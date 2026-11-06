@@ -16,6 +16,7 @@ Kullanım:
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import html
 import json
@@ -719,6 +720,11 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
     return mesajlar
 
 
+# Kaynak türü → ürettiği içerik türü (akış temizliğinde kullanılır)
+KAYNAK_ICERIK_TURU = {"sayfa": "yazi", "rss": "yazi", "google_haber": "yazi", "youtube": "video",
+                      "bluesky": "paylasim", "telegram": "paylasim", "podcast": "podcast",
+                      "eksi_yazar": "eksi", "eksi_baslik": "eksi", "instagram": "instagram"}
+
 OKUYUCULAR = {
     "google_haber": google_haber_kaynak_oku,
     "bluesky": bluesky_oku,
@@ -875,7 +881,8 @@ def ayar_oku(yol: Path) -> dict:
                 k["_uygulamada_kapali"] = True
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
-                         "konular": _liste(uyg.get("konular"))}
+                         "konular": _liste(uyg.get("konular")),
+                         "push": uyg.get("push") if isinstance(uyg.get("push"), dict) else {}}
     # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
     uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
     if uyg_bildirim:
@@ -921,6 +928,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     if kesif_mesajlari:
         ayar = ayar_oku(ayar_yolu)  # yeni bulunan kaynaklarla yeniden oku
         a = ayar["ayarlar"]
+    a["_push"] = push_durumu(ayar)
     veri_dir = KOK / a.get("veri_klasoru", "veri")
     cikti_dir = KOK / a.get("cikti_klasoru", "docs")
     durum_yolu = veri_dir / "durum.json"
@@ -1034,6 +1042,23 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         if anahtar not in aktif_anahtarlar:
             del durum["kaynaklar"][anahtar]
 
+    # kaldırılan/kapatılan kaynakların ve takipten çıkarılan kişilerin içerikleri akıştan da düşsün
+    # (adres değişikliğinde aynı kişinin aynı türdeki geçmişi korunur)
+    aktif_turler = {(y["ad"], k.get("icerik_turu") or KAYNAK_ICERIK_TURU.get(tur, "yazi"))
+                    for y, k, tur, _ in kaynaklari_listele(ayar)}
+    haberli_konular = {k["ad"] for k in konular if k["haberler"]}
+
+    def akista_kalsin(o: dict) -> bool:
+        if o.get("konu_haberi"):
+            return o["konu_haberi"] in haberli_konular
+        kid = o.get("kaynak_id")
+        return not kid or kid in aktif_anahtarlar or (o["yazar"], o.get("tur", "yazi")) in aktif_turler
+
+    once = len(durum["ogeler"])
+    durum["ogeler"] = [o for o in durum["ogeler"] if akista_kalsin(o)]
+    if len(durum["ogeler"]) < once:
+        print(f"– kaldırılan kaynaklara ait {once - len(durum['ogeler'])} içerik akıştan çıkarıldı")
+
     # yazarlar hâlâ aynı yerde mi yazıyor?
     denetim_mesajlari = adres_denetimi(ist, ayar, durum, zorla=zorla_denetim)
 
@@ -1060,8 +1085,10 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         for m in denetim_mesajlari:
             print("  • " + m)
         mesajlar.append(("Takip listesi: kontrol et", denetim_mesajlari))
+    push_yeni_cihazlar(a)
     bildirimleri_gonder(ist, a, durum, konulu, diger, mesajlar)
     bulten_gonder(ist, a, durum, konular)
+    push_kayitlarini_guncelle(ayar_yolu)
 
     for o in durum["ogeler"]:
         o.pop("_metin", None)  # tam metinler kayda girmesin (yalnızca özet için alındı)
@@ -1361,7 +1388,7 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
                         mesajlar: list[tuple[str, list[str]]]):
     """Sessiz saatlerde biriktirir; sessiz saat bitince birikenleri tek bildirimde yollar."""
     b = a.get("bildirim") or {}
-    if not b.get("ntfy_konu"):
+    if not bildirim_kanali_var(a):
         return
     bekleyen = durum.setdefault("bekleyen_bildirim", [])
     if sessiz_saatte_mi(b):
@@ -1390,10 +1417,10 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
 def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | None = None,
                     satirlar: list[str] | None = None, oncelik: str | None = None, etiket: str = "newspaper",
                     tikla: str | None = None):
-    """İsteğe bağlı: ntfy.sh üzerinden telefona anlık bildirim."""
-    konu = (a.get("bildirim") or {}).get("ntfy_konu")
-    if not konu:
+    """Telefona bildirim: uygulamanın kendi bildirimi (Web Push) ve/veya ntfy."""
+    if not bildirim_kanali_var(a):
         return
+    konu = (a.get("bildirim") or {}).get("ntfy_konu")
     sunucu = (a.get("bildirim") or {}).get("ntfy_sunucu", "https://ntfy.sh").rstrip("/")
     if satirlar is None:
         satirlar = [f"{o['yazar']}: {o['baslik']}" for o in yeniler[:8]]
@@ -1412,11 +1439,134 @@ def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | No
         basliklar["Click"] = adres
     if tikla:
         basliklar["Click"] = tikla
+    if (a.get("_push") or {}).get("durum") == "hazir":
+        simge = {"bookmark": "🔖 ", "sunny": "☀ "}.get(etiket, "")
+        push_gonder(a, simge + baslik, "\n".join(satirlar), basliklar.get("Click") or adres or "./",
+                    etiket={"bookmark": "takip-konu", "sunny": "takip-bulten"}.get(etiket, "takip-yeni"),
+                    acil=bool(oncelik))
+    if not konu:
+        return
     try:
         ist.gonder(f"{sunucu}/{konu}", "\n".join(satirlar).encode("utf-8"), basliklar)
-        print("→ telefona bildirim gönderildi")
+        print("→ telefona bildirim gönderildi (ntfy)")
     except Exception as e:
         print(f"! bildirim gönderilemedi: {e}")
+
+
+# ───────────────────────── uygulama bildirimleri (Web Push) ─────────────────────────
+
+PUSH_GECERSIZ: set[str] = set()   # süresi dolmuş / iptal edilmiş abonelikler
+PUSH_ONAY: dict[str, str] = {}    # ilk deneme bildirimi ulaşan abonelikler
+
+
+def _b64u(b: bytes) -> str:
+    return base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+
+
+def _vapid_eslesir(gizli: str, acik: str) -> bool:
+    try:
+        from py_vapid import Vapid
+        from cryptography.hazmat.primitives import serialization
+        ham = Vapid.from_string(gizli).public_key.public_bytes(
+            serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+        return _b64u(ham) == acik.strip().rstrip("=")
+    except Exception:
+        return False
+
+
+def push_durumu(ayar: dict) -> dict:
+    p = (ayar.get("_uygulama") or {}).get("push") or {}
+    acik = (p.get("acik_anahtar") or "").strip()
+    abone = [x for x in _liste(p.get("abonelikler"))
+             if isinstance(x, dict) and x.get("endpoint") and isinstance(x.get("keys"), dict)]
+    gizli = os.environ.get("VAPID_GIZLI", "").strip() or str(ayar["ayarlar"].get("vapid_gizli") or "")
+    if not acik:
+        d = "kapali"
+    elif not gizli:
+        d = "gizli_yok"
+    elif not _vapid_eslesir(gizli, acik):
+        d = "uyusmuyor"
+    else:
+        d = "hazir" if abone else "abone_yok"
+    return {"acik_anahtar": acik, "abonelikler": abone, "gizli": gizli, "durum": d}
+
+
+def _vapid_sub(a: dict) -> str:
+    # bildirim servisleri gönderenin bir iletişim adresini ister; sitenin kök adresi yeterli
+    u = urlparse(site_adresi(a) or "https://github.com")
+    return f"https://{u.netloc}" if u.netloc else "https://github.com"
+
+
+def bildirim_kanali_var(a: dict) -> bool:
+    return bool((a.get("bildirim") or {}).get("ntfy_konu")) or (a.get("_push") or {}).get("durum") == "hazir"
+
+
+def push_gonder(a: dict, baslik: str, metin: str, url: str, etiket: str = "takip", acil: bool = False,
+                yalnizca: list[dict] | None = None) -> int:
+    """Uygulamaya abone olan her cihaza bildirim gönderir; ulaşan cihaz sayısını döndürür."""
+    p = a.get("_push") or {}
+    try:
+        from pywebpush import webpush, WebPushException
+    except Exception:
+        print("! uygulama bildirimi için pywebpush kurulu değil")
+        return 0
+    yuk = json.dumps({"baslik": baslik, "metin": metin[:1500], "url": url, "etiket": etiket}, ensure_ascii=False)
+    ulasan = 0
+    for ab in (yalnizca if yalnizca is not None else p.get("abonelikler") or []):
+        if ab["endpoint"] in PUSH_GECERSIZ:
+            continue
+        try:
+            webpush({"endpoint": ab["endpoint"], "keys": ab["keys"]}, yuk, vapid_private_key=p["gizli"],
+                    vapid_claims={"sub": _vapid_sub(a)}, ttl=12 * 3600,
+                    headers={"Urgency": "high" if acil else "normal"}, timeout=15)
+            ulasan += 1
+        except WebPushException as e:
+            kod = getattr(getattr(e, "response", None), "status_code", None)
+            if kod in (404, 410):
+                PUSH_GECERSIZ.add(ab["endpoint"])
+                print(f"– {ab.get('cihaz') or 'bir cihaz'}: bildirim aboneliği artık geçersiz, listeden çıkarılıyor")
+            else:
+                print(f"! uygulama bildirimi gönderilemedi ({ab.get('cihaz') or 'cihaz'}): HTTP {kod} {str(e)[:120]}")
+        except Exception as e:
+            print(f"! uygulama bildirimi gönderilemedi: {type(e).__name__}: {str(e)[:120]}")
+    if ulasan:
+        print(f"→ {ulasan} cihaza uygulama bildirimi gönderildi")
+    return ulasan
+
+
+def push_yeni_cihazlar(a: dict):
+    """Yeni abone olan cihaza bir kez 'bildirimler açık' iletisi yollar; ulaşırsa onaylanmış sayılır."""
+    p = a.get("_push") or {}
+    if p.get("durum") != "hazir":
+        return
+    for ab in p["abonelikler"]:
+        if ab.get("onay"):
+            continue
+        if push_gonder(a, "Takip bildirimleri açık ✓", "Yeni yazılar ve konuların bu cihaza bildirim olarak gelecek.",
+                       site_adresi(a) or "./", etiket="takip-deneme", yalnizca=[ab]):
+            PUSH_ONAY[ab["endpoint"]] = iso(simdi())
+
+
+def push_kayitlarini_guncelle(ayar_yolu: Path):
+    """Geçersiz abonelikleri siler, onaylananları işaretler (kaynaklar_uygulama.json)."""
+    if not (PUSH_GECERSIZ or PUSH_ONAY):
+        return
+    yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
+    try:
+        uyg = json.loads(yol.read_text(encoding="utf-8"))
+        p = uyg.get("push") or {}
+        yeni = []
+        for ab in _liste(p.get("abonelikler")):
+            if not isinstance(ab, dict) or ab.get("endpoint") in PUSH_GECERSIZ:
+                continue
+            if ab.get("endpoint") in PUSH_ONAY and not ab.get("onay"):
+                ab["onay"] = PUSH_ONAY[ab["endpoint"]]
+            yeni.append(ab)
+        p["abonelikler"] = yeni
+        uyg["push"] = p
+        yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    except Exception as e:
+        print(f"! bildirim abonelikleri güncellenemedi: {e}")
 
 
 def bulten_icerigi(durum: dict, konular: list[dict], baslangic: datetime) -> tuple[int, list[str]]:
@@ -1449,7 +1599,7 @@ def bulten_gonder(ist: Istemci, a: dict, durum: dict, konular: list[dict], an: d
     """Bülten saati geldiyse (günde bir kez) son bültenden beri gelenleri tek bildirimde yollar."""
     b = a.get("bildirim") or {}
     saat = _dakika(b.get("bulten_saat"))
-    if saat is None or not b.get("ntfy_konu"):
+    if saat is None or not bildirim_kanali_var(a):
         return False
     an = an or simdi()
     yerel = an.astimezone(TR_SAAT)
@@ -1666,12 +1816,18 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
                         for ad, kd in (durum.get("konular") or {}).items()},
         "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
             "sessiz_bas", "sessiz_bit", "kapsam", "sessiz_turler", "sessiz_yazarlar", "bulten_saat", "anlik")},
+        "push": {"acik_anahtar": (a.get("_push") or {}).get("acik_anahtar") or "",
+                 "durum": (a.get("_push") or push_durumu(ayar)).get("durum"),
+                 "cihazlar": [{"kimlik": kimlik(x["endpoint"]), "cihaz": x.get("cihaz"), "zaman": x.get("zaman"),
+                               "onay": x.get("onay") or PUSH_ONAY.get(x["endpoint"])}
+                              for x in (a.get("_push") or push_durumu(ayar)).get("abonelikler", [])
+                              if x["endpoint"] not in PUSH_GECERSIZ]},
         "yz": {k: (durum.get("yz") or {}).get(k) for k in (
             "durum", "model", "son_hata", "son_basari", "bugun")},
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",
-                                   "bulunma", "ilk", "yz_ozet", "konu_haberi") if k in o or k in ("id", "url")}
+                                   "bulunma", "ilk", "yz_ozet", "konu_haberi", "kaynak_id") if k in o or k in ("id", "url")}
             for o in durum["ogeler"]
         ],
         "kaynaklar": kaynaklar,

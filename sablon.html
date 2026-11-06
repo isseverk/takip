@@ -95,6 +95,10 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .konu-satir small{display:block;color:var(--soluk);font-size:12.5px}
 .zaman-alan{display:flex;gap:10px;align-items:center;margin:6px 0 0 28px}
 .zaman-alan input{border:1px solid var(--cizgi);background:var(--zemin);color:inherit;border-radius:10px;padding:8px 10px;font-size:16px}
+.gizli-kutu{display:flex;gap:8px;align-items:center;margin-top:6px}
+.gizli-kutu code{flex:1;min-width:0;overflow-wrap:anywhere;font-size:12.5px;background:var(--ince);border-radius:8px;padding:6px 8px;user-select:all}
+.ntfy-blok{margin-top:14px;border-top:1px solid var(--cizgi);padding-top:10px}
+.ntfy-blok summary{cursor:pointer;font-weight:600;font-size:14.5px}
 .alt-baslik{font-size:13px;font-weight:600;color:var(--soluk);margin:14px 0 2px;text-transform:uppercase;letter-spacing:.04em}
 .yazar[role=button]{cursor:pointer}
 .bulten-ozet{font-size:14.5px;color:var(--soluk);margin:4px 2px 10px}
@@ -486,7 +490,8 @@ footer a{color:var(--soluk)}
       return (t > new Date(b.getTime() + 6*3600e3)) ? b : t; };
     const konular = konuListesi(), adlar = new Set(konular.map(k => k.ad));
     // kaldırılan konuların haberleri akıştan düşer
-    ogeler = V.ogeler.filter(o => !o.konu_haberi || adlar.has(o.konu_haberi))
+    const gizli = gizlenenler(), gizliKaynak = new Set(gizli.map(g => g.kaynak).filter(Boolean)), gizliYazar = new Set(gizli.map(g => g.yazar).filter(Boolean));
+    ogeler = V.ogeler.filter(o => (!o.konu_haberi || adlar.has(o.konu_haberi)) && !gizliKaynak.has(o.kaynak_id) && !gizliYazar.has(o.yazar))
       .map(o => Object.assign(o, {_t: zaman(o), _b: new Date(o.bulunma || 0)})).sort((a,b) => b._t - a._t);
     const desen = konular.map(k => ({ad: k.ad, rx: ((k.kelimeler && k.kelimeler.length) ? k.kelimeler : [k.ad])
       .map(w => new RegExp("(^|[^a-z0-9])" + katla(w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))}));
@@ -506,6 +511,15 @@ footer a{color:var(--soluk)}
   function yerelVeyaSunucu(anahtar, sunucu){
     const y = depo.al(anahtar, null);
     return (y && y.zaman > new Date(V.olusturma).getTime() && Date.now() - y.zaman < 6*3600e3) ? y.deger : sunucu;
+  }
+  // kaldırılan kaynağın/kişinin içerikleri, sıradaki kontrol akışı temizleyene kadar burada gizlenir
+  function gizlenenler(){
+    const yansiyan = new Date(V.olusturma).getTime();
+    return depo.al("gizlenen", []).filter(g => g && g.zaman > yansiyan && Date.now() - g.zaman < 6*3600e3);
+  }
+  function akistanGizle(g){
+    depo.yaz("gizlenen", gizlenenler().concat([Object.assign({zaman: Date.now()}, g)]));
+    veriHazirla(); akisCiz();
   }
   const konuListesi = () => yerelVeyaSunucu("konular_yerel", V.konular || []);
   const bildirimAyari = () => Object.assign({}, yerelVeyaSunucu("bildirim_yerel", V.bildirim || {}));
@@ -949,7 +963,7 @@ footer a{color:var(--soluk)}
         islem(i => {
           i.yazarlar = i.yazarlar.filter(a => a.ad !== y.ad);
           if (y.kok !== "uygulama" || y.kaynaklar.some(k => k.kok === "yaml")) { if (!i.kapali_yazarlar.includes(y.ad)) i.kapali_yazarlar.push(y.ad); }
-        }, `${y.ad} takipten çıkarıldı`, `${y.ad}: takipten çıkarıldı`);
+        }, `${y.ad} takipten çıkarıldı`, `${y.ad}: takipten çıkarıldı`).then(ok => ok && akistanGizle({yazar: y.ad}));
       }});
     }
     menuAc(y.ad, s);
@@ -962,7 +976,7 @@ footer a{color:var(--soluk)}
       s.push({yazi:"Adresini değiştir", fn: () => ekleAc({ad: y.ad, tur: k.tur, eski: k, baslik:"Adresi değiştir"})});
       s.push({yazi:"Bu kaynağı kaldır", tehlike:true, fn: () => {
         if (!confirm(`${y.ad} · ${k.etiket} kaldırılsın mı?`)) return;
-        islem(i => kaynakKaldir(i, y.ad, k), "Kaynak kaldırıldı", `${y.ad}: ${k.etiket} kaldırıldı`);
+        islem(i => kaynakKaldir(i, y.ad, k), "Kaynak kaldırıldı", `${y.ad}: ${k.etiket} kaldırıldı`).then(ok => ok && akistanGizle({kaynak: k.anahtar}));
       }});
     }
     menuAc(`${y.ad} · ${k.etiket}`, s);
@@ -976,8 +990,8 @@ footer a{color:var(--soluk)}
   function ayniKaynak(x, k){ return (x.url || x.kanal || x.kullanici || x.rss_url || x.site) === k.adres && (x.tur || "sayfa") === k.tur; }
   async function islem(fn, tostMetni, bekleyenMetni){
     tost("Kaydediliyor…", 15000);
-    try { await uygDosyaDegistir(fn, bekleyenMetni); bekleyenEkle(bekleyenMetni); tost(tostMetni + " — birkaç dakika içinde yansır"); kaynaklarCiz(); }
-    catch(e){ tost(e.message, 6000); }
+    try { await uygDosyaDegistir(fn, bekleyenMetni); bekleyenEkle(bekleyenMetni); tost(tostMetni + " — birkaç dakika içinde yansır"); kaynaklarCiz(); return true; }
+    catch(e){ tost(e.message, 6000); return false; }
   }
 
   // ───────── KONULAR
@@ -1232,21 +1246,154 @@ footer a{color:var(--soluk)}
   function bildirimCiz(){
     const a = $("bildirimAyar"); a.replaceChildren();
     const konu = depo.al("ntfy_konu_yerel", "") || V.ntfy_konu;
+    const pushAcik = pushBilgi().acik_anahtar;
+    a.append(pushBolumu());
+    const ntfy = el("details",{class:"ntfy-blok", open: (konu && !pushAcik) ? "" : null},
+      el("summary",{text: konu ? "ntfy ile bildirim — açık" : "ntfy ile bildirim (alternatif yol)"}));
     if (!konu){
-      a.append(el("h3",{text:"Yeni yazı çıkınca bildirim al"}),
-        el("p",{text:"Bildirimler ücretsiz ntfy uygulaması üzerinden gelir. İki adımda açılır."}),
+      ntfy.append(el("p",{text:"Uygulama bildirimleri çalışmazsa ücretsiz ntfy uygulaması üzerinden de bildirim alabilirsin."}),
         el("ol",{class:"adimlar"}, el("li", null, el("a",{href:"https://play.google.com/store/apps/details?id=io.heckel.ntfy", target:"_blank", rel:"noopener", text:"ntfy uygulamasını Google Play'den kur"}), "."),
           el("li",{text:"Aşağıdaki düğmeye bas, sonra çıkan \"ntfy'de abone ol\" düğmesine dokun."})),
-        el("button",{class:"dugme ana", type:"button", text:"Bildirimleri aç", onclick: bildirimAc}));
+        el("button",{class:"dugme", type:"button", text:"ntfy bildirimlerini aç", onclick: bildirimAc}));
+    } else {
+      ntfy.append(el("p", null, "Konu adın: ", el("code",{text:konu}), ". Bu telefonda ntfy uygulamasında bu konuya abone olman gerekiyor."),
+        el("div",{class:"satir"},
+          el("a",{class:"dugme", href:`ntfy://ntfy.sh/${konu}`, text:"ntfy'de abone ol", style:"text-decoration:none"}),
+          el("button",{class:"dugme", type:"button", text:"Deneme", onclick: () => denemeBildirim(konu)}),
+          el("button",{class:"dugme tehlike", type:"button", text:"ntfy'yi kapat", onclick: async () => {
+            if (!confirm("ntfy bildirimleri kapatılsın mı?")) return;
+            if (await bildirimDegistir(b => { b.ntfy_konu = ""; }, "ntfy bildirimleri kapatıldı")){ depo.sil("ntfy_konu_yerel"); V.ntfy_konu = ""; bildirimCiz(); }
+          }})),
+        el("p",{style:"margin-top:8px;font-size:12.5px", text:"\"ntfy'de abone ol\" çalışmazsa ntfy uygulamasında + düğmesine basıp konu adını elle yaz. Uygulama bildirimleri açıksa ntfy'yi kapatabilirsin; yoksa her bildirim iki kez gelir."}));
+    }
+    a.append(ntfy);
+    if (konu || pushAcik) inceAyarCiz(a);
+  }
+
+  // ───────── UYGULAMA BİLDİRİMLERİ (Web Push)
+  const b64u = by => btoa(String.fromCharCode(...by)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  const b64uCoz = s => Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/") + "===".slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+  async function sha12(metin){ const b = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(metin)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("").slice(0,12); }
+  const pushBilgi = () => Object.assign({acik_anahtar:"", durum:"kapali", cihazlar:[]}, yerelVeyaSunucu("push_yerel", V.push || {}));
+  const pushDestek = () => HTTP && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+  function cihazAdi(){
+    const u = navigator.userAgent;
+    const tur = /Android/i.test(u) ? "Android telefon" : /iPhone|iPad/i.test(u) ? "iPhone/iPad" : /Windows/i.test(u) ? "Windows bilgisayar" : /Mac OS/i.test(u) ? "Mac" : "Tarayıcı";
+    return `${tur} (${new Date().toLocaleDateString("tr-TR")})`;
+  }
+  function pushBolumu(){
+    const kap = el("div",{id:"pushBolum"});
+    const P = pushBilgi(), depoAdi = GH.depo();
+    kap.append(el("h3",{text:"Uygulama bildirimleri"}));
+    if (!pushDestek()){
+      kap.append(el("p",{text:"Bu tarayıcı uygulama bildirimlerini desteklemiyor. Takip'i telefonda Chrome ile açıp uygulama olarak kur ya da aşağıdaki ntfy yolunu kullan."}));
+      return kap;
+    }
+    const gizli = depo.al("vapid_gizli_gecici", "");
+    const adim = (no, bitti, ...icerik) => el("li",{style: bitti ? "color:var(--soluk)" : ""}, el("b",{text: (bitti ? "✓ " : "") }), ...icerik);
+    if (!P.acik_anahtar){
+      kap.append(el("p",{text:"Yeni yazılar Takip simgesiyle, doğrudan telefonunun bildirimlerine gelir; ayrı bir uygulama gerekmez. Bir kez ayarlanır (üç adım)."}),
+        el("button",{class:"dugme ana", type:"button", text:"Kuruluma başla", onclick: pushAnahtarOlustur}));
+      return kap;
+    }
+    const gizliTamam = P.durum === "hazir" || P.durum === "abone_yok";
+    const ol = el("ol",{class:"adimlar"});
+    ol.append(adim(1, true, "Bildirim anahtarı oluşturuldu."));
+    const li2 = adim(2, gizliTamam, gizliTamam ? "Gizli anahtar GitHub'a eklendi." : "Gizli anahtarı GitHub'a ekle:");
+    if (!gizliTamam){
+      if (P.durum === "uyusmuyor") li2.append(el("div",{class:"durum-yazi kotu", text:"GitHub'daki VAPID_GIZLI bu anahtarla eşleşmiyor. Aşağıdaki anahtarla güncelle ya da yeni anahtar oluştur."}));
+      if (gizli){
+        li2.append(el("div",{class:"gizli-kutu"}, el("code",{text:gizli}),
+          el("button",{class:"dugme", type:"button", text:"Kopyala", onclick: async () => { try { await navigator.clipboard.writeText(gizli); tost("Kopyalandı"); } catch(_){ tost("Kopyalanamadı; uzun basıp seç"); } }})),
+          el("div",{style:"font-size:13.5px;margin-top:6px"}, depoAdi ? el("a",{href:`https://github.com/${depoAdi}/settings/secrets/actions/new`, target:"_blank", rel:"noopener", text:"GitHub'da gizli ayar ekleme sayfasını aç"}) : "GitHub'da Settings → Secrets and variables → Actions → New repository secret sayfasını aç",
+            ". ", el("b",{text:"Name"}), ": ", el("code",{text:"VAPID_GIZLI"}), ", ", el("b",{text:"Secret"}), ": kopyaladığın anahtar → ", el("b",{text:"Add secret"}), "."),
+          el("div",{style:"font-size:12.5px;color:var(--soluk);margin-top:4px", text:"Eklendikten sonraki ilk kontrolde bu adım ✓ olur. Bu anahtarı başka kimseyle paylaşma."}));
+      } else {
+        li2.append(el("div",{style:"font-size:13.5px;margin-top:4px", text:"Anahtar başka bir cihazda oluşturulmuş. O cihazdan devam et ya da yeni anahtar oluştur."}));
+      }
+    }
+    ol.append(li2);
+    const li3 = adim(3, false, "Bu cihazda bildirimleri aç:");
+    const cihazYer = el("div",{style:"margin-top:6px"}, "…");
+    li3.append(cihazYer);
+    ol.append(li3);
+    kap.append(ol);
+    pushCihazDurumu(cihazYer, P);
+    if (P.cihazlar.length) kap.append(el("p",{style:"font-size:13px;color:var(--soluk)", text:"Kayıtlı cihazlar: " +
+      P.cihazlar.map(c => `${c.cihaz || "cihaz"}${c.onay ? " ✓" : " (ilk bildirim bekleniyor)"}`).join(", ")}));
+    kap.append(el("button",{class:"dugme", type:"button", style:"margin-top:4px;font-size:13px", text:"Yeni anahtar oluştur (her şeyi sıfırlar)", onclick: () => {
+      if (confirm("Yeni anahtar oluşturulursa GitHub'daki VAPID_GIZLI'yi güncellemen ve tüm cihazlarda bildirimleri yeniden açman gerekir. Devam edilsin mi?")) pushAnahtarOlustur();
+    }}));
+    return kap;
+  }
+  async function pushCihazDurumu(yer, P){
+    let sub = null;
+    try { const reg = await navigator.serviceWorker.ready; sub = await reg.pushManager.getSubscription(); } catch(_){}
+    const kimlik = sub ? await sha12(sub.endpoint) : "";
+    const bu = P.cihazlar.find(c => c.kimlik === kimlik);
+    yer.replaceChildren();
+    if (Notification.permission === "denied"){
+      yer.append(el("div",{class:"durum-yazi kotu", text:"Bu cihazda Takip için bildirim izni kapalı. Telefonun Ayarlar → Uygulamalar → Takip (ya da Chrome) → Bildirimler bölümünden izin ver, sonra bu sayfayı yenile."}));
       return;
     }
-    a.append(el("h3",{text:"Bildirimler açık"}),
-      el("p", null, "Konu adın: ", el("code",{text:konu}), ". Bu telefonda ntfy uygulamasında bu konuya abone olman gerekiyor."),
-      el("div",{class:"satir"},
-        el("a",{class:"dugme ana", href:`ntfy://ntfy.sh/${konu}`, text:"ntfy'de abone ol", style:"text-decoration:none"}),
-        el("button",{class:"dugme", type:"button", text:"Deneme bildirimi gönder", onclick: () => denemeBildirim(konu)})),
-      el("p",{style:"margin-top:8px;font-size:12.5px", text:"\"ntfy'de abone ol\" çalışmazsa ntfy uygulamasında + düğmesine basıp konu adını elle yaz."}));
-    inceAyarCiz(a);
+    if (sub && bu){
+      yer.append(el("span",{text: bu.onay ? "✓ Bu cihaz kayıtlı, bildirimler geliyor." : "✓ Bu cihaz kayıtlı. GitHub anahtarı eklendikten sonraki ilk kontrolde bir deneme bildirimi gelecek."}), " ",
+        el("button",{class:"dugme tehlike", type:"button", style:"margin-top:6px", text:"Bu cihazda kapat", onclick: () => pushKapat(sub)}));
+    } else {
+      yer.append(el("button",{class:"dugme ana", type:"button", text:"Bu cihazda bildirimleri aç", onclick: pushAc}));
+    }
+  }
+  async function pushYerelKaydet(fn){
+    const P = pushBilgi(); fn(P);
+    depo.yaz("push_yerel", {deger: P, zaman: Date.now()});
+  }
+  async function pushAnahtarOlustur(){
+    if (!GH.bagli()){ tost("Önce GitHub bağlantısını kur"); return; }
+    try {
+      const k = await crypto.subtle.generateKey({name:"ECDSA", namedCurve:"P-256"}, true, ["sign","verify"]);
+      const jwk = await crypto.subtle.exportKey("jwk", k.privateKey);
+      const acik = b64u(new Uint8Array(await crypto.subtle.exportKey("raw", k.publicKey)));
+      tost("Kaydediliyor…", 15000);
+      await uygDosyaDegistir(i => { i.push = {acik_anahtar: acik, abonelikler: []}; }, "Uygulama bildirimi anahtarı oluşturuldu");
+      depo.yaz("vapid_gizli_gecici", jwk.d);
+      try { const reg = await navigator.serviceWorker.ready; const s = await reg.pushManager.getSubscription(); if (s) await s.unsubscribe(); } catch(_){}
+      await pushYerelKaydet(P => { P.acik_anahtar = acik; P.durum = "gizli_yok"; P.cihazlar = []; });
+      tost("Anahtar oluşturuldu. Şimdi 2. adımı yap.", 4500);
+      bildirimCiz();
+    } catch(e){ tost(e.message || String(e), 6000); }
+  }
+  async function pushAc(){
+    const P = pushBilgi();
+    if (!GH.bagli()){ tost("Önce GitHub bağlantısını kur"); return; }
+    try {
+      const izin = await Notification.requestPermission();
+      if (izin !== "granted"){ tost("Bildirim izni verilmedi", 4500); bildirimCiz(); return; }
+      const reg = await navigator.serviceWorker.ready;
+      const eski = await reg.pushManager.getSubscription(); if (eski) await eski.unsubscribe();
+      const sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64uCoz(P.acik_anahtar)});
+      const j = sub.toJSON(), cihaz = cihazAdi();
+      tost("Kaydediliyor…", 15000);
+      await uygDosyaDegistir(i => {
+        i.push = Object.assign({}, i.push);
+        i.push.abonelikler = (Array.isArray(i.push.abonelikler) ? i.push.abonelikler : []).filter(x => x.endpoint !== j.endpoint && (!eski || x.endpoint !== eski.endpoint));
+        i.push.abonelikler.push({endpoint: j.endpoint, keys: j.keys, cihaz, zaman: new Date().toISOString()});
+      }, `Uygulama bildirimleri açıldı: ${cihaz}`);
+      const kimlik = await sha12(j.endpoint);
+      await pushYerelKaydet(P => { P.cihazlar = P.cihazlar.filter(c => c.kimlik !== kimlik).concat([{kimlik, cihaz, zaman: new Date().toISOString()}]); });
+      tost("Bu cihaz kaydedildi. Sıradaki kontrolde bir deneme bildirimi gelecek.", 5000);
+      bildirimCiz();
+    } catch(e){ tost("Açılamadı: " + (e.message || e), 6000); }
+  }
+  async function pushKapat(sub){
+    if (!confirm("Bu cihazda uygulama bildirimleri kapatılsın mı?")) return;
+    try {
+      tost("Kaydediliyor…", 15000);
+      await uygDosyaDegistir(i => { i.push = Object.assign({}, i.push); i.push.abonelikler = (i.push.abonelikler || []).filter(x => x.endpoint !== sub.endpoint); }, "Uygulama bildirimleri kapatıldı");
+      const kimlik = await sha12(sub.endpoint);
+      await sub.unsubscribe();
+      await pushYerelKaydet(P => { P.cihazlar = P.cihazlar.filter(c => c.kimlik !== kimlik); });
+      tost("Bu cihazda bildirimler kapatıldı"); bildirimCiz();
+    } catch(e){ tost(e.message || String(e), 6000); }
   }
   const BILDIRIM_TURLERI = [["yazi","Köşe ve blog yazıları"], ["video","YouTube videoları"], ["podcast","Podcast bölümleri"],
     ["paylasim","Bluesky / Telegram paylaşımları"], ["eksi","Ekşi Sözlük entry'leri"], ["instagram","Instagram paylaşımları"]];

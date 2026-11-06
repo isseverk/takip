@@ -33,7 +33,7 @@ Kontrolleri GitHub'ın sunucuları yarım saatte bir yapar, bilgisayarının aç
 **D. Telefona kur (Android)**
 8. Bu adresi telefonda **Chrome** ile aç. Altta "Takip'i yükle" önerisi çıkar. Çıkmazsa ⋮ menüsünden **Uygulamayı yükle** seç. Ana ekrana Takip simgesi gelir.
 9. Uygulamada **Ayarlar → GitHub bağlantısı** bölümüne git. "Anahtar nasıl alınır?" adımlarını izleyip anahtarı yapıştır ve **Kaydet ve dene**'ye bas. Bu adım telefondan ekleme ve çıkarma yapabilmen için gerekli.
-10. İstersen **Ayarlar → Bildirimler** bölümünden **Bildirimleri aç**'a bas. Ücretsiz ntfy uygulamasıyla yeni yazılar telefonuna bildirim olarak gelir.
+10. İstersen **Ayarlar → Bildirimler → Kuruluma başla**'ya bas ve üç adımı izle. Yeni yazılar Takip simgesiyle telefonuna bildirim olarak gelir (ayrıntısı aşağıda).
 
 Bundan sonra akış her yarım saatte bir kendiliğinden güncellenir. GitHub zamanlanmış işleri bazen birkaç dakika geciktirebilir.
 
@@ -70,7 +70,7 @@ Bu yol yalnızca bilgisayarda bakmak içindir; telefondaki uygulama GitHub'daki 
 
 Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
 - **Kısayol:** YouTube uygulamasında bir kanalı, ya da Chrome'da bir yazarın sayfasını açıp **Paylaş → Takip** de. Form adres dolu olarak açılır.
-- **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
+- **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. O kaynaktan gelmiş içerikler de akıştan hemen kalkar. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
 - **Adresi değişen yazar:** **⋯ → Adresini değiştir** seç.
 
 Değişiklik birkaç dakika içinde akışa yansır. Telefondan yapılanlar `kaynaklar_uygulama.json` dosyasında tutulur.
@@ -103,7 +103,14 @@ Uygulamada **Kaynaklar → Konular → + Konu**'ya bas ve bir konu yaz (ör. *as
 
 ## Bildirimler
 
-Uygulamada **Ayarlar → Bildirimler → Bildirimleri aç**'a bas. Ücretsiz **ntfy** uygulamasını kurman ve çıkan **ntfy'de abone ol** düğmesine dokunman yeterli.
+**Uygulama bildirimleri (önerilen):** Yeni yazılar Takip simgesiyle doğrudan telefonunun bildirimlerine gelir; ayrı bir uygulama gerekmez. Takip'in telefona uygulama olarak kurulu olması gerekir. Bir kez ayarlanır:
+1. **Ayarlar → Bildirimler → Kuruluma başla**'ya bas. Uygulama bir bildirim anahtarı oluşturur ve sana gizli bir anahtar gösterir.
+2. **Kopyala**'ya bas, sonra **GitHub'da gizli ayar ekleme sayfasını aç** bağlantısına dokun. **Name** kutusuna `VAPID_GIZLI` yaz, **Secret** kutusuna kopyaladığın anahtarı yapıştır ve **Add secret**'e bas.
+3. Uygulamaya dön ve **Bu cihazda bildirimleri aç**'a bas, izin istediğinde **İzin ver** de.
+
+Sıradaki kontrolde telefonuna "Takip bildirimleri açık ✓" diye bir deneme bildirimi gelir. Bilgisayarında da Takip'i açıp 3. adımı yaparsan bildirimler oraya da gelir. Gizli anahtar yalnızca GitHub'ın gizli ayarlarında durur, depoda görünmez; kimseyle paylaşma.
+
+**ntfy ile (alternatif yol):** Aynı bölümdeki **ntfy ile bildirim** kısmını aç ve **ntfy bildirimlerini aç**'a bas. Ücretsiz **ntfy** uygulamasını kurman ve **ntfy'de abone ol** düğmesine dokunman yeterli. İkisi birden açıksa her bildirim iki kez gelir; birini kapat.
 
 Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
 - **Ne zaman:** Her yeni içerikte ya da yalnızca konularına uyanlarda.
