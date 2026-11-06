@@ -221,7 +221,7 @@ def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
         raise KaynakHatasi(f"site bulut sunucularını engelliyor ve Google Haberler yedeği de açılamadı ({e})")
     sonuc = []
     for e in feedparser.parse(metin).entries:
-        baslik = re.sub(r"\s+-\s+[^-]{2,40}$", "", e.get("title", "")).strip()
+        baslik = re.sub(r"\s+-\s+[^-]{1,40}$", "", e.get("title", "")).strip()
         # "Can Ataklı yazdı: ..." / "... | Can Ataklı" gibi ekleri at
         baslik = re.sub(r"^" + re.escape(ad) + r"\s*(yazdı)?\s*[:|-]\s*", "", baslik, flags=re.I)
         baslik = re.sub(r"\s*[|-]\s*" + re.escape(ad) + r"\s*$", "", baslik, flags=re.I).strip()
@@ -458,7 +458,181 @@ def instagram_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
     return sonuc
 
 
+def google_haber_kaynak_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
+    """Doğrudan okunamayan bir sitedeki yazıları Google Haberler aramasıyla izler."""
+    ogeler = google_haber_oku(ist, k.get("bul") or yazar, k["site"])
+    for o in ogeler:
+        o.pop("_yedek", None)
+    return ogeler
+
+
+# ───────────────────────── isimden kaynak bulma ─────────────────────────
+# Uygulamada "İsimle bul" seçilince ad, kaynaklar_uygulama.json'daki "aranacaklar" listesine yazılır.
+# Burada o kişinin nerede yazdığını bulup kaynaklarını kendimiz ekleriz.
+
+YAZAR_YOLLARI = ["/yazarlar/{s}", "/yazar/{s}", "/kose-yazarlari/{s}", "/author/{s}", "/yazarlar/{s}/"]
+YAZAR_DIZINLERI = ["/yazarlar", "/kose-yazarlari", "/yazarlar/tum-yazarlar"]
+GENEL_SITELER = {"youtube.com", "x.com", "twitter.com", "instagram.com", "facebook.com", "wikipedia.org",
+                 "eksisozluk.com", "news.google.com", "google.com", "msn.com", "yandex.com.tr"}
+
+
+def _slug(ad: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", sade(ad)).strip("-")
+
+
+def _yazar_sayfasi_mi(ist: Istemci, url: str, ad: str) -> tuple[bool, str | None]:
+    """(geçerli mi, hata kodu). Sayfa açılıyor, kişinin adı geçiyor ve en az 2 yazı bağlantısı varsa geçerli."""
+    try:
+        metin = ist.al(url, deneme=0)
+    except KaynakHatasi as e:
+        m = re.search(r"HTTP (\d+)", str(e))
+        return False, m.group(1) if m else "hata"
+    corba = BeautifulSoup(metin, "html.parser")
+    bas = sade(" ".join(x.get_text(" ") for x in corba.find_all(["title", "h1", "h2"])[:8]))
+    if sade(ad) not in bas:
+        return False, None
+    on_ek = urlparse(url).path.rstrip("/") + "/"
+    linkler = _linkleri_topla(corba, url, lambda u: urlparse(u).path.startswith(on_ek)
+                              and len(urlparse(u).path) > len(on_ek) + 3)
+    if len(linkler) < 2:
+        linkler = _linkleri_topla(corba, url, lambda u: _makaleye_benziyor(u, url))
+    return len(linkler) >= 2, None
+
+
+def _youtube_kanali_bul(ist: Istemci, ad: str) -> dict | None:
+    try:
+        metin = ist.al("https://www.youtube.com/results?search_query=" + quote(ad) + "&sp=EgIQAg%253D%253D",
+                       basliklar={"Cookie": "CONSENT=YES+1; SOCS=CAI"}, deneme=0)
+    except KaynakHatasi:
+        return None
+    hedef = sade(ad)
+    for m in re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})","title":\{"simpleText":"([^"]+)"', metin):
+        baslik = json.loads('"' + m.group(2) + '"')
+        if hedef == sade(baslik) or (hedef in sade(baslik) and len(sade(baslik)) <= len(hedef) + 12):
+            return {"tur": "youtube", "kanal": f"https://www.youtube.com/channel/{m.group(1)}",
+                    "kanal_id": m.group(1), "etiket": "YouTube", "otomatik": True}
+    return None
+
+
+def yazar_kesfet(ist: Istemci, ad: str) -> tuple[list[dict], str]:
+    """Kişinin yazdığı yerleri bulur. (kaynaklar, açıklama) döner."""
+    sorgu = quote(f'"{ad}" when:60d')
+    alanlar: dict[str, dict] = {}
+    try:
+        akis = feedparser.parse(ist.al(f"https://news.google.com/rss/search?q={sorgu}&hl=tr&gl=TR&ceid=TR:tr",
+                                       deneme=1))
+        for e in akis.entries:
+            kaynak = e.get("source") or {}
+            href = kaynak.get("href") or ""
+            alan = _alan_adi(href)
+            if not alan or any(alan == g or alan.endswith("." + g) for g in GENEL_SITELER):
+                continue
+            s = alanlar.setdefault(alan, {"alan": alan, "kok": href.rstrip("/"), "ad": kaynak.get("title") or alan,
+                                         "say": 0})
+            s["say"] += 1
+    except Exception as e:
+        print(f"   (Google Haberler araması yapılamadı: {e})")
+
+    slug = _slug(ad)
+    bulunan: list[dict] = []
+    engelli: list[dict] = []
+    # 1) kişisel site: alan adında kişinin adı geçiyorsa (ör. farukbildirici.com)
+    for s in alanlar.values():
+        if slug.replace("-", "") in s["alan"].replace("-", "").replace(".", ""):
+            try:
+                rss = rss_kesfet(ist, s["kok"] + "/")
+                bulunan.append({"tur": "rss", "url": rss, "kesfet": s["kok"] + "/", "etiket": s["alan"],
+                                "otomatik": True})
+            except Exception:
+                pass
+    # 2) haber siteleri: yazar sayfasını tahmin et ya da yazarlar listesinden bul
+    for s in sorted(alanlar.values(), key=lambda x: -x["say"])[:6]:
+        if len([b for b in bulunan if b["tur"] == "sayfa"]) >= 2:
+            break
+        if any(_alan_adi(b.get("url") or b.get("kesfet")) == s["alan"] for b in bulunan):
+            continue
+        kok = s["kok"] if s["kok"].startswith("http") else "https://" + s["alan"]
+        bulundu, kodlar = None, []
+        for yol in YAZAR_YOLLARI:
+            aday = kok + yol.format(s=slug)
+            gecerli, kod = _yazar_sayfasi_mi(ist, aday, ad)
+            kodlar.append(kod)
+            if gecerli:
+                bulundu = aday
+                break
+            if kod in ("403", "429", "503"):
+                break
+        if not bulundu and not any(k in ("403", "429", "503") for k in kodlar):
+            for dizin in YAZAR_DIZINLERI:
+                try:
+                    aday = yazar_sayfasini_bul(ist, kok + dizin, ad, {})
+                except Exception:
+                    continue
+                if _yazar_sayfasi_mi(ist, aday, ad)[0]:
+                    bulundu = aday
+                    break
+        if bulundu:
+            bulunan.append({"tur": "sayfa", "url": bulundu, "etiket": s["ad"], "dogrula": True, "otomatik": True})
+        elif any(k in ("403", "429", "503") for k in kodlar) and s["say"] >= 3:
+            engelli.append({"tur": "google_haber", "site": s["alan"], "etiket": s["ad"], "otomatik": True})
+    # site doğrudan açılmıyorsa ve başka yer bulunamadıysa: Google Haberler üzerinden izle
+    if not any(b["tur"] in ("sayfa", "rss") for b in bulunan):
+        bulunan.extend(engelli[:1])
+    # 3) YouTube kanalı
+    yt = _youtube_kanali_bul(ist, ad)
+    if yt:
+        bulunan.append(yt)
+
+    if bulunan:
+        aciklama = ", ".join(b["etiket"] for b in bulunan)
+    elif alanlar:
+        aciklama = ("Adı haberlerde geçiyor (" + ", ".join(list(alanlar)[:3]) +
+                    ") ama köşe sayfası bulunamadı; adresi elle ekle")
+    else:
+        aciklama = "Son 2 ayda haberlerde adı geçmiyor; adresi elle ekle"
+    return bulunan, aciklama
+
+
+def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
+    """kaynaklar_uygulama.json'daki 'aranacaklar' listesini işler. Bildirim mesajları döner."""
+    yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
+    if not yol.exists():
+        return []
+    try:
+        uyg = json.loads(yol.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return []
+    aranacaklar = [a for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict) and bosluk(a.get("ad"))]
+    if not aranacaklar:
+        return []
+    uyg.setdefault("yazarlar", [])
+    kesif = uyg.setdefault("kesif", {})
+    mesajlar = []
+    for a in aranacaklar[:5]:  # bir çalışmada en fazla 5 kişi
+        ad = bosluk(a["ad"])
+        print(f"🔍 {ad} için kaynak aranıyor…")
+        kaynaklar, aciklama = yazar_kesfet(ist, ad)
+        if kaynaklar:
+            y = next((x for x in uyg["yazarlar"] if x.get("ad") == ad), None)
+            if not y:
+                y = {"ad": ad, "kaynaklar": []}
+                uyg["yazarlar"].append(y)
+            y.setdefault("kaynaklar", []).extend(kaynaklar)
+            uyg["kapali_yazarlar"] = [x for x in _liste(uyg.get("kapali_yazarlar")) if x != ad]
+            kesif[ad] = {"durum": "bulundu", "zaman": iso(simdi()), "aciklama": aciklama}
+            mesajlar.append(f"{ad} eklendi: {aciklama}")
+        else:
+            kesif[ad] = {"durum": "bulunamadi", "zaman": iso(simdi()), "aciklama": aciklama}
+            mesajlar.append(f"{ad}: {aciklama}")
+        print(f"   → {aciklama}")
+    islenen = {bosluk(a["ad"]) for a in aranacaklar[:5]}
+    uyg["aranacaklar"] = [a for a in aranacaklar if bosluk(a["ad"]) not in islenen]
+    yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return mesajlar
+
+
 OKUYUCULAR = {
+    "google_haber": google_haber_kaynak_oku,
     "sayfa": sayfa_oku,
     "rss": rss_oku,
     "youtube": youtube_oku,
@@ -532,7 +706,7 @@ UYGULAMA_DOSYASI = "kaynaklar_uygulama.json"
 def kaynak_anahtari(ad: str, k: dict) -> str:
     tur = k.get("tur", "sayfa")
     return kimlik(ad, tur, str(k.get("url") or k.get("kanal") or k.get("kullanici")
-                               or k.get("yazar_dizini") or k.get("rss_url")))
+                               or k.get("yazar_dizini") or k.get("rss_url") or k.get("site")))
 
 
 def ayar_oku(yol: Path) -> dict:
@@ -580,6 +754,8 @@ def ayar_oku(yol: Path) -> dict:
             if kaynak_anahtari(y["ad"], k) in kapali:
                 k["aktif"] = False
                 k["_uygulamada_kapali"] = True
+    ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
+                         "kesif": uyg.get("kesif") or {}}
     if (uyg.get("bildirim") or {}).get("ntfy_konu"):
         ayar["ayarlar"].setdefault("bildirim", {})
         ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"]["bildirim"] or {},
@@ -620,11 +796,15 @@ def kaynaklari_listele(ayar: dict):
 def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool = False) -> int:
     ayar = ayar_oku(ayar_yolu)
     a = ayar["ayarlar"]
+    ist = Istemci(bekleme=float(a.get("istekler_arasi_bekleme", 0.7)))
+    kesif_mesajlari = [] if sadece_kontrol else kesif_calistir(ist, ayar_yolu)
+    if kesif_mesajlari:
+        ayar = ayar_oku(ayar_yolu)  # yeni bulunan kaynaklarla yeniden oku
+        a = ayar["ayarlar"]
     veri_dir = KOK / a.get("veri_klasoru", "veri")
     cikti_dir = KOK / a.get("cikti_klasoru", "docs")
     durum_yolu = veri_dir / "durum.json"
     durum = durum_oku(durum_yolu)
-    ist = Istemci(bekleme=float(a.get("istekler_arasi_bekleme", 0.7)))
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
     ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 40))
     baslangic = simdi()
@@ -735,6 +915,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
           f"Sayfa: {cikti_dir / 'index.html'}")
     if gercek_yeni:
         bildirim_gonder(ist, a, gercek_yeni)
+    if kesif_mesajlari:
+        bildirim_gonder(ist, a, [], baslik="Yeni takip: arama sonucu", satirlar=kesif_mesajlari)
     if denetim_mesajlari:
         print("\nAdres denetimi:")
         for m in denetim_mesajlari:
@@ -822,7 +1004,7 @@ def adres_denetimi(ist: Istemci, ayar: dict, durum: dict, zorla: bool = False) -
         yd = yd_hepsi.setdefault(ad, {})
         yd.setdefault("izlemeye_baslama", iso(simdi()))
         kaynaklar = [kd for kd in durum["kaynaklar"].values() if kd.get("yazar") == ad]
-        yazi_var = any(kd.get("tur") in ("sayfa", "rss") for kd in kaynaklar)
+        yazi_var = any(kd.get("tur") in ("sayfa", "rss", "google_haber") for kd in kaynaklar)
         son = iso_oku(yd.get("son_yazi")) if yazi_var else iso_oku(yd.get("son_yazi") or yd.get("son_diger"))
         referans = son or iso_oku(yd["izlemeye_baslama"])
         gun = max(0, (simdi() - referans).days)
@@ -880,6 +1062,8 @@ def _etiket_tahmin(k: dict, tur: str) -> str:
         return "Ekşi Sözlük"
     if tur == "instagram":
         return "Instagram"
+    if tur == "google_haber":
+        return (k.get("site") or "") + " (Google Haberler)"
     adres = k.get("url") or k.get("yazar_dizini") or ""
     host = urlparse(adres).netloc.replace("www.", "")
     return host.split(".")[0].capitalize() if host else tur
@@ -962,13 +1146,15 @@ def _yazar_listesi(ayar: dict, durum: dict) -> list[dict]:
                 "anahtar": anahtar, "tur": tur,
                 "etiket": k.get("etiket") or _etiket_tahmin(k, tur),
                 "adres": k.get("url") or k.get("kanal") or k.get("kullanici") or k.get("rss_url")
-                or k.get("yazar_dizini"),
+                or k.get("yazar_dizini") or k.get("site"),
+                "otomatik": bool(k.get("otomatik")),
                 "kok": k.get("_kok", "yaml"),
                 "kapali": k.get("aktif") is False,
                 "durum": kd.get("durum") or ("bekliyor" if k.get("aktif") is not False else None),
                 "son_hata": kd.get("son_hata"),
                 "son_basari": kd.get("son_basari"),
-                "not_": kd.get("not_"),
+                "not_": kd.get("not_") or ("Site doğrudan okunamıyor; Google Haberler üzerinden takip ediliyor"
+                                           if tur == "google_haber" else None),
             })
         sonuc.append({"ad": y["ad"], "kok": y.get("_kok", "yaml"), "kapali": y.get("aktif") is False,
                       "kaynaklar": kayitlar})
@@ -992,6 +1178,8 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "depo": os.environ.get("GITHUB_REPOSITORY") or a.get("github_depo") or "",
         "ntfy_konu": (a.get("bildirim") or {}).get("ntfy_konu") or "",
         "yazar_listesi": _yazar_listesi(ayar, durum),
+        "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
+        "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",

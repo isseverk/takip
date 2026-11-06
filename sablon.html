@@ -161,6 +161,13 @@ dialog.levha h2{font:600 20px var(--serif);margin:2px 0 4px}
 .secenek-listesi button:active{background:var(--ince)}
 .secenek-listesi button.tehlike{color:var(--hata)}
 
+.mod-sec{display:grid;grid-template-columns:1fr 1fr;background:var(--ince);border-radius:12px;padding:3px;margin:8px 0 4px}
+.mod-sec button{border:0;background:none;border-radius:9px;padding:8px;font-size:14.5px;cursor:pointer;color:var(--soluk)}
+.mod-sec button[aria-pressed=true]{background:var(--kart);color:var(--metin);font-weight:600;box-shadow:var(--golge)}
+.oto{font-size:11px;font-weight:600;color:var(--soluk);border:1px solid var(--cizgi);border-radius:6px;padding:0 5px;margin-left:4px}
+.aranan{display:flex;gap:10px;align-items:center;padding:12px 14px;font-size:14.5px}
+.aranan .yazi{flex:1;min-width:0}
+.aranan small{display:block;color:var(--soluk);font-size:12.5px}
 .tost{position:fixed;left:50%;bottom:calc(var(--alt-bar) + 14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;
   background:var(--metin);color:var(--zemin);padding:10px 16px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);
   box-shadow:0 6px 20px rgba(0,0,0,.18)}
@@ -295,6 +302,16 @@ footer a{color:var(--soluk)}
   <form method="dialog" id="ekleForm">
     <div class="levha-tutamak"></div>
     <h2 id="ekleBaslik">Kaynak ekle</h2>
+    <div class="mod-sec" id="modSec" role="group">
+      <button type="button" data-mod="isim" aria-pressed="true">İsimle bul</button>
+      <button type="button" data-mod="adres" aria-pressed="false">Adresi biliyorum</button>
+    </div>
+    <div id="isimBlok">
+      <label class="alan"><span>Yazarın / kişinin adı</span>
+        <input id="fIsim" autocomplete="off" placeholder="ör. Nevşin Mengü"></label>
+      <p style="font-size:13.5px;color:var(--soluk);margin:6px 0 0">Program bu kişinin nerede yazdığını araştırır: haber sitelerindeki köşe sayfası, kişisel blogu ve YouTube kanalı. Bulduklarını birkaç dakika içinde ekler; yanlış bulduğu olursa ⋯ ile kaldırabilirsin.</p>
+    </div>
+    <div id="adresBlok">
     <label class="alan"><span>Adres</span>
       <input id="fAdres" required autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url"
              placeholder="https://… ya da @kullanici">
@@ -315,6 +332,7 @@ footer a{color:var(--soluk)}
       </select></label>
     <label class="onay" id="fDogrulaSatir"><input type="checkbox" id="fDogrula" checked>
       <span>Yalnızca bu kişinin imzasını taşıyan yazıları al <br><small style="color:var(--soluk)">Sayfada başka yazarların yazıları da görünüyorsa açık kalsın.</small></span></label>
+    </div>
     <div class="durum-yazi kotu" id="fHata"></div>
     <div class="levha-alt">
       <button class="dugme" value="iptal" formnovalidate>Vazgeç</button>
@@ -346,7 +364,7 @@ footer a{color:var(--soluk)}
     sil(k){ try{ localStorage.removeItem(k); }catch(e){} }
   };
   const TUR = {yazi:"Yazı", video:"Video", eksi:"Ekşi", instagram:"Instagram"};
-  const KAYNAK_TUR = {sayfa:"Köşe", youtube:"YouTube", rss:"Blog/RSS", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
+  const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", rss:"Blog/RSS", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
   const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const GUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
   const HTTP = location.protocol.startsWith("http");
@@ -618,7 +636,7 @@ footer a{color:var(--soluk)}
     throw new Error("Kaydedilemedi, birkaç saniye sonra tekrar dene.");
   }
   async function kaynakAnahtari(ad, k){
-    const adres = String(k.url || k.kanal || k.kullanici || k.yazar_dizini || k.rss_url || "None");
+    const adres = String(k.url || k.kanal || k.kullanici || k.yazar_dizini || k.rss_url || k.site || "None");
     const b = await crypto.subtle.digest("SHA-1", new TextEncoder().encode([ad, k.tur || "sayfa", adres].join("|")));
     return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("").slice(0,12);
   }
@@ -646,6 +664,25 @@ footer a{color:var(--soluk)}
     }
     const q = sade(durum.kaynakAra.trim());
     const liste = $("kaynakListe"); liste.replaceChildren();
+    // isimle aranan kişiler
+    const kesif = V.kesif || {};
+    const yerel = depo.al("aranan_yerel", []).filter(x => x && x.ad && Date.now() - x.zaman < 6*3600e3 &&
+      !(kesif[x.ad] && new Date(kesif[x.ad].zaman).getTime() > x.zaman));
+    depo.yaz("aranan_yerel", yerel);
+    const aranan = [...new Set([...(V.aranacaklar||[]), ...yerel.map(x => x.ad)])];
+    const bulunamayan = Object.entries(kesif).filter(([ad, k]) => k.durum === "bulunamadi" && !(V.yazar_listesi||[]).some(y => y.ad === ad) && !aranan.includes(ad));
+    if (aranan.length || bulunamayan.length){
+      const kart = el("div",{class:"kart", style:"margin-top:12px"});
+      for (const ad of aranan) kart.append(el("div",{class:"aranan"}, el("span",{text:"🔍"}),
+        el("div",{class:"yazi"}, el("b",{text:ad}), el("small",{text:"Kaynakları aranıyor — birkaç dakika sürer, sonra yenile"}))));
+      for (const [ad, k] of bulunamayan) kart.append(el("div",{class:"aranan"}, el("span",{class:"ikon-uyari", text:"!"}),
+        el("div",{class:"yazi"}, el("b",{text:ad}), el("small",{text:k.aciklama})),
+        el("button",{class:"menu-dugme", type:"button", "aria-label":"Seçenekler", text:"⋯", onclick: () => menuAc(ad, [
+          {yazi:"Adresi elle ekle", fn: () => ekleAc({ad, mod:"adres"})},
+          {yazi:"Tekrar ara", fn: () => islem(i => { i.aranacaklar = (i.aranacaklar||[]).concat([{ad, zaman:new Date().toISOString()}]); if (i.kesif) delete i.kesif[ad]; }, `${ad} yeniden aranıyor`, `${ad} yeniden aranıyor`)},
+          {yazi:"Listeden kaldır", tehlike:true, fn: () => islem(i => { if (i.kesif) delete i.kesif[ad]; }, "Kaldırıldı", `${ad} listeden kaldırıldı`)}])})));
+      liste.append(kart);
+    }
     const yazarlar = (V.yazar_listesi || []).filter(y => !q || sade(y.ad).includes(q));
     const aktif = yazarlar.filter(y => !y.kapali), kapali = yazarlar.filter(y => y.kapali);
     const denetim = Object.fromEntries((V.denetim||[]).map(d => [d.ad, d]));
@@ -663,7 +700,7 @@ footer a{color:var(--soluk)}
         const sinif = k.kapali ? "" : k.durum === "hata" ? "ikon-hata" : (k.durum === "uyari" || k.durum === "bekliyor") ? "ikon-uyari" : "ikon-tamam";
         const satir = el("div",{class:"kaynak-satir" + (k.kapali ? " kapali" : "")},
           el("span",{class:sinif, text:ikon}),
-          el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || ""),
+          el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || "", k.otomatik ? el("span",{class:"oto", text:"otomatik bulundu"}) : null),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
           el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
@@ -717,7 +754,7 @@ footer a{color:var(--soluk)}
       i.yazarlar = i.yazarlar.filter(a => (a.kaynaklar||[]).length);
     } else if (!i.kapali.includes(k.anahtar)) i.kapali.push(k.anahtar);
   }
-  function ayniKaynak(x, k){ return (x.url || x.kanal || x.kullanici || x.rss_url) === k.adres && (x.tur || "sayfa") === k.tur; }
+  function ayniKaynak(x, k){ return (x.url || x.kanal || x.kullanici || x.rss_url || x.site) === k.adres && (x.tur || "sayfa") === k.tur; }
   async function islem(fn, tostMetni, bekleyenMetni){
     tost("Kaydediliyor…", 15000);
     try { await uygDosyaDegistir(fn, bekleyenMetni); bekleyenEkle(bekleyenMetni); tost(tostMetni + " — birkaç dakika içinde yansır"); kaynaklarCiz(); }
@@ -752,9 +789,19 @@ footer a{color:var(--soluk)}
     return {tur:"sayfa", url: u.href, adres: u.href};
   }
   let form = {};
+  function modAyarla(mod){
+    form.mod = mod;
+    document.querySelectorAll("#modSec button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mod === mod)));
+    $("isimBlok").hidden = mod !== "isim"; $("adresBlok").hidden = mod !== "adres";
+    $("fAdres").required = $("fAd").required = mod === "adres";
+    $("fKaydet").textContent = form.eski ? "Değiştir" : mod === "isim" ? "Bul ve ekle" : "Ekle";
+  }
+  document.querySelectorAll("#modSec button").forEach(b => b.addEventListener("click", () => { modAyarla(b.dataset.mod); (b.dataset.mod === "isim" ? $("fIsim") : $("fAdres")).focus(); }));
   function ekleAc(on){
     on = on || {};
     form = {eski: on.eski || null};
+    $("modSec").hidden = !!on.eski;
+    $("fIsim").value = "";
     $("ekleBaslik").textContent = on.baslik || "Kaynak ekle";
     $("fKaydet").textContent = on.eski ? "Değiştir" : "Ekle";
     $("fAd").value = on.ad || ""; $("fAd").readOnly = !!on.eski;
@@ -763,8 +810,9 @@ footer a{color:var(--soluk)}
     $("fHata").textContent = "";
     const dl = $("yazarOneri"); dl.replaceChildren(...(V.yazar_listesi||[]).map(y => el("option",{value:y.ad})));
     formAlgila(false);
+    modAyarla(on.mod || (on.adres || on.eski || on.ad ? "adres" : "isim"));
     $("ekleLevha").showModal();
-    setTimeout(() => (on.adres ? $("fAd") : $("fAdres")).focus(), 80);
+    setTimeout(() => (form.mod === "isim" ? $("fIsim") : on.adres ? $("fAd") : $("fAdres")).focus(), 80);
   }
   function formAlgila(turuDegistir = true){
     const a = algila($("fAdres").value);
@@ -783,6 +831,24 @@ footer a{color:var(--soluk)}
   $("ekleForm").addEventListener("submit", async e => {
     if (e.submitter && e.submitter.value === "iptal") return;
     e.preventDefault();
+    if (form.mod === "isim"){
+      const isim = $("fIsim").value.trim().replace(/\s+/g," ");
+      if (isim.length < 3){ $("fHata").textContent = "Adı yaz."; return; }
+      if (!GH.bagli()){ $("fHata").textContent = "Önce Ayarlar'dan GitHub bağlantısını kur."; return; }
+      $("fKaydet").disabled = true;
+      try {
+        await uygDosyaDegistir(i => {
+          i.aranacaklar = (Array.isArray(i.aranacaklar) ? i.aranacaklar : []).filter(x => x.ad !== isim);
+          i.aranacaklar.push({ad: isim, zaman: new Date().toISOString()});
+          if (i.kesif) delete i.kesif[isim];
+          i.kapali_yazarlar = i.kapali_yazarlar.filter(x => x !== isim);
+        }, `${isim} aranıyor`);
+        depo.yaz("aranan_yerel", depo.al("aranan_yerel", []).filter(x => x && x.ad !== isim).concat([{ad: isim, zaman: Date.now()}]));
+        $("ekleLevha").close(); tost(`${isim} aranıyor — birkaç dakika içinde sonuç gelecek`, 4500); sekmeAc("kaynaklar");
+      } catch(err){ $("fHata").textContent = err.message; }
+      finally { $("fKaydet").disabled = false; }
+      return;
+    }
     const ad = $("fAd").value.trim().replace(/\s+/g," "), tur = $("fTur").value, a = algila($("fAdres").value) || {};
     if (!ad || !$("fAdres").value.trim()) { $("fHata").textContent = "Adres ve ad gerekli."; return; }
     const k = {tur};
