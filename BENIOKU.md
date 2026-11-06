@@ -1,0 +1,111 @@
+# Takip Akışı
+
+Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
+
+Uygulamanın üç ekranı var:
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir.
+- **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
+- **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
+
+---
+
+## Kurulum — bir kere yapılır, yaklaşık 15 dakika
+
+Kontrolleri GitHub'ın sunucuları yarım saatte bir yapar, bilgisayarının açık olması gerekmez. Adımları **bilgisayardan** yapmak daha kolay. Son iki adım telefonda.
+
+**A. Hesap ve depo (bilgisayarda)**
+1. **github.com** adresinde ücretsiz bir hesap aç (**Sign up**). E-postana gelen kodla hesabı doğrula.
+2. Sağ üstteki **+** menüsünden **New repository** seç.
+   - **Repository name:** `takip`
+   - **Public** seç. Ücretsiz sayfa yayını için gerekiyor. Depoda yalnızca zaten herkese açık yazıların bağlantıları ve takip listen bulunur.
+   - **Create repository**'ye bas.
+3. Açılan sayfada **uploading an existing file** bağlantısına tıkla. Zip'ten çıkardığın `takip` klasörünün **içindeki her şeyi** seç, sürükleyip bırak, sonra **Commit changes**'e bas. `.github` klasörünün de yüklendiğinden emin ol; otomatik çalışma onun içinde.
+
+**B. İki ayar (bilgisayarda)**
+4. Deponun **Settings** sekmesinden **Actions → General** sayfasına git. En alttaki **Workflow permissions** bölümünde **Read and write permissions**'ı seç, **Save**'e bas.
+5. **Settings → Pages** sayfasına git. **Source** olarak **GitHub Actions** seç.
+
+**C. İlk çalıştırma (bilgisayarda)**
+6. **Actions** sekmesine git. Bir uyarı çıkarsa yeşil düğmeye basıp iş akışlarını etkinleştir. Soldan **Takip akışını güncelle**'yi seç, sağdaki **Run workflow → Run workflow**'a bas. 2–4 dakika sürer.
+7. Bitince (yeşil ✓) uygulamanın adresi şu olur: `https://KULLANICIADIN.github.io/takip/`. Adres, çalışmanın özet sayfasında da yazar.
+
+**D. Telefona kur (Android)**
+8. Bu adresi telefonda **Chrome** ile aç. Altta "Takip'i yükle" önerisi çıkar. Çıkmazsa ⋮ menüsünden **Uygulamayı yükle** seç. Ana ekrana Takip simgesi gelir.
+9. Uygulamada **Ayarlar → GitHub bağlantısı** bölümüne git. "Anahtar nasıl alınır?" adımlarını izleyip anahtarı yapıştır ve **Kaydet ve dene**'ye bas. Bu adım telefondan ekleme ve çıkarma yapabilmen için gerekli.
+10. İstersen **Ayarlar → Bildirimler** bölümünden **Bildirimleri aç**'a bas. Ücretsiz ntfy uygulamasıyla yeni yazılar telefonuna bildirim olarak gelir.
+
+Bundan sonra akış her yarım saatte bir kendiliğinden güncellenir. GitHub zamanlanmış işleri bazen birkaç dakika geciktirebilir.
+
+> GitHub, depoda 60 gün boyunca hiç değişiklik olmazsa zamanlanmış işleri durdurabilir. Program her güncellemede depoya yazdığı için bu normalde olmaz. Olursa GitHub e-posta atar; Actions sekmesinden tek tıkla yeniden açılır.
+
+## İsteğe bağlı — Kendi Windows bilgisayarında da çalıştırmak
+
+1. **python.org** adresinden Python'u kur. Kurarken **"Add python.exe to PATH"** kutusunu işaretle.
+2. Bu klasördeki **`calistir.bat`** dosyasına çift tıkla. İlk seferde gerekli parçaları kurar, kaynakları kontrol eder ve akış sayfasını açar.
+3. Otomatik çalışsın istersen **`zamanlayici_kur.bat`** dosyasına çift tıkla. Bilgisayar açıkken her 30 dakikada bir arka planda, pencere açmadan çalışır. Sayfayı görmek için `docs\index.html` dosyasını aç.
+
+Bu yol yalnızca bilgisayarda bakmak içindir; telefondaki uygulama GitHub'daki sürümü gösterir.
+
+---
+
+## Yazar / kaynak eklemek ve çıkarmak
+
+**Telefondan (en kolayı):** Uygulamada **Kaynaklar → + Ekle**'ye bas ve adresi yapıştır. Türü (köşe sayfası, YouTube, blog, Ekşi, Instagram) uygulama kendisi tanır. Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
+- **Kısayol:** YouTube uygulamasında bir kanalı, ya da Chrome'da bir yazarın sayfasını açıp **Paylaş → Takip** de. Form adres dolu olarak açılır.
+- **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
+- **Adresi değişen yazar:** **⋯ → Adresini değiştir** seç.
+
+Değişiklik birkaç dakika içinde akışa yansır. Telefondan yapılanlar `kaynaklar_uygulama.json` dosyasında tutulur.
+
+**Bilgisayardan (gelişmiş):** `kaynaklar.yaml` dosyasını da düzenleyebilirsin. GitHub'da dosyaya tıklayıp ✏️ simgesine bas ve mevcut örneklerden birini kopyala:
+
+```yaml
+  - ad: Yeni Yazar
+    kaynaklar:
+      - tur: sayfa
+        url: https://www.gazete.com/yazarlar/yeni-yazar
+        dogrula: true
+```
+
+**Instagram**, giriş yapmadan otomatik okumayı çoğu zaman engeller. Kalıcı çözüm için **rss.app** gibi bir servisten hesabın RSS adresini alıp telefondan **Blog / RSS** türüyle ekle.
+
+## Bildirimler
+
+Uygulamada **Ayarlar → Bildirimler → Bildirimleri aç**'a bas. Ücretsiz **ntfy** uygulamasını kurman ve çıkan **ntfy'de abone ol** düğmesine dokunman yeterli.
+
+## Adres denetimi — yazarlar hâlâ aynı yerde mi?
+
+Gazeteciler yer değiştirdiğinde eski sayfaları açılmaya devam eder. Bu yüzden program her çalışmada ayrıca şunlara bakar:
+
+- **Sessizlik:** Bir yazardan 10 gündür yeni yazı gelmediyse uyarır. Haftada bir yazanlar için bu süre 16 gün; `kaynaklar.yaml` içinde yazara özel `sessizlik_gun:` ile değiştirilebilir.
+- **Erişim:** Yazarın sayfası 6 saattir açılmıyorsa, ya da açılıp hiç yazı vermiyorsa uyarır.
+- **Haber taraması:** Haftada bir Google Haberler'de yazarın adını tarar. Son 30 günde hangi sitelerde "X yazdı" şeklinde imzalı yazısı göründüğünü kaydeder. Sessiz kalan yazarlar 2–3 günde bir taranır.
+
+Yazar sessizken imzalı yazıları başka bir sitede görünüyorsa, sayfanın en üstünde şöyle bir uyarı çıkar: **"⚠ Can Ataklı: 20 gündür yeni yazı gelmedi; imzalı yazıları X sitesinde görünüyor — adresini değiştirmen gerekebilir"**. Yanında örnek yazının bağlantısı da olur. Telefon bildirimini açtıysan aynı uyarı telefonuna da gelir. Her sorun bir kez bildirilir, tekrar tekrar gelmez.
+
+Program adresi kendiliğinden değiştirmez. Haberlerde adı geçmek her zaman o sitede yazdığı anlamına gelmediği için son karar sende. Değişiklik gerekiyorsa uyarıdaki **Düzelt** düğmesine bas, ardından **⋯ → Adresini değiştir** seç.
+
+Tüm yazarların durumu sayfanın altındaki **"Yazar adres denetimi"** bölümünde görünür: son yazı tarihi, haberlerde göründüğü siteler ve son tarama zamanı. Taramayı hemen yaptırmak için bilgisayarında `python takip.py --denetle` komutunu çalıştırabilirsin.
+
+## Bir kaynak çalışmıyorsa
+
+Akış sayfasının en altındaki **"Kaynakların durumu"** bölümüne bak:
+
+- ✗ işareti, sitenin açılamadığını ya da engellediğini gösterir.
+- ! işareti, sayfanın açıldığını ama yazı bulunamadığını gösterir. Bu durumda site tasarımı ya da adresi değişmiş olabilir.
+
+Bilgisayarında `python takip.py --kontrol` komutunu çalıştırırsan her kaynağın kaç öğe bulduğunu ve ilk birkaç başlığı listeler. Bu komut hiçbir şey kaydetmez.
+
+## Dosyalar
+
+| Dosya | Ne işe yarar |
+|---|---|
+| `takip.py` | Programın kendisi |
+| `kaynaklar.yaml` | Takip listesi ve ayarlar |
+| `kaynaklar_uygulama.json` | Telefondan yapılan ekleme/çıkarmalar (uygulama yazar, elle düzenlemen gerekmez) |
+| `uygulama/` | Telefon uygulamasının simgeleri ve çevrimdışı çalışma dosyaları |
+| `sablon.html` | Uygulamanın ekranları |
+| `veri/durum.json` | Daha önce görülen yazıların kaydı. Silersen her şey "ilk çalıştırma" sayılır. |
+| `docs/` | Üretilen akış sayfası ve RSS |
+| `.github/workflows/takip.yml` | Bulutta yarım saatlik otomatik çalışma |
+| `calistir.bat`, `zamanlayici_kur.bat` | Windows'ta çalıştırma ve otomatik zamanlama |

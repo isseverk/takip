@@ -1,0 +1,189 @@
+# ─────────────────────────────────────────────────────────────
+#  TAKİP AKIŞI — AYAR DOSYASI
+#  Yazar eklemek/çıkarmak için yalnızca bu dosyayı düzenlemen yeterli.
+#  Bir kaynağı geçici kapatmak için altına  aktif: false  yaz.
+#  Satır başlarındaki boşluklar önemlidir (sekme değil, boşluk kullan).
+# ─────────────────────────────────────────────────────────────
+
+ayarlar:
+  site_basligi: "Takip Akışım"
+  # GitHub Pages adresin (kurulumdan sonra doldur; bildirimlerdeki bağlantı buraya gider)
+  site_adresi: ""
+  # Bir kaynak ilk kez eklendiğinde akışa konacak en son yazı sayısı
+  ilk_calistirmada_goster: 3
+  # Akışta kaç günlük içerik tutulsun
+  akista_tutulacak_gun: 45
+  # Telefona anlık bildirim (isteğe bağlı): ntfy uygulamasını kur, kimsenin tahmin
+  # edemeyeceği bir konu adı uydur (ör. takip-akis-7k2q9x), uygulamada o konuya abone ol
+  # ve aynı adı aşağıya yaz. Boş bırakırsan bildirim gönderilmez.
+  bildirim:
+    ntfy_konu: ""
+  # Yazarlar hâlâ aynı yerde mi yazıyor? Program her çalışmada bunu da denetler.
+  adres_denetimi:
+    # Bu kadar gün yeni yazı gelmezse "sessiz" uyarısı verir.
+    # Haftada bir yazanlar için yazara özel  sessizlik_gun: 16  gibi bir değer yazabilirsin.
+    sessizlik_gun: 10
+    # Google Haberler'de yazarın son 30 günde hangi sitelerde göründüğünü kaç günde bir tarasın
+    # (sessiz kalan yazarlar bunun üçte biri sıklıkla taranır)
+    tarama_gun: 7
+
+# ─────────────────────────────────────────────────────────────
+#  KAYNAK TÜRLERİ
+#   sayfa       : yazarın "tüm yazıları" sayfası. link_deseni, yazı bağlantılarını
+#                 ayırt eden kalıptır (yazılmazsa program kendisi tahmin eder).
+#                 yazar_dizini + bul: yazar sayfası adresi bilinmiyorsa, sitenin
+#                 yazarlar listesinden isimle bulur.
+#                 dogrula: true → yeni yazının sayfasında yazar adı geçiyor mu bakar.
+#   rss         : RSS/Atom akışı. yazar_filtresi ile sadece o yazarın yazıları alınır.
+#   youtube     : kanal: https://www.youtube.com/@kanaladi  (kısa videolar atlanır)
+#   eksi_yazar  : kullanici: ekşi nick'i  → o yazarın yeni entry'leri
+#   eksi_baslik : url: başlık adresi       → başlığa yazılan yeni entry'ler
+#   instagram   : kullanici: hesap adı. Instagram çoğu zaman engeller; kalıcı çözüm
+#                 için rss_url: (RSS.app vb. servisin verdiği adres) ekle.
+# ─────────────────────────────────────────────────────────────
+
+yazarlar:
+
+  - ad: Fatih Altaylı
+    kaynaklar:
+      - tur: sayfa
+        etiket: fatihaltayli.com.tr
+        url: https://fatihaltayli.com.tr/yazilar/fatih-altayli/kose-yazilari
+        link_deseni: '/yazarlar/fatih-altayli/\d{4}-\d{2}-\d{2}/'
+      - tur: youtube
+        kanal: https://www.youtube.com/fatihaltayli
+
+  - ad: Murat Yetkin
+    kaynaklar:
+      - tur: rss
+        etiket: Yetkin Report
+        url: https://yetkinreport.com/feed/
+        yazar_filtresi: Murat Yetkin
+
+  - ad: Barış Pehlivan
+    kaynaklar:
+      - tur: sayfa
+        etiket: Cumhuriyet
+        url: https://www.cumhuriyet.com.tr/yazarlar/baris-pehlivan
+        link_deseni: '/yazarlar/baris-pehlivan/.+-\d+$'
+
+  - ad: İsmail Saymaz
+    kaynaklar:
+      - tur: sayfa
+        etiket: Sözcü
+        url: https://www.sozcu.com.tr/ismail-saymaz-a36
+        link_deseni: 'sozcu\.com\.tr/[a-z0-9-]+-p\d+$'
+        dogrula: true
+
+  - ad: Mahfi Eğilmez
+    kaynaklar:
+      - tur: rss
+        etiket: Kendime Yazılar
+        url: https://www.mahfiegilmez.com/feeds/posts/default
+        kesfet: https://www.mahfiegilmez.com/
+
+  - ad: Uğur Gürses
+    sessizlik_gun: 16   # haftada bir yazıyor
+    kaynaklar:
+      - tur: sayfa
+        etiket: Oksijen
+        url: https://gazeteoksijen.com/yazarlar/ugur-gurses
+        dogrula: true
+
+  - ad: Soner Yalçın
+    kaynaklar:
+      - tur: sayfa
+        etiket: Nefes
+        url: https://www.nefes.com.tr/yazarlar/soner-yalcin
+        link_deseni: '/yazarlar/soner-yalcin/.+-\d+$'
+
+  - ad: Can Ataklı
+    kaynaklar:
+      - tur: sayfa
+        etiket: Nefes
+        url: https://www.nefes.com.tr/yazarlar/can-atakli
+        link_deseni: '/yazarlar/can-atakli/.+-\d+$'
+
+  - ad: Murat Ağırel
+    kaynaklar:
+      - tur: sayfa
+        etiket: Cumhuriyet
+        url: https://www.cumhuriyet.com.tr/yazarlar/murat-agirel
+        link_deseni: '/yazarlar/murat-agirel/.+-\d+$'
+
+  - ad: Sinan Meydan
+    sessizlik_gun: 16   # haftada bir yazıyor
+    kaynaklar:
+      - tur: sayfa
+        etiket: Cumhuriyet
+        url: https://www.cumhuriyet.com.tr/yazarlar/sinan-meydan
+        link_deseni: '/yazarlar/sinan-meydan/.+-\d+$'
+
+  - ad: Barış Terkoğlu
+    kaynaklar:
+      - tur: sayfa
+        etiket: Cumhuriyet
+        url: https://www.cumhuriyet.com.tr/yazarlar/baris-terkoglu
+        link_deseni: '/yazarlar/baris-terkoglu/.+-\d+$'
+
+  - ad: Timur Soykan
+    kaynaklar:
+      - tur: sayfa
+        etiket: BirGün
+        yazar_dizini: https://www.birgun.net/yazarlar
+        link_deseni: 'birgun\.net/makale/.+-\d+$'
+        dogrula: true
+
+  - ad: Fehim Taştekin
+    sessizlik_gun: 16   # haftada bir yazıyor
+    kaynaklar:
+      - tur: sayfa
+        etiket: Evrensel
+        url: https://www.evrensel.net/yazar/137/fehim-tastekin
+        link_deseni: 'evrensel\.net/yazi/\d+/'
+      - tur: youtube
+        kanal: https://www.youtube.com/@fehim.tastekin
+        kanal_id: UCOWQEzp21AMWY1J-6Gf33CQ
+
+  - ad: Zafer Arapkirli
+    kaynaklar:
+      - tur: sayfa
+        etiket: BirGün
+        yazar_dizini: https://www.birgun.net/yazarlar
+        link_deseni: 'birgun\.net/makale/.+-\d+$'
+        dogrula: true
+
+  - ad: Faruk Bildirici
+    sessizlik_gun: 16   # haftada bir yazıyor
+    kaynaklar:
+      - tur: rss
+        etiket: farukbildirici.com
+        url: https://www.farukbildirici.com/feed/
+        kesfet: https://www.farukbildirici.com/
+      - tur: sayfa
+        etiket: BirGün
+        yazar_dizini: https://www.birgun.net/yazarlar
+        link_deseni: 'birgun\.net/makale/.+-\d+$'
+        dogrula: true
+
+# ─────────────────────────────────────────────────────────────
+#  EKŞİ SÖZLÜK ve INSTAGRAM ÖRNEKLERİ
+#  Kullanmak için aşağıdaki satırların başındaki # işaretlerini kaldır,
+#  kendi nick / başlık / hesap adlarını yaz.
+# ─────────────────────────────────────────────────────────────
+
+#  - ad: Ekşi - takip ettiğim yazar
+#    kaynaklar:
+#      - tur: eksi_yazar
+#        kullanici: ssg
+#
+#  - ad: Ekşi - takip ettiğim başlık
+#    kaynaklar:
+#      - tur: eksi_baslik
+#        url: https://eksisozluk.com/baslik-adi--1234567
+#
+#  - ad: Instagram - bir hesap
+#    kaynaklar:
+#      - tur: instagram
+#        kullanici: hesapadi
+#        # rss_url: https://rss.app/feeds/xxxxxxxx.xml

@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Takip">
+<meta name="theme-color" content="#f6f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16181c" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex, nofollow">
+<title>Takip Akışım</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Takip Akışım" href="akis.xml">
+<style>
+:root{
+  --zemin:#f6f3ee; --kart:#fffdf9; --metin:#1d1b18; --soluk:#6b665e; --cizgi:#e5dfd4; --ince:#efe9df;
+  --vurgu:#b4472f; --vurgu-acik:#f3e2dc; --yeni:#1f7a4d; --yeni-acik:#dff1e7; --uyari:#a86a00; --hata:#b3261e;
+  --golge:0 1px 2px rgba(40,30,20,.06);
+  --serif:"Iowan Old Style","Charter",Georgia,"Noto Serif",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --alt-bar:64px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --zemin:#16181c; --kart:#1e2126; --metin:#ece8e1; --soluk:#9b968e; --cizgi:#2d3138; --ince:#25282e;
+    --vurgu:#e0795e; --vurgu-acik:#3a2621; --yeni:#5cc492; --yeni-acik:#1d3329; --uyari:#e0a83a; --hata:#ef7b72;
+    --golge:none; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--zemin);color:var(--metin);font:16px/1.45 var(--sans);overscroll-behavior-y:contain}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.kap{max-width:760px;margin:0 auto;padding:0 16px}
+main.kap{padding-bottom:calc(var(--alt-bar) + 28px + env(safe-area-inset-bottom))}
+
+/* üst bölüm */
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--zemin) 92%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--cizgi)}
+header .kap{padding-bottom:2px}
+.ust{display:flex;align-items:center;gap:8px;padding:12px 0 10px;padding-top:calc(12px + env(safe-area-inset-top))}
+h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-width:0}
+.durum-satir{font-size:12.5px;color:var(--soluk);margin-top:3px;font-family:var(--sans);font-weight:400}
+.yeni-rozet{display:inline-block;background:var(--yeni-acik);color:var(--yeni);font-weight:600;border-radius:99px;padding:1px 8px;margin-left:6px}
+.ikon-dugme{width:40px;height:40px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);display:grid;place-items:center;cursor:pointer;flex:none}
+.ikon-dugme svg{width:20px;height:20px}
+.ikon-dugme.donuyor svg{animation:don 0.9s linear infinite}
+@keyframes don{to{transform:rotate(360deg)}}
+.dugme{border:1px solid var(--cizgi);background:var(--kart);border-radius:10px;padding:8px 12px;font-size:14.5px;cursor:pointer}
+.dugme.ana{background:var(--vurgu);border-color:var(--vurgu);color:#fff;font-weight:600}
+.dugme.tehlike{color:var(--hata)}
+.dugme:disabled{opacity:.5}
+.dugme:active,.ikon-dugme:active{transform:translateY(1px)}
+.filtreler{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.filtreler::-webkit-scrollbar{display:none}
+.cip{flex:none;border:1px solid var(--cizgi);background:var(--kart);border-radius:99px;padding:5px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.cip[aria-pressed=true]{background:var(--metin);color:var(--zemin);border-color:var(--metin)}
+.cip .say{opacity:.6;margin-left:4px;font-size:12px}
+.arama{width:100%;border:1px solid var(--cizgi);background:var(--kart);border-radius:10px;padding:9px 12px;font-size:15px;margin:0 0 10px;color:var(--metin)}
+
+/* aşağı çekip yenile */
+#cekGosterge{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top));z-index:9;transform:translate(-50%,-60px);
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:99px;padding:6px 14px;font-size:13.5px;color:var(--soluk);
+  box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .15s}
+
+/* akış */
+.gun{font:600 13px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--soluk);margin:22px 2px 8px}
+.liste{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.oge{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;padding:12px 14px;box-shadow:var(--golge);position:relative}
+.oge.okundu{opacity:.55}
+.oge.yeni{border-color:color-mix(in srgb,var(--yeni) 45%,var(--cizgi))}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:13px;color:var(--soluk);margin-bottom:3px}
+.yazar{font-weight:600;color:var(--metin);display:inline-flex;align-items:center;gap:6px}
+.nokta{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.tur{font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 6px;background:var(--vurgu-acik);color:var(--vurgu)}
+.tur.video,.tur.youtube{background:#fde4e4;color:#b42318}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#e3f4d8;color:#3c6b1d}
+.tur.instagram{background:#f6e0f1;color:#9c2f86}.tur.rss{background:#e3ecf8;color:#24569c}
+@media (prefers-color-scheme: dark){.tur.video,.tur.youtube{background:#3b2222;color:#ff9a8f}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#253322;color:#9fd27a}
+  .tur.instagram{background:#38233a;color:#f0a3e0}.tur.rss{background:#1f2a3b;color:#93b8ee}}
+.etiket-yeni{font-size:11px;font-weight:700;color:var(--yeni);letter-spacing:.04em}
+.baslik{display:block;font:600 17.5px/1.32 var(--serif);text-decoration:none;color:var(--metin);margin:2px 0}
+.baslik::after{content:"";position:absolute;inset:0;border-radius:14px}
+.baslik:focus-visible{outline:none}.oge:focus-within{outline:2px solid var(--vurgu);outline-offset:2px}
+.ozet{font-size:14.5px;color:var(--soluk);margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bos{text-align:center;color:var(--soluk);padding:48px 12px}
+.daha{display:block;margin:18px auto 0}
+details.saglik{margin-top:34px;border-top:1px solid var(--cizgi);padding-top:14px}
+details.saglik summary{cursor:pointer;color:var(--soluk);font-size:14px}
+.kaynak-tablo{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+.kaynak-tablo td{padding:7px 4px;border-bottom:1px solid var(--cizgi);vertical-align:top}
+.hata-metni{color:var(--hata);font-size:12.5px;word-break:break-word}
+.ikon-tamam{color:var(--yeni)}.ikon-uyari,.ikon-bekliyor{color:var(--uyari)}.ikon-hata{color:var(--hata)}
+.uyari-kutu{background:color-mix(in srgb,var(--uyari) 12%,var(--kart));border:1px solid color-mix(in srgb,var(--uyari) 40%,var(--cizgi));
+  border-radius:14px;padding:12px 14px;margin:16px 0 0;font-size:14.5px}
+.uyari-kutu summary{cursor:pointer;font-weight:600}
+.uyari-kutu ul{margin:8px 0 0;padding-left:18px}.uyari-kutu li{margin:6px 0}
+.uyari-kutu .dugme{padding:3px 9px;font-size:13px;margin-left:4px}
+.bilgi-kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;padding:12px 14px;margin:16px 0 0;font-size:14.5px;
+  display:flex;gap:10px;align-items:center}
+.bilgi-kutu p{margin:0;flex:1}
+.denetim-satir{display:grid;grid-template-columns:18px 1fr;gap:2px 8px;padding:9px 2px;border-bottom:1px solid var(--cizgi);font-size:13.5px}
+.denetim-satir .alt{grid-column:2;color:var(--soluk);font-size:12.5px}
+
+/* kaynaklar & ayarlar */
+.bolum-baslik{font:600 13px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--soluk);margin:24px 2px 8px}
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;box-shadow:var(--golge);overflow:hidden}
+.kart + .kart{margin-top:8px}
+.kart-ust{display:flex;align-items:center;gap:8px;padding:11px 12px 9px 14px}
+.kart-ust b{flex:1;min-width:0;font-size:16px}
+.kart.kapali{opacity:.6}
+.kaynak-satir{display:grid;grid-template-columns:16px 1fr auto;gap:2px 10px;align-items:center;padding:9px 12px 9px 14px;border-top:1px solid var(--ince);font-size:14px}
+.kaynak-satir .adres{grid-column:2;color:var(--soluk);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kaynak-satir .sag{grid-row:1 / span 2;grid-column:3}
+.kaynak-satir.kapali{opacity:.55}
+.menu-dugme{border:0;background:none;width:36px;height:36px;border-radius:10px;cursor:pointer;color:var(--soluk);font-size:20px;line-height:1}
+.menu-dugme:active{background:var(--ince)}
+.ust-satir{display:flex;gap:8px;align-items:center;margin-top:16px}
+.ust-satir .arama{margin:0;flex:1}
+.ipucu{color:var(--soluk);font-size:13.5px;margin:10px 2px 0}
+.bekleyen{background:var(--yeni-acik);color:var(--metin);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:14px}
+.bekleyen ul{margin:6px 0 0;padding-left:18px}
+.ayar{padding:12px 14px;border-top:1px solid var(--ince)}
+.ayar:first-child{border-top:0}
+.ayar h3{margin:0 0 4px;font-size:15.5px}
+.ayar p{margin:0 0 8px;color:var(--soluk);font-size:14px}
+.ayar .satir{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.alan{display:block;margin:10px 0}
+.alan span{display:block;font-size:13px;color:var(--soluk);margin-bottom:4px}
+.alan input,.alan select{width:100%;border:1px solid var(--cizgi);background:var(--zemin);border-radius:10px;padding:10px 12px;font-size:16px}
+.alan small{display:block;color:var(--soluk);font-size:12.5px;margin-top:4px}
+.onay{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:10px 0}
+.onay input{margin-top:3px;width:18px;height:18px;flex:none}
+.durum-yazi{font-size:13.5px;margin-top:8px}
+.durum-yazi.iyi{color:var(--yeni)}.durum-yazi.kotu{color:var(--hata)}
+ol.adimlar{margin:6px 0 8px;padding-left:20px;font-size:14px;color:var(--soluk)}
+ol.adimlar li{margin:3px 0}
+code{font-size:.92em;background:var(--ince);padding:1px 5px;border-radius:5px}
+
+/* alt gezinme */
+nav.alt{position:fixed;left:0;right:0;bottom:0;z-index:6;background:color-mix(in srgb,var(--kart) 94%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--cizgi);padding-bottom:env(safe-area-inset-bottom)}
+nav.alt .ic{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);height:var(--alt-bar)}
+nav.alt button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;color:var(--soluk);cursor:pointer;position:relative}
+nav.alt button svg{width:22px;height:22px}
+nav.alt button[aria-current=page]{color:var(--vurgu);font-weight:600}
+nav.alt .rozet{position:absolute;top:8px;left:calc(50% + 6px);background:var(--vurgu);color:#fff;border-radius:99px;font-size:10.5px;font-weight:700;padding:0 5px;min-width:16px;line-height:16px;text-align:center}
+
+/* alttan açılan form */
+dialog.levha{border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;max-height:92vh;border-radius:18px 18px 0 0;background:var(--kart);color:var(--metin)}
+dialog.levha::backdrop{background:rgba(0,0,0,.35)}
+dialog.levha form{padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+dialog.levha h2{font:600 20px var(--serif);margin:2px 0 4px}
+.levha-tutamak{width:40px;height:4px;border-radius:2px;background:var(--cizgi);margin:0 auto 10px}
+.algilanan{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--soluk);margin-top:6px;min-height:22px}
+.levha-alt{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.secenek-listesi{display:grid;gap:4px;margin-top:6px}
+.secenek-listesi button{text-align:left;border:0;background:none;padding:12px 6px;border-radius:10px;font-size:16px;cursor:pointer}
+.secenek-listesi button:active{background:var(--ince)}
+.secenek-listesi button.tehlike{color:var(--hata)}
+
+.tost{position:fixed;left:50%;bottom:calc(var(--alt-bar) + 14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;
+  background:var(--metin);color:var(--zemin);padding:10px 16px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);
+  box-shadow:0 6px 20px rgba(0,0,0,.18)}
+footer{color:var(--soluk);font-size:12.5px;margin-top:22px;text-align:center}
+footer a{color:var(--soluk)}
+</style>
+</head>
+<body>
+<div id="cekGosterge">Bırak, yenilensin</div>
+
+<header>
+  <div class="kap">
+    <div class="ust">
+      <h1><span id="baslik">Takip Akışım</span><div class="durum-satir" id="durumSatir"></div></h1>
+      <button class="ikon-dugme" id="yenileBtn" title="Yenile" aria-label="Yenile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+      </button>
+      <button class="ikon-dugme" id="okunduBtn" title="Görünenlerin hepsini okundu say" aria-label="Hepsini okundu say">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.5l4.5 4.5L15 8.5"/><path d="M9.5 15.5L11 17l8.5-8.5"/></svg>
+      </button>
+    </div>
+    <div id="akisUst">
+      <input class="arama" id="arama" type="search" placeholder="Başlıkta veya yazarda ara…" autocomplete="off">
+      <div class="filtreler" id="turFiltre" role="group" aria-label="İçerik türü"></div>
+      <div class="filtreler" id="yazarFiltre" role="group" aria-label="Yazar"></div>
+    </div>
+  </div>
+</header>
+
+<main class="kap">
+  <!-- AKIŞ -->
+  <section id="g-akis">
+    <div id="kurBanner"></div>
+    <div id="denetimUyari"></div>
+    <div id="akis"></div>
+    <button class="dugme daha" id="dahaBtn" hidden>Daha eski içerikleri göster</button>
+    <details class="saglik" id="denetimDetay">
+      <summary id="denetimOzet">Yazar adres denetimi</summary>
+      <div id="denetimListe"></div>
+    </details>
+    <details class="saglik" id="saglik">
+      <summary id="saglikOzet">Kaynakların durumu</summary>
+      <table class="kaynak-tablo" id="kaynakTablo"></table>
+    </details>
+    <footer>RSS: <a href="akis.xml">akis.xml</a></footer>
+  </section>
+
+  <!-- KAYNAKLAR -->
+  <section id="g-kaynaklar" hidden>
+    <div class="ust-satir">
+      <input class="arama" id="kaynakAra" type="search" placeholder="Yazar ara…" autocomplete="off">
+      <button class="dugme ana" id="ekleBtn">+ Ekle</button>
+    </div>
+    <div id="baglantiUyari"></div>
+    <div id="bekleyenKutu"></div>
+    <p class="ipucu">İpucu: YouTube'da bir kanalı ya da Chrome'da bir yazar sayfasını açıp <b>Paylaş → Takip</b> dersen doğrudan buraya eklenir.</p>
+    <div id="kaynakListe"></div>
+  </section>
+
+  <!-- AYARLAR -->
+  <section id="g-ayarlar" hidden>
+    <h2 class="bolum-baslik">Uygulama</h2>
+    <div class="kart">
+      <div class="ayar" id="kurAyar"></div>
+    </div>
+
+    <h2 class="bolum-baslik">GitHub bağlantısı</h2>
+    <div class="kart">
+      <div class="ayar">
+        <p>Telefondan yazar ekleyip çıkarabilmen için uygulamanın GitHub'daki listene yazabilmesi gerekiyor. Bunu bir kez ayarlaman yeterli.</p>
+        <label class="alan"><span>Depo (kullanıcıadı/depo)</span>
+          <input id="ghDepo" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="kullaniciadi/takip"></label>
+        <label class="alan"><span>Erişim anahtarı</span>
+          <input id="ghAnahtar" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_…">
+          <small>Anahtar yalnızca bu telefonda saklanır.</small></label>
+        <details>
+          <summary style="font-size:14px;color:var(--vurgu);cursor:pointer">Anahtar nasıl alınır?</summary>
+          <ol class="adimlar">
+            <li>Telefonda github.com'a giriş yap, sağ üstteki profil resmine dokun → <b>Settings</b>.</li>
+            <li>En altta <b>Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
+            <li>Ad: <code>Takip uygulaması</code>. Süre: en uzununu seç.</li>
+            <li><b>Repository access → Only select repositories →</b> <code>takip</code> deposunu seç.</li>
+            <li><b>Permissions → Repository permissions</b> bölümünde <b>Contents: Read and write</b> seç. "Şimdi kontrol et" düğmesi için <b>Actions: Read and write</b> da seçebilirsin.</li>
+            <li><b>Generate token</b>'a bas, çıkan <code>github_pat_…</code> yazısını kopyalayıp yukarıya yapıştır.</li>
+          </ol>
+        </details>
+        <div class="satir" style="margin-top:10px">
+          <button class="dugme ana" id="ghKaydet">Kaydet ve dene</button>
+          <button class="dugme tehlike" id="ghSil" hidden>Bağlantıyı kaldır</button>
+        </div>
+        <div class="durum-yazi" id="ghDurum"></div>
+      </div>
+    </div>
+
+    <h2 class="bolum-baslik">Bildirimler</h2>
+    <div class="kart"><div class="ayar" id="bildirimAyar"></div></div>
+
+    <h2 class="bolum-baslik">Diğer</h2>
+    <div class="kart">
+      <div class="ayar">
+        <h3>Şimdi kontrol et</h3>
+        <p>Kontroller normalde yarım saatte bir kendiliğinden yapılır. Beklemek istemezsen hemen başlatabilirsin.</p>
+        <button class="dugme" id="simdiBtn">Kontrolü başlat</button>
+        <div class="durum-yazi" id="simdiDurum"></div>
+      </div>
+      <div class="ayar">
+        <h3>Okundu işaretleri</h3>
+        <p>Okundu olarak işaretlediğin yazıların kaydı bu telefonda tutulur.</p>
+        <button class="dugme" id="okunduSifirla">Okundu işaretlerini temizle</button>
+      </div>
+      <div class="ayar" id="hakkinda"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="alt" aria-label="Bölümler">
+  <div class="ic">
+    <button data-sekme="akis" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Akış<span class="rozet" id="akisRozet" hidden></span></button>
+    <button data-sekme="kaynaklar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M18 8v6M15 11h6"/></svg>
+      Kaynaklar<span class="rozet" id="kaynakRozet" hidden></span></button>
+    <button data-sekme="ayarlar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      Ayarlar</button>
+  </div>
+</nav>
+
+<!-- Kaynak ekleme formu -->
+<dialog class="levha" id="ekleLevha">
+  <form method="dialog" id="ekleForm">
+    <div class="levha-tutamak"></div>
+    <h2 id="ekleBaslik">Kaynak ekle</h2>
+    <label class="alan"><span>Adres</span>
+      <input id="fAdres" required autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url"
+             placeholder="https://… ya da @kullanici">
+      <small>Yazarın "tüm yazıları" sayfası, YouTube kanalı, blog, Ekşi yazar sayfası ya da Instagram hesabı.</small></label>
+    <div class="algilanan" id="fAlgilanan"></div>
+    <label class="alan"><span>Kişi / kaynak adı</span>
+      <input id="fAd" required list="yazarOneri" autocomplete="off" placeholder="ör. Nevşin Mengü">
+      <small>Var olan bir yazarın adını seçersen kaynak onun altına eklenir.</small></label>
+    <datalist id="yazarOneri"></datalist>
+    <label class="alan"><span>Tür</span>
+      <select id="fTur">
+        <option value="sayfa">Köşe yazısı sayfası</option>
+        <option value="youtube">YouTube kanalı</option>
+        <option value="rss">Blog / Substack / RSS</option>
+        <option value="eksi_yazar">Ekşi Sözlük yazarı</option>
+        <option value="eksi_baslik">Ekşi Sözlük başlığı</option>
+        <option value="instagram">Instagram hesabı</option>
+      </select></label>
+    <label class="onay" id="fDogrulaSatir"><input type="checkbox" id="fDogrula" checked>
+      <span>Yalnızca bu kişinin imzasını taşıyan yazıları al <br><small style="color:var(--soluk)">Sayfada başka yazarların yazıları da görünüyorsa açık kalsın.</small></span></label>
+    <div class="durum-yazi kotu" id="fHata"></div>
+    <div class="levha-alt">
+      <button class="dugme" value="iptal" formnovalidate>Vazgeç</button>
+      <button class="dugme ana" id="fKaydet" value="kaydet">Ekle</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- İşlem menüsü -->
+<dialog class="levha" id="menuLevha">
+  <form method="dialog">
+    <div class="levha-tutamak"></div>
+    <h2 id="menuBaslik"></h2>
+    <div class="secenek-listesi" id="menuSecenekler"></div>
+  </form>
+</dialog>
+
+<div class="tost" id="tost" hidden></div>
+
+<script id="veri" type="application/json">{"baslik": "Takip Akışım", "olusturma": "2026-11-06T10:46:27+00:00", "yenileme_dk": 30, "depo": "", "ntfy_konu": "", "yazar_listesi": [{"ad": "Fatih Altaylı", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "300fec0cbe54", "tur": "sayfa", "etiket": "fatihaltayli.com.tr", "adres": "https://fatihaltayli.com.tr/yazilar/fatih-altayli/kose-yazilari", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}, {"anahtar": "bd18cc8f160c", "tur": "youtube", "etiket": "YouTube", "adres": "https://www.youtube.com/fatihaltayli", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Murat Yetkin", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "5af2e07f0c27", "tur": "rss", "etiket": "Yetkin Report", "adres": "https://yetkinreport.com/feed/", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Barış Pehlivan", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "75ab720b70db", "tur": "sayfa", "etiket": "Cumhuriyet", "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-pehlivan", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "İsmail Saymaz", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "8bc6d471b726", "tur": "sayfa", "etiket": "Sözcü", "adres": "https://www.sozcu.com.tr/ismail-saymaz-a36", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Mahfi Eğilmez", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "e9003bd7785f", "tur": "rss", "etiket": "Kendime Yazılar", "adres": "https://www.mahfiegilmez.com/feeds/posts/default", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Uğur Gürses", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "83fde5714def", "tur": "sayfa", "etiket": "Oksijen", "adres": "https://gazeteoksijen.com/yazarlar/ugur-gurses", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Soner Yalçın", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "1b71fb56e280", "tur": "sayfa", "etiket": "Nefes", "adres": "https://www.nefes.com.tr/yazarlar/soner-yalcin", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Can Ataklı", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "9a4155f460ae", "tur": "sayfa", "etiket": "Nefes", "adres": "https://www.nefes.com.tr/yazarlar/can-atakli", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Murat Ağırel", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "f983ca78f028", "tur": "sayfa", "etiket": "Cumhuriyet", "adres": "https://www.cumhuriyet.com.tr/yazarlar/murat-agirel", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Sinan Meydan", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "4e1f3296dace", "tur": "sayfa", "etiket": "Cumhuriyet", "adres": "https://www.cumhuriyet.com.tr/yazarlar/sinan-meydan", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Barış Terkoğlu", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "05133581170c", "tur": "sayfa", "etiket": "Cumhuriyet", "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-terkoglu", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Timur Soykan", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "d01176567c10", "tur": "sayfa", "etiket": "BirGün", "adres": "https://www.birgun.net/yazarlar", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Fehim Taştekin", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "bd98a62a803e", "tur": "sayfa", "etiket": "Evrensel", "adres": "https://www.evrensel.net/yazar/137/fehim-tastekin", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}, {"anahtar": "4d43e995a22b", "tur": "youtube", "etiket": "YouTube", "adres": "https://www.youtube.com/@fehim.tastekin", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Zafer Arapkirli", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "298e4857585d", "tur": "sayfa", "etiket": "BirGün", "adres": "https://www.birgun.net/yazarlar", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}, {"ad": "Faruk Bildirici", "kok": "yaml", "kapali": false, "kaynaklar": [{"anahtar": "fc2db4b80ba8", "tur": "rss", "etiket": "farukbildirici.com", "adres": "https://www.farukbildirici.com/feed/", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}, {"anahtar": "d1fb34dc45db", "tur": "sayfa", "etiket": "BirGün", "adres": "https://www.birgun.net/yazarlar", "kok": "yaml", "kapali": false, "durum": "bekliyor", "son_hata": null, "son_basari": null}]}], "yazarlar": ["Fatih Altaylı", "Murat Yetkin", "Barış Pehlivan", "İsmail Saymaz", "Mahfi Eğilmez", "Uğur Gürses", "Soner Yalçın", "Can Ataklı", "Murat Ağırel", "Sinan Meydan", "Barış Terkoğlu", "Timur Soykan", "Fehim Taştekin", "Zafer Arapkirli", "Faruk Bildirici"], "ogeler": [], "kaynaklar": [], "denetim": [{"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Fatih Altaylı"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Murat Yetkin"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Barış Pehlivan"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "İsmail Saymaz"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Mahfi Eğilmez"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Uğur Gürses"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Soner Yalçın"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Can Ataklı"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Murat Ağırel"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Sinan Meydan"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Barış Terkoğlu"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Timur Soykan"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Fehim Taştekin"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Zafer Arapkirli"}, {"durum": null, "aciklama": null, "son_yazi": null, "son_diger": null, "sessiz_gun": null, "esik_gun": null, "son_tarama": null, "haberlerde": null, "oneriler": null, "tarama_hatasi": null, "ad": "Faruk Bildirici"}]}</script>
+<script>
+(function(){
+  "use strict";
+  let V = JSON.parse(document.getElementById("veri").textContent);
+  const $ = id => document.getElementById(id);
+  const depo = {
+    al(k, v){ try{ const x = localStorage.getItem(k); return x === null ? v : JSON.parse(x); }catch(e){ return v; } },
+    yaz(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+    sil(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  };
+  const TUR = {yazi:"Yazı", video:"Video", eksi:"Ekşi", instagram:"Instagram"};
+  const KAYNAK_TUR = {sayfa:"Köşe", youtube:"YouTube", rss:"Blog/RSS", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
+  const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+  const GUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  const HTTP = location.protocol.startsWith("http");
+  const KURULU = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+
+  const oncekiZiyaret = depo.al("son_ziyaret", null);
+  depo.yaz("son_ziyaret", Date.now());
+  let okunanlar = new Set(depo.al("okunanlar", []));
+  const durum = { sekme: "akis", tur: depo.al("f_tur", "hepsi"), yazar: depo.al("f_yazar", "hepsi"), ara: "", limit: 80, kaynakAra: "" };
+  let ogeler = [];
+
+  // ───────── yardımcılar
+  function el(t, o, ...c){ const e = document.createElement(t); if (o) for (const k in o){
+      if (o[k] == null) continue;
+      if (k === "class") e.className = o[k]; else if (k === "text") e.textContent = o[k];
+      else if (k.startsWith("on")) e.addEventListener(k.slice(2), o[k]); else e.setAttribute(k, o[k]); }
+    for (const x of c) if (x != null && x !== false) e.append(x); return e; }
+  const sade = s => (s||"").toLocaleLowerCase("tr-TR");
+  function renk(ad){ let h=0; for (const c of ad) h = (h*31 + c.charCodeAt(0)) % 360; return `hsl(${h} 55% 50%)`; }
+  function saat(d){ return d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}); }
+  function gunEtiketi(d){
+    const bugun = new Date(); bugun.setHours(0,0,0,0);
+    const g = new Date(d); g.setHours(0,0,0,0);
+    const fark = Math.round((bugun - g)/864e5);
+    if (fark === 0) return "Bugün"; if (fark === 1) return "Dün";
+    return `${d.getDate()} ${AY[d.getMonth()]} ${GUN[d.getDay()]}`;
+  }
+  function onceki(d){
+    const dk = Math.round((Date.now() - d)/6e4);
+    if (dk < 1) return "az önce"; if (dk < 60) return dk + " dk önce";
+    const sa = Math.round(dk/60); if (sa < 24) return sa + " saat önce";
+    return Math.round(sa/24) + " gün önce";
+  }
+  let tostZ;
+  function tost(m, sure){ const t = $("tost"); t.textContent = m; t.hidden = false; clearTimeout(tostZ); tostZ = setTimeout(() => t.hidden = true, sure || 3200); }
+  function kisaAdres(a){ return (a||"").replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""); }
+
+  // ───────── veri
+  function veriHazirla(){
+    const zaman = o => { const b = new Date(o.bulunma || 0), t = o.tarih ? new Date(o.tarih) : b;
+      return (t > new Date(b.getTime() + 6*3600e3)) ? b : t; };
+    ogeler = V.ogeler.map(o => Object.assign(o, {_t: zaman(o), _b: new Date(o.bulunma || 0)})).sort((a,b) => b._t - a._t);
+  }
+  const yeniMi = o => !o.ilk && oncekiZiyaret !== null && o._b.getTime() > oncekiZiyaret;
+
+  async function yenile(sessiz){
+    if (!HTTP) { if (!sessiz) location.reload(); return; }
+    const b = $("yenileBtn"); b.classList.add("donuyor");
+    try {
+      const r = await fetch("veri.json?t=" + Date.now(), {cache: "no-store"});
+      if (!r.ok) throw new Error(r.status);
+      const yeni = await r.json();
+      const degisti = yeni.olusturma !== V.olusturma;
+      V = yeni; veriHazirla(); hepsiniCiz();
+      if (!sessiz) tost(degisti ? "Akış güncellendi" : "Akış zaten güncel");
+    } catch (e) {
+      if (!sessiz) tost(navigator.onLine === false ? "İnternet yok — son kaydedilen akış gösteriliyor" : "Yenilenemedi, biraz sonra tekrar dene");
+    } finally { b.classList.remove("donuyor"); }
+  }
+
+  // ───────── AKIŞ
+  function cipler(kap, secenekler, secili, ad){
+    kap.replaceChildren();
+    for (const [deger, yazi, say] of secenekler){
+      const b = el("button", {class:"cip", "aria-pressed": String(deger === secili), type:"button"}, yazi);
+      if (say !== undefined) b.append(el("span",{class:"say", text:String(say)}));
+      b.onclick = () => { durum[ad] = deger; depo.yaz("f_" + ad, deger); durum.limit = 80; akisCiz(); };
+      kap.append(b);
+    }
+  }
+  function filtrele(){
+    const q = sade(durum.ara.trim());
+    return ogeler.filter(o =>
+      (durum.tur === "hepsi" || (o.tur||"yazi") === durum.tur) &&
+      (durum.yazar === "hepsi" || o.yazar === durum.yazar) &&
+      (!q || sade(o.baslik + " " + o.yazar + " " + (o.ozet||"")).includes(q)));
+  }
+  function akisCiz(){
+    const turSay = {}; for (const o of ogeler){ const t = o.tur||"yazi"; turSay[t] = (turSay[t]||0)+1; }
+    const turlar = [["hepsi","Tümü"]].concat(Object.keys(TUR).filter(t => turSay[t]).map(t => [t, TUR[t], turSay[t]]));
+    if (!turlar.some(x => x[0] === durum.tur)) durum.tur = "hepsi";
+    cipler($("turFiltre"), turlar, durum.tur, "tur");
+    const yazarSay = {}; for (const o of ogeler) yazarSay[o.yazar] = (yazarSay[o.yazar]||0)+1;
+    const yazarlar = [["hepsi","Tüm yazarlar"]].concat(V.yazarlar.map(y => [y, y, yazarSay[y]||0]));
+    if (!yazarlar.some(x => x[0] === durum.yazar)) durum.yazar = "hepsi";
+    cipler($("yazarFiltre"), yazarlar, durum.yazar, "yazar");
+
+    const liste = filtrele();
+    const akis = $("akis"); akis.replaceChildren();
+    if (!liste.length){
+      akis.append(el("div",{class:"bos", text: ogeler.length ? "Bu filtreye uyan içerik yok." :
+        "Henüz içerik yok. İlk kontrol tamamlanınca burada görünecek."}));
+    }
+    let sonGun = null, ul = null;
+    for (const o of liste.slice(0, durum.limit)){
+      const g = gunEtiketi(o._t);
+      if (g !== sonGun){ sonGun = g; akis.append(el("h2",{class:"gun", text:g})); ul = el("ul",{class:"liste"}); akis.append(ul); }
+      const tur = o.tur || "yazi";
+      const li = el("li", {class: "oge" + (okunanlar.has(o.id) ? " okundu" : "") + (yeniMi(o) ? " yeni" : "")});
+      const meta = el("div",{class:"meta"},
+        el("span",{class:"yazar"}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar),
+        el("span",{class:"tur " + tur, text: TUR[tur] || tur}),
+        el("span",{text: o.kaynak || ""}),
+        el("span",{text: saat(o._t), title: o._t.toLocaleString("tr-TR")}));
+      if (yeniMi(o)) meta.append(el("span",{class:"etiket-yeni", text:"YENİ"}));
+      const a = el("a",{class:"baslik", href:o.url, target:"_blank", rel:"noopener noreferrer", text:o.baslik});
+      a.addEventListener("click", () => { okunanlar.add(o.id); depo.yaz("okunanlar", [...okunanlar].slice(-3000)); li.classList.add("okundu"); rozetler(); });
+      li.append(meta, a);
+      if (o.ozet && o.ozet !== o.baslik) li.append(el("p",{class:"ozet", text:o.ozet}));
+      ul.append(li);
+    }
+    $("dahaBtn").hidden = liste.length <= durum.limit;
+
+    const yeniSay = ogeler.filter(yeniMi).length;
+    const ds = $("durumSatir"); ds.replaceChildren();
+    ds.append("Son kontrol " + onceki(new Date(V.olusturma)));
+    if (yeniSay) ds.append(el("span",{class:"yeni-rozet", text: yeniSay + " yeni"}));
+    document.title = (yeniSay ? `(${yeniSay}) ` : "") + V.baslik;
+    rozetler();
+  }
+  function rozetler(){
+    const okunmamisYeni = ogeler.filter(o => yeniMi(o) && !okunanlar.has(o.id)).length;
+    const r = $("akisRozet"); r.hidden = !okunmamisYeni; r.textContent = okunmamisYeni > 99 ? "99+" : okunmamisYeni;
+    if ("setAppBadge" in navigator) { try { okunmamisYeni ? navigator.setAppBadge(okunmamisYeni) : navigator.clearAppBadge(); } catch(e){} }
+    const sorun = (V.denetim||[]).filter(d => d.durum && d.durum !== "tamam").length;
+    const k = $("kaynakRozet"); k.hidden = !sorun; k.textContent = sorun;
+  }
+
+  function denetimCiz(){
+    const D = V.denetim || [];
+    const ikon = {tamam:"✓", sessiz:"!", bos:"!", kismen:"!", erisilemiyor:"✗", tasinmis_olabilir:"⇄"};
+    const sinif = d => d === "tamam" || !d ? "tamam" : (d === "erisilemiyor" || d === "tasinmis_olabilir") ? "hata" : "uyari";
+    const sorunlu = D.filter(d => d.durum && d.durum !== "tamam");
+    const kutu = $("denetimUyari"); kutu.replaceChildren();
+    if (sorunlu.length){
+      const det = el("details",{class:"uyari-kutu"}, el("summary",{text:`⚠ ${sorunlu.length} yazar için takip listesini kontrol et`}));
+      const ul = el("ul");
+      for (const d of sorunlu){
+        const li = el("li", null, el("b",{text:d.ad + ": "}), d.aciklama || "");
+        const o = (d.oneriler||[])[0];
+        if (o && o.ornek_link) li.append(" — ", el("a",{href:o.ornek_link, target:"_blank", rel:"noopener", text:"örnek yazı"}));
+        li.append(el("button",{class:"dugme", type:"button", text:"Düzelt", onclick: () => { sekmeAc("kaynaklar"); durum.kaynakAra = d.ad; $("kaynakAra").value = d.ad; kaynaklarCiz(); }}));
+        ul.append(li);
+      }
+      det.append(ul);
+      kutu.append(det);
+    }
+    const liste = $("denetimListe"); liste.replaceChildren();
+    for (const d of D){
+      const son = d.son_yazi || d.son_diger;
+      const alt = [son ? `Son yazı ${onceki(new Date(son))}` : "Henüz yazı görülmedi"];
+      if (d.esik_gun) alt.push(`uyarı eşiği ${d.esik_gun} gün`);
+      const h = (d.haberlerde||[]).filter(x => x.gecen).slice(0,3);
+      if (h.length) alt.push("Haberlerde (30 gün): " + h.map(x => `${x.alan}${x.imzali ? " · imzalı " + x.imzali : ""}`).join(", "));
+      if (d.son_tarama) alt.push(`son tarama ${onceki(new Date(d.son_tarama))}`);
+      liste.append(el("div",{class:"denetim-satir"},
+        el("span",{class:"ikon-" + sinif(d.durum), text: ikon[d.durum] || "·"}),
+        el("span", null, el("b",{text:d.ad}), (d.durum && d.durum !== "tamam") ? " — " + d.aciklama : ""),
+        el("span",{class:"alt", text: alt.join(" · ")})));
+    }
+    const oz = $("denetimOzet");
+    oz.textContent = `Yazar adres denetimi — ${D.length} yazar` + (sorunlu.length ? `, ${sorunlu.length} kontrol önerisi` : ", hepsi güncel");
+    oz.style.color = sorunlu.length ? "var(--uyari)" : "";
+  }
+
+  function saglikCiz(){
+    const t = $("kaynakTablo"); t.replaceChildren();
+    let hata = 0, uyari = 0;
+    for (const k of V.kaynaklar){
+      const ikon = k.durum === "hata" ? "✗" : k.durum === "uyari" ? "!" : "✓";
+      if (k.durum === "hata") hata++; if (k.durum === "uyari") uyari++;
+      const acik = el("td", null, el("div",{text: `${k.yazar} · ${k.etiket || k.tur}`}));
+      if (k.durum === "hata" && k.son_hata) acik.append(el("div",{class:"hata-metni", text:k.son_hata}));
+      if (k.durum === "uyari") acik.append(el("div",{class:"hata-metni", text:"Sayfa açıldı ama içerik bulunamadı; adres değişmiş olabilir."}));
+      t.append(el("tr", null, el("td",{class:"ikon-" + (k.durum || "tamam"), text: ikon}), acik,
+        el("td",{style:"white-space:nowrap;color:var(--soluk)", text: k.son_basari ? onceki(new Date(k.son_basari)) : "hiç"})));
+    }
+    const oz = $("saglikOzet");
+    oz.textContent = `Kaynakların durumu — ${V.kaynaklar.length} kaynak` + (hata ? `, ${hata} hatalı` : "") + (uyari ? `, ${uyari} uyarı` : "");
+    oz.style.color = hata ? "var(--hata)" : "";
+  }
+
+  // ───────── KURULUM (telefona yükleme)
+  let kurIstemi = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); kurIstemi = e; kurCiz(); });
+  window.addEventListener("appinstalled", () => { kurIstemi = null; tost("Takip ana ekrana eklendi"); kurCiz(); });
+  async function kur(){
+    if (!kurIstemi) return;
+    kurIstemi.prompt();
+    try { await kurIstemi.userChoice; } catch(e){}
+    kurIstemi = null; kurCiz();
+  }
+  function kurCiz(){
+    const a = $("kurAyar"); a.replaceChildren();
+    if (KURULU){
+      a.append(el("h3",{text:"✓ Uygulama telefona kurulu"}), el("p",{text:"Ana ekrandaki Takip simgesinden açabilirsin. İnternet yokken de son akışı gösterir."}));
+    } else {
+      a.append(el("h3",{text:"Telefona kur"}), el("p",{text:"Takip'i ana ekrana ekle: kendi simgesiyle, tarayıcı çubuğu olmadan açılır, internet yokken de çalışır ve paylaş menüsünde görünür."}));
+      if (kurIstemi) a.append(el("button",{class:"dugme ana", type:"button", text:"Uygulamayı yükle", onclick: kur}));
+      else a.append(el("ol",{class:"adimlar"},
+        el("li",{text:"Bu sayfayı telefonda Chrome ile aç."}),
+        el("li",{text:"Sağ üstteki ⋮ menüsüne dokun."}),
+        el("li",{text:"\"Uygulamayı yükle\" ya da \"Ana ekrana ekle\"yi seç."})));
+    }
+    const b = $("kurBanner"); b.replaceChildren();
+    if (!KURULU && kurIstemi && !depo.al("kur_gizle", false)){
+      b.append(el("div",{class:"bilgi-kutu"},
+        el("p",{text:"Takip'i telefonuna uygulama olarak kur."}),
+        el("button",{class:"dugme ana", type:"button", text:"Kur", onclick: kur}),
+        el("button",{class:"menu-dugme", type:"button", "aria-label":"Kapat", text:"×", onclick: () => { depo.yaz("kur_gizle", true); kurCiz(); }})));
+    }
+  }
+
+  // ───────── GITHUB
+  const GH = {
+    depo(){ return depo.al("gh_depo", "") || V.depo || tahminDepo(); },
+    anahtar(){ return depo.al("gh_anahtar", ""); },
+    bagli(){ return !!(this.depo() && this.anahtar()); },
+    async istek(yol, secenek){
+      const r = await fetch("https://api.github.com" + yol, Object.assign({cache:"no-store"}, secenek, {
+        headers: Object.assign({"Accept":"application/vnd.github+json", "Authorization":"Bearer " + this.anahtar(),
+          "X-GitHub-Api-Version":"2022-11-28"}, (secenek||{}).headers || {})}));
+      return r;
+    }
+  };
+  function tahminDepo(){
+    if (location.hostname.endsWith(".github.io")){
+      const k = location.hostname.split(".")[0], d = location.pathname.split("/").filter(Boolean)[0];
+      return d ? `${k}/${d}` : `${k}/${k}.github.io`;
+    }
+    return "";
+  }
+  function hataMetni(r){
+    if (r.status === 401) return "Anahtar geçersiz ya da süresi dolmuş. Ayarlar'dan yeni anahtar gir.";
+    if (r.status === 403) return "Anahtarın bu işlem için izni yok (Contents: Read and write gerekli).";
+    if (r.status === 404) return "Depo bulunamadı. Depo adını ve anahtarın bu depoya erişimi olduğunu kontrol et.";
+    return "GitHub hatası: " + r.status;
+  }
+  const b64 = { coz(s){ const b = atob(s.replace(/\n/g,"")); return new TextDecoder().decode(Uint8Array.from(b, c => c.charCodeAt(0))); },
+    kodla(s){ const by = new TextEncoder().encode(s); let x = ""; for (let i = 0; i < by.length; i += 0x8000) x += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(x); } };
+  const DOSYA = "kaynaklar_uygulama.json";
+  async function uygDosyaOku(){
+    const r = await GH.istek(`/repos/${GH.depo()}/contents/${DOSYA}`);
+    if (r.status === 404){
+      const d = await GH.istek(`/repos/${GH.depo()}`);
+      if (!d.ok) throw new Error(hataMetni(d));
+      return {icerik: {}, sha: null};
+    }
+    if (!r.ok) throw new Error(hataMetni(r));
+    const j = await r.json();
+    let icerik = {};
+    try { icerik = JSON.parse(b64.coz(j.content)) || {}; } catch(e) { icerik = {}; }
+    return {icerik, sha: j.sha};
+  }
+  async function uygDosyaDegistir(fn, mesaj){
+    if (!GH.bagli()) throw new Error("Önce Ayarlar'dan GitHub bağlantısını kur.");
+    for (let deneme = 0; deneme < 3; deneme++){
+      const {icerik, sha} = await uygDosyaOku();
+      for (const k of ["yazarlar","kapali","kapali_yazarlar"]) if (!Array.isArray(icerik[k])) icerik[k] = [];
+      fn(icerik);
+      const govde = {message: mesaj + " (telefondan)", content: b64.kodla(JSON.stringify(icerik, null, 2) + "\n")};
+      if (sha) govde.sha = sha;
+      const r = await GH.istek(`/repos/${GH.depo()}/contents/${DOSYA}`, {method:"PUT", body: JSON.stringify(govde)});
+      if (r.ok) return true;
+      if (r.status === 409 || r.status === 422) continue;   // arada başka bir değişiklik olmuş; tekrar dene
+      throw new Error(hataMetni(r));
+    }
+    throw new Error("Kaydedilemedi, birkaç saniye sonra tekrar dene.");
+  }
+  async function kaynakAnahtari(ad, k){
+    const adres = String(k.url || k.kanal || k.kullanici || k.yazar_dizini || k.rss_url || "None");
+    const b = await crypto.subtle.digest("SHA-1", new TextEncoder().encode([ad, k.tur || "sayfa", adres].join("|")));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("").slice(0,12);
+  }
+
+  // bekleyen değişiklikler (bir sonraki kontrolde yansıyana kadar)
+  function bekleyenEkle(metin){ const l = depo.al("bekleyen", []); l.push({metin, zaman: Date.now()}); depo.yaz("bekleyen", l.slice(-20)); }
+  function bekleyenCiz(){
+    const yansiyan = new Date(V.olusturma).getTime();
+    const l = depo.al("bekleyen", []).filter(b => b.zaman > yansiyan && Date.now() - b.zaman < 6*3600e3);
+    depo.yaz("bekleyen", l);
+    const k = $("bekleyenKutu"); k.replaceChildren();
+    if (!l.length) return;
+    const ul = el("ul"); for (const b of l) ul.append(el("li",{text: b.metin}));
+    k.append(el("div",{class:"bekleyen"}, el("b",{text:"Kaydedildi, sıradaki kontrolde akışa yansıyacak"}),
+      el("div",{style:"font-size:13px;color:var(--soluk)", text:"Genellikle 2–5 dakika sürer. Sonra yukarıdan yenile."}), ul));
+  }
+
+  // ───────── KAYNAKLAR
+  function kaynaklarCiz(){
+    bekleyenCiz();
+    const u = $("baglantiUyari"); u.replaceChildren();
+    if (!GH.bagli()){
+      u.append(el("div",{class:"bilgi-kutu"}, el("p",{text:"Telefondan ekleyip çıkarabilmek için önce GitHub bağlantısını kur."}),
+        el("button",{class:"dugme", type:"button", text:"Ayarlar", onclick: () => sekmeAc("ayarlar")})));
+    }
+    const q = sade(durum.kaynakAra.trim());
+    const liste = $("kaynakListe"); liste.replaceChildren();
+    const yazarlar = (V.yazar_listesi || []).filter(y => !q || sade(y.ad).includes(q));
+    const aktif = yazarlar.filter(y => !y.kapali), kapali = yazarlar.filter(y => y.kapali);
+    const denetim = Object.fromEntries((V.denetim||[]).map(d => [d.ad, d]));
+    const ciz = (y) => {
+      const d = denetim[y.ad];
+      const kart = el("div",{class:"kart" + (y.kapali ? " kapali" : "")});
+      const ust = el("div",{class:"kart-ust"}, el("span",{class:"nokta", style:`background:${renk(y.ad)}`}), el("b",{text:y.ad}));
+      if (d && d.durum && d.durum !== "tamam") ust.append(el("span",{class:"ikon-uyari", title:d.aciklama, text:"⚠"}));
+      if (y.kapali) ust.append(el("span",{style:"font-size:12.5px;color:var(--soluk)", text:"kapalı"}));
+      ust.append(el("button",{class:"menu-dugme", type:"button", "aria-label": y.ad + " seçenekleri", text:"⋯", onclick: () => yazarMenu(y)}));
+      kart.append(ust);
+      if (d && d.durum && d.durum !== "tamam") kart.append(el("div",{style:"padding:0 14px 8px;font-size:13px;color:var(--uyari)", text:d.aciklama}));
+      for (const k of y.kaynaklar){
+        const ikon = k.kapali ? "–" : k.durum === "hata" ? "✗" : k.durum === "uyari" ? "!" : k.durum === "bekliyor" ? "…" : "✓";
+        const sinif = k.kapali ? "" : k.durum === "hata" ? "ikon-hata" : (k.durum === "uyari" || k.durum === "bekliyor") ? "ikon-uyari" : "ikon-tamam";
+        const satir = el("div",{class:"kaynak-satir" + (k.kapali ? " kapali" : "")},
+          el("span",{class:sinif, text:ikon}),
+          el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || ""),
+          el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+        kart.append(satir);
+      }
+      return kart;
+    };
+    aktif.forEach(y => liste.append(ciz(y)));
+    if (kapali.length){ liste.append(el("h2",{class:"bolum-baslik", text:"Kapatılanlar"})); kapali.forEach(y => liste.append(ciz(y))); }
+    if (!yazarlar.length) liste.append(el("div",{class:"bos", text: q ? "Bu isimde kaynak yok." : "Henüz kaynak yok."}));
+  }
+
+  function menuAc(baslik, secenekler){
+    $("menuBaslik").textContent = baslik;
+    const kap = $("menuSecenekler"); kap.replaceChildren();
+    for (const s of secenekler) kap.append(el("button",{class: s.tehlike ? "tehlike" : "", value:"", text:s.yazi, onclick: () => { $("menuLevha").close(); setTimeout(s.fn, 60); }}));
+    kap.append(el("button",{value:"", text:"Vazgeç"}));
+    $("menuLevha").showModal();
+  }
+  function yazarMenu(y){
+    const s = [];
+    if (y.kapali) s.push({yazi:"Takibi yeniden aç", fn: () => islem(i => { i.kapali_yazarlar = i.kapali_yazarlar.filter(a => a !== y.ad); }, `${y.ad} yeniden açıldı`, `${y.ad}: takip yeniden açıldı`)});
+    else {
+      s.push({yazi:"Bu kişiye kaynak ekle", fn: () => ekleAc({ad: y.ad})});
+      s.push({yazi:"Akışta yalnızca bu kişiyi göster", fn: () => { durum.yazar = y.ad; depo.yaz("f_yazar", y.ad); sekmeAc("akis"); }});
+      s.push({yazi:"Takipten çıkar", tehlike:true, fn: () => {
+        if (!confirm(`${y.ad} takipten çıkarılsın mı? Kapatılanlar bölümünden geri açabilirsin.`)) return;
+        islem(i => {
+          i.yazarlar = i.yazarlar.filter(a => a.ad !== y.ad);
+          if (y.kok !== "uygulama" || y.kaynaklar.some(k => k.kok === "yaml")) { if (!i.kapali_yazarlar.includes(y.ad)) i.kapali_yazarlar.push(y.ad); }
+        }, `${y.ad} takipten çıkarıldı`, `${y.ad}: takipten çıkarıldı`);
+      }});
+    }
+    menuAc(y.ad, s);
+  }
+  function kaynakMenu(y, k){
+    const s = [];
+    if (k.adres && /^https?:/.test(k.adres)) s.push({yazi:"Sayfayı aç", fn: () => window.open(k.adres, "_blank", "noopener")});
+    if (k.kapali) s.push({yazi:"Yeniden aç", fn: () => islem(i => { i.kapali = i.kapali.filter(a => a !== k.anahtar); }, "Kaynak yeniden açıldı", `${y.ad}: ${k.etiket} yeniden açıldı`)});
+    else {
+      s.push({yazi:"Adresini değiştir", fn: () => ekleAc({ad: y.ad, tur: k.tur, eski: k, baslik:"Adresi değiştir"})});
+      s.push({yazi:"Bu kaynağı kaldır", tehlike:true, fn: () => {
+        if (!confirm(`${y.ad} · ${k.etiket} kaldırılsın mı?`)) return;
+        islem(i => kaynakKaldir(i, y.ad, k), "Kaynak kaldırıldı", `${y.ad}: ${k.etiket} kaldırıldı`);
+      }});
+    }
+    menuAc(`${y.ad} · ${k.etiket}`, s);
+  }
+  function kaynakKaldir(i, ad, k){
+    if (k.kok === "uygulama"){
+      for (const a of i.yazarlar) if (a.ad === ad) a.kaynaklar = (a.kaynaklar||[]).filter(x => x._anahtar !== k.anahtar && !ayniKaynak(x, k));
+      i.yazarlar = i.yazarlar.filter(a => (a.kaynaklar||[]).length);
+    } else if (!i.kapali.includes(k.anahtar)) i.kapali.push(k.anahtar);
+  }
+  function ayniKaynak(x, k){ return (x.url || x.kanal || x.kullanici || x.rss_url) === k.adres && (x.tur || "sayfa") === k.tur; }
+  async function islem(fn, tostMetni, bekleyenMetni){
+    tost("Kaydediliyor…", 15000);
+    try { await uygDosyaDegistir(fn, bekleyenMetni); bekleyenEkle(bekleyenMetni); tost(tostMetni + " — birkaç dakika içinde yansır"); kaynaklarCiz(); }
+    catch(e){ tost(e.message, 6000); }
+  }
+
+  // ───────── EKLE FORMU
+  function algila(girdi){
+    let s = (girdi||"").trim();
+    const m = s.match(/https?:\/\/\S+/); if (m) s = m[0];
+    s = s.replace(/[)\]>.,]+$/,"");
+    if (/^@?[\w.]{2,30}$/.test(s) && !s.includes("/")) return {tur:"instagram", kullanici: s.replace(/^@/,""), adres: s};
+    let u; try { u = new URL(/^https?:/.test(s) ? s : "https://" + s); } catch(e){ return null; }
+    const h = u.hostname.replace(/^(www|m)\./,""), p = u.pathname;
+    if (/(^|\.)youtube\.com$|^youtu\.be$/.test(h)){
+      const kanal = /^\/(@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)/.exec(p);
+      return {tur:"youtube", kanal: kanal ? `https://www.youtube.com/${kanal[1]}` : u.href, adres: u.href, uyari: kanal ? "" : "Video bağlantısı verdin; videonun kanalı takip edilecek."};
+    }
+    if (h.endsWith("eksisozluk.com") || h.endsWith("eksisozluk1923.com")){
+      const n = /^\/biri\/([^/?#]+)/.exec(p);
+      if (n) return {tur:"eksi_yazar", kullanici: decodeURIComponent(n[1]).replace(/-/g," "), adres: u.href};
+      if (/^\/[^/]+--\d+/.test(p)) return {tur:"eksi_baslik", url: `https://eksisozluk.com${p.split("?")[0]}`, adres: u.href};
+      return {tur:"eksi_baslik", url: u.href, adres: u.href, uyari:"Ekşi'de bir başlığın ya da yazarın (biri/…) adresini kullan."};
+    }
+    if (h.endsWith("instagram.com")){
+      const n = /^\/([\w.]+)\/?/.exec(p);
+      if (n && !["p","reel","reels","stories","explore"].includes(n[1])) return {tur:"instagram", kullanici: n[1], adres: u.href};
+      return {tur:"instagram", adres: u.href, uyari:"Hesabın profil adresini kullan (instagram.com/kullanici)."};
+    }
+    if (/substack\.com$|medium\.com$|blogspot\.|wordpress\.com$/.test(h) || /\/(feed|rss)(\/|$)|\.xml$|atom/.test(p))
+      return {tur:"rss", url: u.href, kesfet: u.origin + "/", adres: u.href};
+    return {tur:"sayfa", url: u.href, adres: u.href};
+  }
+  let form = {};
+  function ekleAc(on){
+    on = on || {};
+    form = {eski: on.eski || null};
+    $("ekleBaslik").textContent = on.baslik || "Kaynak ekle";
+    $("fKaydet").textContent = on.eski ? "Değiştir" : "Ekle";
+    $("fAd").value = on.ad || ""; $("fAd").readOnly = !!on.eski;
+    $("fAdres").value = on.adres || "";
+    $("fTur").value = on.tur || "sayfa";
+    $("fHata").textContent = "";
+    const dl = $("yazarOneri"); dl.replaceChildren(...(V.yazar_listesi||[]).map(y => el("option",{value:y.ad})));
+    formAlgila(false);
+    $("ekleLevha").showModal();
+    setTimeout(() => (on.adres ? $("fAd") : $("fAdres")).focus(), 80);
+  }
+  function formAlgila(turuDegistir = true){
+    const a = algila($("fAdres").value);
+    form.algi = a;
+    const k = $("fAlgilanan"); k.replaceChildren();
+    if (a){
+      if (turuDegistir) $("fTur").value = a.tur;
+      k.append("Algılanan: ", el("span",{class:"tur " + a.tur, text: KAYNAK_TUR[a.tur]}), a.uyari ? " " + a.uyari : "");
+      if (a.tur === "eksi_yazar" && !$("fAd").value) $("fAd").value = "Ekşi - " + a.kullanici;
+      if (a.tur === "instagram" && a.kullanici && !$("fAd").value) $("fAd").value = "@" + a.kullanici;
+    }
+    $("fDogrulaSatir").hidden = $("fTur").value !== "sayfa";
+  }
+  $("fAdres").addEventListener("input", () => formAlgila(true));
+  $("fTur").addEventListener("change", () => formAlgila(false));
+  $("ekleForm").addEventListener("submit", async e => {
+    if (e.submitter && e.submitter.value === "iptal") return;
+    e.preventDefault();
+    const ad = $("fAd").value.trim().replace(/\s+/g," "), tur = $("fTur").value, a = algila($("fAdres").value) || {};
+    if (!ad || !$("fAdres").value.trim()) { $("fHata").textContent = "Adres ve ad gerekli."; return; }
+    const k = {tur};
+    if (tur === "sayfa"){ if (!a.url) return void ($("fHata").textContent = "Geçerli bir sayfa adresi gir."); k.url = a.url; if ($("fDogrula").checked) k.dogrula = true; }
+    else if (tur === "rss"){ if (!a.url) return void ($("fHata").textContent = "Geçerli bir adres gir."); k.url = a.url; k.kesfet = a.kesfet || a.url; }
+    else if (tur === "youtube"){ k.kanal = a.kanal || a.url || $("fAdres").value.trim(); }
+    else if (tur === "eksi_yazar"){ k.kullanici = a.kullanici || $("fAdres").value.trim().replace(/^@/,""); }
+    else if (tur === "eksi_baslik"){ if (!a.url) return void ($("fHata").textContent = "Başlığın adresini yapıştır."); k.url = a.url; }
+    else if (tur === "instagram"){ if (!a.kullanici) return void ($("fHata").textContent = "Instagram kullanıcı adını ya da profil adresini gir."); k.kullanici = a.kullanici; }
+    if (tur === "sayfa" || tur === "rss"){ try { k.etiket = new URL(k.url).hostname.replace(/^www\./,""); } catch(_){} }
+    if (!GH.bagli()){ $("fHata").textContent = "Önce Ayarlar'dan GitHub bağlantısını kur."; return; }
+    $("fKaydet").disabled = true; $("fHata").textContent = "";
+    const eski = form.eski;
+    try {
+      const anahtar = await kaynakAnahtari(ad, k);
+      await uygDosyaDegistir(i => {
+        let y = i.yazarlar.find(x => x.ad === ad);
+        if (!y){ y = {ad, kaynaklar: []}; i.yazarlar.push(y); }
+        y.kaynaklar = y.kaynaklar || [];
+        if (!y.kaynaklar.some(x => ayniKaynak(x, {adres: k.url || k.kanal || k.kullanici, tur}))) y.kaynaklar.push(k);
+        i.kapali = i.kapali.filter(x => x !== anahtar);
+        i.kapali_yazarlar = i.kapali_yazarlar.filter(x => x !== ad);
+        if (eski) kaynakKaldir(i, ad, eski);
+      }, eski ? `${ad}: adres değiştirildi` : `${ad}: ${KAYNAK_TUR[tur]} eklendi`);
+      bekleyenEkle(eski ? `${ad}: adres ${kisaAdres(k.url || k.kanal)} olarak değiştirildi` : `${ad}: ${KAYNAK_TUR[tur]} eklendi (${kisaAdres(k.url || k.kanal || k.kullanici)})`);
+      $("ekleLevha").close();
+      tost(eski ? "Adres değiştirildi" : "Eklendi — ilk kontrolden sonra akışta görünecek", 4000);
+      sekmeAc("kaynaklar");
+    } catch(err){ $("fHata").textContent = err.message; }
+    finally { $("fKaydet").disabled = false; }
+  });
+
+  // ───────── AYARLAR
+  function ayarlarCiz(){
+    kurCiz();
+    $("ghDepo").value = GH.depo();
+    $("ghAnahtar").value = GH.anahtar() ? "••••••••••••" : "";
+    $("ghSil").hidden = !GH.anahtar();
+    if (GH.bagli() && !$("ghDurum").textContent) { $("ghDurum").className = "durum-yazi iyi"; $("ghDurum").textContent = "✓ Bağlantı kayıtlı"; }
+    bildirimCiz();
+    const h = $("hakkinda"); h.replaceChildren(el("h3",{text:"Hakkında"}),
+      el("p",{text:`Son kontrol: ${new Date(V.olusturma).toLocaleString("tr-TR")} · ${(V.yazar_listesi||[]).filter(y => !y.kapali).length} kişi takipte`}));
+    if (GH.depo()) h.append(el("p", null, el("a",{href:`https://github.com/${GH.depo()}/actions`, target:"_blank", rel:"noopener", text:"GitHub'daki çalışma kayıtları"})));
+  }
+  $("ghKaydet").addEventListener("click", async () => {
+    const d = $("ghDepo").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\/$/,"");
+    const a = $("ghAnahtar").value.trim();
+    const s = $("ghDurum");
+    if (!/^[\w.-]+\/[\w.-]+$/.test(d)) { s.className = "durum-yazi kotu"; s.textContent = "Depo adını kullaniciadi/takip biçiminde yaz."; return; }
+    depo.yaz("gh_depo", d);
+    if (a && !a.startsWith("•")) depo.yaz("gh_anahtar", a);
+    if (!GH.anahtar()) { s.className = "durum-yazi kotu"; s.textContent = "Anahtarı yapıştır."; return; }
+    s.className = "durum-yazi"; s.textContent = "Deneniyor…";
+    try {
+      const r = await GH.istek(`/repos/${d}`);
+      if (!r.ok) throw new Error(hataMetni(r));
+      const j = await r.json();
+      if (j.permissions && !j.permissions.push) throw new Error("Anahtar depoyu okuyabiliyor ama yazamıyor. Contents: Read and write iznini ver.");
+      s.className = "durum-yazi iyi"; s.textContent = "✓ Bağlantı çalışıyor. Artık Kaynaklar sekmesinden ekleyip çıkarabilirsin.";
+      ayarlarCiz(); kaynaklarCiz();
+    } catch(e){ s.className = "durum-yazi kotu"; s.textContent = e.message; }
+  });
+  $("ghSil").addEventListener("click", () => { depo.sil("gh_anahtar"); $("ghDurum").textContent = ""; ayarlarCiz(); kaynaklarCiz(); tost("Bağlantı bu telefondan kaldırıldı"); });
+
+  function bildirimCiz(){
+    const a = $("bildirimAyar"); a.replaceChildren();
+    const konu = depo.al("ntfy_konu_yerel", "") || V.ntfy_konu;
+    if (!konu){
+      a.append(el("h3",{text:"Yeni yazı çıkınca bildirim al"}),
+        el("p",{text:"Bildirimler ücretsiz ntfy uygulaması üzerinden gelir. İki adımda açılır."}),
+        el("ol",{class:"adimlar"}, el("li", null, el("a",{href:"https://play.google.com/store/apps/details?id=io.heckel.ntfy", target:"_blank", rel:"noopener", text:"ntfy uygulamasını Google Play'den kur"}), "."),
+          el("li",{text:"Aşağıdaki düğmeye bas, sonra çıkan \"ntfy'de abone ol\" düğmesine dokun."})),
+        el("button",{class:"dugme ana", type:"button", text:"Bildirimleri aç", onclick: bildirimAc}));
+      return;
+    }
+    a.append(el("h3",{text:"Bildirimler açık"}),
+      el("p", null, "Konu adın: ", el("code",{text:konu}), ". Bu telefonda ntfy uygulamasında bu konuya abone olman gerekiyor."),
+      el("div",{class:"satir"},
+        el("a",{class:"dugme ana", href:`ntfy://ntfy.sh/${konu}`, text:"ntfy'de abone ol", style:"text-decoration:none"}),
+        el("button",{class:"dugme", type:"button", text:"Deneme bildirimi gönder", onclick: () => denemeBildirim(konu)})),
+      el("p",{style:"margin-top:8px;font-size:12.5px", text:"\"ntfy'de abone ol\" çalışmazsa ntfy uygulamasında + düğmesine basıp konu adını elle yaz."}));
+  }
+  async function bildirimAc(){
+    if (!GH.bagli()){ tost("Önce GitHub bağlantısını kur"); return; }
+    const harf = "abcdefghijkmnpqrstuvwxyz23456789"; const r = crypto.getRandomValues(new Uint8Array(12));
+    const konu = "takip-" + [...r].map(x => harf[x % harf.length]).join("");
+    tost("Kaydediliyor…", 15000);
+    try {
+      await uygDosyaDegistir(i => { i.bildirim = {ntfy_konu: konu}; }, "Bildirimler açıldı");
+      depo.yaz("ntfy_konu_yerel", konu);
+      tost("Bildirimler açıldı. Şimdi ntfy'de abone ol.", 4500);
+      bildirimCiz();
+    } catch(e){ tost(e.message, 6000); }
+  }
+  async function denemeBildirim(konu){
+    try {
+      const r = await fetch(`https://ntfy.sh/${konu}`, {method:"POST", body:"Bildirimler çalışıyor. Yeni yazılar böyle gelecek.", headers:{"Title":"Takip"}});
+      tost(r.ok ? "Deneme bildirimi gönderildi" : "Gönderilemedi");
+    } catch(e){ tost("Gönderilemedi — internet bağlantını kontrol et"); }
+  }
+  $("simdiBtn").addEventListener("click", async () => {
+    const s = $("simdiDurum");
+    if (!GH.bagli()){ s.className = "durum-yazi kotu"; s.textContent = "Önce GitHub bağlantısını kur."; return; }
+    s.className = "durum-yazi"; s.textContent = "Başlatılıyor…";
+    try {
+      const r = await GH.istek(`/repos/${GH.depo()}/actions/workflows/takip.yml/dispatches`, {method:"POST", body: JSON.stringify({ref:"main"})});
+      if (r.status === 204){ s.className = "durum-yazi iyi"; s.textContent = "✓ Kontrol başladı. 3–5 dakika sonra akışı yenile."; }
+      else if (r.status === 403 || r.status === 404){ s.className = "durum-yazi kotu"; s.textContent = "Anahtarın bunun için izni yok. Anahtar ayarlarında Actions: Read and write iznini ekle."; }
+      else throw new Error(hataMetni(r));
+    } catch(e){ s.className = "durum-yazi kotu"; s.textContent = e.message; }
+  });
+  $("okunduSifirla").addEventListener("click", () => { okunanlar = new Set(); depo.yaz("okunanlar", []); akisCiz(); tost("Okundu işaretleri temizlendi"); });
+
+  // ───────── sekmeler
+  function sekmeAc(ad){
+    durum.sekme = ad;
+    for (const s of ["akis","kaynaklar","ayarlar"]) $("g-" + s).hidden = s !== ad;
+    $("akisUst").hidden = ad !== "akis";
+    $("okunduBtn").hidden = ad !== "akis";
+    document.querySelectorAll("nav.alt button").forEach(b => b.setAttribute("aria-current", b.dataset.sekme === ad ? "page" : "false"));
+    $("baslik").textContent = ad === "akis" ? V.baslik : ad === "kaynaklar" ? "Kaynaklar" : "Ayarlar";
+    if (ad === "kaynaklar") kaynaklarCiz();
+    if (ad === "ayarlar") ayarlarCiz();
+    if (ad === "akis") akisCiz();
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll("nav.alt button").forEach(b => b.addEventListener("click", () => sekmeAc(b.dataset.sekme)));
+
+  // ───────── olaylar
+  $("arama").addEventListener("input", e => { durum.ara = e.target.value; durum.limit = 80; akisCiz(); });
+  $("kaynakAra").addEventListener("input", e => { durum.kaynakAra = e.target.value; kaynaklarCiz(); });
+  $("dahaBtn").addEventListener("click", () => { durum.limit += 120; akisCiz(); });
+  $("ekleBtn").addEventListener("click", () => ekleAc());
+  $("yenileBtn").addEventListener("click", () => yenile(false));
+  $("okunduBtn").addEventListener("click", () => {
+    for (const o of filtrele()) okunanlar.add(o.id);
+    depo.yaz("okunanlar", [...okunanlar].slice(-3000)); akisCiz(); tost("Hepsi okundu olarak işaretlendi");
+  });
+  for (const d of [$("ekleLevha"), $("menuLevha")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });
+
+  // aşağı çekip yenile
+  (function(){
+    let bas = null, fark = 0; const g = $("cekGosterge");
+    window.addEventListener("touchstart", e => { bas = (window.scrollY <= 0 && !document.querySelector("dialog[open]")) ? e.touches[0].clientY : null; fark = 0; }, {passive:true});
+    window.addEventListener("touchmove", e => {
+      if (bas === null) return; fark = e.touches[0].clientY - bas;
+      if (fark > 0){ const y = Math.min(fark/2, 60) - 60; g.style.transform = `translate(-50%, ${y}px)`; g.textContent = fark > 110 ? "Bırak, yenilensin" : "Yenilemek için çek"; }
+    }, {passive:true});
+    window.addEventListener("touchend", () => { if (bas !== null && fark > 110) yenile(false); bas = null; g.style.transform = "translate(-50%,-60px)"; });
+  })();
+
+  // uygulama arka plandan dönünce sessizce yenile
+  let sonYenileme = Date.now();
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && Date.now() - sonYenileme > 3*60e3){ sonYenileme = Date.now(); yenile(true); }
+  });
+
+  if (HTTP && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+  // ───────── açılış
+  veriHazirla();
+  function hepsiniCiz(){ akisCiz(); denetimCiz(); saglikCiz(); kurCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz(); if (durum.sekme === "ayarlar") ayarlarCiz(); rozetler(); }
+  hepsiniCiz();
+  const p = new URLSearchParams(location.search);
+  const paylasilan = [p.get("p_adres"), p.get("p_metin")].filter(Boolean).join(" ");
+  if (paylasilan){
+    history.replaceState(null, "", location.pathname);
+    sekmeAc("kaynaklar");
+    const a = algila(paylasilan);
+    let ad = (p.get("p_baslik") || "").replace(/\s+[-–|]\s+[^-–|]{2,30}$/,"").trim();
+    if (ad.length > 60 || /^https?:/.test(ad)) ad = "";
+    ekleAc({adres: a ? (a.kanal || a.url || a.adres) : paylasilan, ad});
+    formAlgila(true);
+  } else if (p.get("sekme")){
+    sekmeAc(p.get("sekme"));
+    if (p.get("ekle")) ekleAc();
+    history.replaceState(null, "", location.pathname);
+  }
+  if (HTTP) setTimeout(() => yenile(true), 400);
+})();
+</script>
+</body>
+</html>
