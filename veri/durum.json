@@ -20,12 +20,13 @@
    "tur": "sayfa",
    "etiket": "fatihaltayli.com.tr",
    "adres": "https://fatihaltayli.com.tr/yazilar/fatih-altayli/kose-yazilari",
-   "son_deneme": "2026-11-06T20:17:02+00:00",
-   "son_basari": "2026-11-06T20:17:02+00:00",
+   "son_deneme": "2026-11-06T20:26:58+00:00",
+   "son_basari": "2026-11-06T20:26:58+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 13,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "bd18cc8f160c": {
    "gorulen": [
@@ -43,12 +44,13 @@
    "ekstra": {
     "kanal_id": "UCdS7OE5qbJQc7AG4SwlTzKg"
    },
-   "son_deneme": "2026-11-06T20:17:02+00:00",
-   "son_basari": "2026-11-06T20:17:02+00:00",
+   "son_deneme": "2026-11-06T20:26:58+00:00",
+   "son_basari": "2026-11-06T20:26:58+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 6,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "5af2e07f0c27": {
    "gorulen": [
@@ -63,12 +65,13 @@
    "tur": "rss",
    "etiket": "Yetkin Report",
    "adres": "https://yetkinreport.com/feed/",
-   "son_deneme": "2026-11-06T20:17:03+00:00",
-   "son_basari": "2026-11-06T20:17:03+00:00",
+   "son_deneme": "2026-11-06T20:26:59+00:00",
+   "son_basari": "2026-11-06T20:26:59+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 6,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "75ab720b70db": {
    "gorulen": [
@@ -102,12 +105,13 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-pehlivan",
-   "son_deneme": "2026-11-06T20:17:04+00:00",
-   "son_basari": "2026-11-06T20:17:04+00:00",
+   "son_deneme": "2026-11-06T20:27:00+00:00",
+   "son_basari": "2026-11-06T20:27:00+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "8bc6d471b726": {
    "gorulen": [
@@ -120,12 +124,13 @@
    "tur": "sayfa",
    "etiket": "Sözcü",
    "adres": "https://www.sozcu.com.tr/ismail-saymaz-a36",
-   "son_deneme": "2026-11-06T20:17:05+00:00",
-   "son_basari": "2026-11-06T20:17:05+00:00",
+   "son_deneme": "2026-11-06T20:27:00+00:00",
+   "son_basari": "2026-11-06T20:27:00+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 4,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "e9003bd7785f": {
    "gorulen": [
@@ -159,45 +164,125 @@
    "tur": "rss",
    "etiket": "Kendime Yazılar",
    "adres": "https://www.mahfiegilmez.com/feeds/posts/default",
-   "son_deneme": "2026-11-06T20:17:05+00:00",
-   "son_basari": "2026-11-06T20:17:05+00:00",
+   "son_deneme": "2026-11-06T20:27:01+00:00",
+   "son_basari": "2026-11-06T20:27:01+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "83fde5714def": {
-   "gorulen": [],
+   "gorulen": [
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxQTTNIQ2xRWHY3c1hkeFczbWozbmNxWExIdmgyQzBlVFVVRnIxNktfREEzaUZScnYwcGY5WC1nQnhPbXpyeDBGZm9tNmpKRUNtWUpxalFHbkxfeXBINEMtUmlxc3B3eVNYRW8zRjF4UWhLRk0tZjUyNzVJSzhFbzlMc0RUN0RGSDZxQWFkbzYwMzM?oc=5",
+    "https://news.google.com/rss/articles/CBMiygFBVV95cUxNV2YzMXRCVVVVWS1fTEtVY1VCTHdMZVJ6bjJRWUJxSTJUUXp2WjIxR0o3ODFVLUJWWkZCeEwzSmI5U2JMMXF1cmJOQThIeUVqX3h0X3VKLWpaQlc4cVFjMzJ4WmhsT2lPaWp4WFpNWEJOWWFCRENEMWlXSVhlRVgtSnNWbE1VcXFuTHo2VUYycGRNRVVhWnFnNWpMMEZ4RXpsYkpDVC1ZNGlDSGxEUTZ6MWJKNXRVMkV5X2FCQzRnRkEtRlk3aUNybDN3?oc=5",
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxOc3RKY1BsbS1ndHZQdG5rOVN5eFc3cXBMSHFIZDhWRVMxcXYzS2RDcndCTVRZZVlsbDNCT0dVVHVNQjJWVTczS2ROeTd3c0tSS1RSOWlMeHc5N0VkR1VLRndiNVk4NGw1d0J2WDBDM3pFYTZkalp0alJTMlNaV253S09NcXNKTnBYV1MwTzdCeE1qRXM5Si1aaGVkaTZiTzVoTUd1bTZFaEVkcUtMMmJrNWZoUEU1dw?oc=5",
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxQQ3hGUE9EbGxYQkY4YUktek9kS2I1aWhLdlFPZU52UnB0VHNSbFJfOU92eEs0NW1lYllQS2dpSUp5R3VOYU5Sa1haaDlHdFFSYmhZRkRScFhXeVZIMHFQSmoxYUtNbFJLUDZHd3pHQ0ZJQ0ZWT0tYalJLNHU2bWtWYzREeUtacTNSMlE?oc=5",
+    "https://news.google.com/rss/articles/CBMijAFBVV95cUxObDFDUmlfdUlDLWZDRFdIbGNsNkQ5YkZUby14ZHZEcEw2Z2dOUmtjTi0xc2J6bUVsZEJvM2hwZ20yVy1Ld1N4UFBOSGF2QXptZklkVHhFNm1mZTNMM1pQVEFVdEdDY0ZYRUxwdVI4LThCUkozMkhHLWFHcDA1MjFBZTRhNzFXbFVmWDR1Xw?oc=5",
+    "https://news.google.com/rss/articles/CBMioAFBVV95cUxQMWJvWlh3ZS1KU1o5dmN6Q3ZEcjRBbjE5ZkE2RjlpWVpKY3RDa2JJcDIyUksxbEtMYWY2c21FM3VyLXNLOHI3S3M3ZlVNUDNPbHBMM2xQRmNLQ3pEOVZrYkpjVE1Fb2tCblF6eG1idlYzMmljQ25BcGxCWFdtcWktTmxZWmxGVnd6a1dfcmtVc2R5VFF2Uzk0WWpPT2kyS2I4?oc=5",
+    "https://news.google.com/rss/articles/CBMivgFBVV95cUxQdmoxdW5jQ1dlcnlKbmNBeTQ3dGxubmU1eTFQSTZ1QkZHXzVtZTBVMjVWaHZ0TnpmMEh2Tzk4clAtUW51elVOcW94Qmxyd19vTE1IRHhneEo0ZnBVRmZOSm5FQkRrSGtDMy1hYkY2bElYbmx2bDJoc3pXbHZCNGEwZ09Ea2tqb3Y0TEJpTTdSS3BoRGl4SndzSFYyTUFiekJvSjZ0OUtvdXlWeG5uUG9sRlRYRjNKVkVEOEtsc3Zn?oc=5",
+    "https://news.google.com/rss/articles/CBMimgFBVV95cUxQdV9fcXlUQ3B6c00yUHRNRkNHMndmZzl5aTU3WTZ0OXRBUXAzdk54S2swa290M3JpZ0NFS0Itd3lSN2daSWpnUW5YM2JsV3FhaG9KYUVOTGkyTjZfbUVsMU13NHFDTVB2T2pVVkZrbkdCWENIWGRyalo1Q2hZazNiVG9aeFFlSHJIcFpZVkctUWE5NVdmc3lfUzFB?oc=5",
+    "https://news.google.com/rss/articles/CBMic0FVX3lxTE5RZ2YwOGl1c3N3S1FCaWhaenpGcmtCVTlPWTRHeTNCMWE0am5Dc2dlYVZMR2c0Y3p4V1lYeVBnekxNVDhSVHc0d0NTNU9wZC1oeGdnTmZ3MDVBUUJacVNsME9pQjN1SnRKRXFtbXNGcU9lMjQ?oc=5",
+    "https://news.google.com/rss/articles/CBMinAFBVV95cUxQRElRV2d4dXBKVXFzdDVUZFpMb3FRRFVRMHhGS1FGbFVuOXJ1ZWVyMFZCcUxMX0FCUjV5cXQtZHJTYnI4VnZTQ0otcjR6eHpnY2dWZzB3WjlSbm1tdmZwc2hPMDJuWURGbnVfRXp1UDM2NHNhOThSNFMzSnN2bjVSMFpWZnVNZjNaTkNhcnFyUHVYZG1FMFhJak5QcHE?oc=5",
+    "https://news.google.com/rss/articles/CBMitwFBVV95cUxNOVBxQ3REeWw3emx3eUJrdm1JNzc2a3dYYnd2WFFYWS1fSE1JYUhaV3ZIMVpxT3lXdW41Um8wVS01UktYR2dwbV9sMjdMWmtDSEYzc1lINkFjM2tTSnlTQ2RIbU1zX2VhcGxaOUtXVGhLbU1VeHBFYWtDTm13QThleDk0dGREXzhsNnpjV21tM1pyZWNjVkx2N1BsZmxkbnJNQUtDRHlBcDJDLXF4eUlRQ2l4V0gta0U?oc=5",
+    "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPNko4RkMtUWowOXktMENxaG11d1I4Y2tUTmxmdDJvaU5iXzZfYzBWSXg0Y1JrVWRWUk84MTRsS01vZGFjenNQeUxaRUxFRm5fWUYzcWotcXlvRnJscUFLNDYyeEFQNDBKWWEyNWhlWjh6VlFWWUptNGhrbE1sZzVOWXhqdU5BSHVL?oc=5",
+    "https://news.google.com/rss/articles/CBMibEFVX3lxTE9mTVM3clJNNzVBTG80UzRzTWFVWTlXQktxUmd6M3NMckxnT3VwSklEM2hpMGlCMXBfcWVGaGdjSGJsMFpqQWgyaDFpbDduak55YjdNQXJueUlxdW1jbklOdS16NzQxbTdDQzFkWg?oc=5",
+    "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBLNDVmMFZwZi1UMVBPUUZqVGd5cWdMVmdwSUphWlBiR0dWYlgweXJjSDNHVUpQTHdyaGpSVm5yTkp1Z05PN3BJV1Y2bVk2blZBbWk0QXpfaS1CbVhoN2tPTw?oc=5",
+    "https://news.google.com/rss/articles/CBMiowFBVV95cUxPNkUtcDJCQkRpWFpfZU0zZXBDZjVIN0hzeVN0dUlIZUhlcldzZ2NGUGhsOWltbGhLMDlIcWJwaC04MmE2N1ZuT2RFNl80SERyT0NZV1IxTFdQOW5YRHFZX1RzZHBsLURta05ob0NzYkMweWI5S1ljYWVIcnBDM0M3MTZvWnJZQnFaV2h4NExUWmpVSllEYUdyZmw5Zkc4YTF6X1VF?oc=5",
+    "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOX0NFVGRhSzFkcTNPRzdrbmVIWVFxVXd6R2RYcFREWFp6T2Vwdm9vMEhxUTV0RHNnUDl0NnJwbWNoWWRLYVFNc0VxXzREMnVwclZEeGkybTQ4dFJyNlZnUl80WFVWM2p0UHVjdjJub0x6X1ZWQW1zQVM3Y2pBWkFUajNIdkJKbFdf?oc=5",
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxNMUlWbUU0bmRNYkZKa0JMUmlZSlZTWEswdkZoa1hNdzRlQlRTN2hNOGJ6dDJDb2Q5NHo4T0ZvVTVLUkNDNXBaYjEtS3F2RVVMb2R3cG1sTGFzbXQzNG5uZUNWQWRBNUFYcnhlSkViSnAxWGhrX1lxRGhHckJLemdpMmJBQURXelRQMlNKSWR6YTZmTk9EVC1jd0ZhLTI2QQ?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxQWjNYRXJSWU5CR3RCcnpRT3UyZVVtMzB6UVBaSWZBVFc0ZGRYbXpxdnRCRHVFQU5JOG9RekdScm5QXzN5QXFjTmFjeXBtUE4tdF9FSUNfT3Nmal9PTGtncURZbzBPUmJXcWpZdWI1SEZFT0NleXBmVm05N1ZCam5ac1RyT2tzXy1hVEhjeUI5Y3BUUQ?oc=5",
+    "https://news.google.com/rss/articles/CBMigwFBVV95cUxNeWZGWUhhYk9pRmhtb2Zjcko5MmV5STFsY0dYOEpaWFJIVXZqRU1zV3VkVUVLR0hGdjc4dldTNmxGc0Yxb2t3ZUJraWh0TktKbktBdExkb2hmN2Q4NG5VOTUtS3NYeWFvVGFtR1N6MzM5cWFUOWJ2em1ySC1qMWpzbVRaUQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiowFBVV95cUxQaU9MOWJsUEFkTEg3dGhWV2NUVElubHo0WXNTOU9MQng4SVlnOUZQdXR6SEpQa0lIYlBnQkN0OUlzUXlpRHBySnFHVHJVSmNBbkVqeVdmbDJLMGMySVo0eUxYZmRPM0Z5UmFkNlhMVkpRZFlXWXIydk9aRW0xTGIxNC1XNGx2Y3k0OG00eVBzSVBYV1ZfRGF2emlQQTZJVXJBWjJz?oc=5",
+    "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOcC1hWG0zWnpkaktMd1ZaNzlXY0FfNU5oZXIyVUhaNUxNa0JzUU9aaDdCdktkWGV4TTdMQjYxQXNjZUhVVW5NdU9xOFNIWU1FdkwwRGVpQnVRdXZ0b05WTU5GeEtraWpUWUpXR0JzV09ETzRzQTRtbV9zMEY5dVhlMWIxaTFiMzRNTzMzLVQzQmw5V29Ia09VZkdQWmZ2bllPaDNTWk9qQjNZYjg?oc=5",
+    "https://news.google.com/rss/articles/CBMihgFBVV95cUxQTGpDTkVzaTJXWDRwNmZtemlLci04TVZXcWhNXzBETldBVnhpcHFKVXhVMmd0TW9kM0YwR1ZMWVJrd1pwbHJIaXl2NmRybE16ZmoxZkhPQnlPVXpqQ2FJVm0tSHpKdVFKZzFuZEVGOFo3cWQza2Y4TmcwcW9DWjZ2ZHljVGhFUQ?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxObnJjZnZJN2Frc0tSOS13Qm1OUTcxWnk0cmdXUk1TUlh4TVNsZDBOZ0xTX3VsNVE2TUNXY3dtSXpVMFVUZVV2T2lzTUFzdUZBcmlLWWxOMzdZYWNFSV9xMU1ROFp6UVNrVE9HV3UtY29Xcjh5UnZzME1UZU1pNkd4ZTVDSHg5SEtubnZzMzVOR3NwUQ?oc=5",
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxNcUI1NGN4bmRMU0d2dXE1WmJOdTdKaS11d1lYa0stTjRRZFBIWkxYdFVRelloSDI5MHR6QjdiVENNMG1YXzVOUXptUnpNMlZ1NlBRSmZUcVBHWXc2LTJUUW5kWXdMaVBkSFVTS2tWNlY0cFNiVTVqek0xTThHa2tlY2t2TDhEeU1iQmhMRjgyYWVRVEVXSDVZVE1hN045Zw?oc=5",
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxNWk5vZWFRWDFEalFxem8xSVNrYkRVdTR1U1V6SFpfN2FXWnVoZnd1LUdMa0ZMQXZILUplZ0JybmEySlhueTVfOWdUbHNOSWI2dlJvS09scDEwYmxZRGdNd3l3S2ttVVhEd2JaSjZKRjl6QUZLLUU2NDJ3WXV2U2c0YjFVaHVSRGRrUWRhdmpOdUU?oc=5"
+   ],
    "yazar": "Uğur Gürses",
    "tur": "sayfa",
    "etiket": "Oksijen",
    "adres": "https://gazeteoksijen.com/yazarlar/ugur-gurses",
-   "hata_sayisi": 2,
-   "son_hata": "https://gazeteoksijen.com/yazarlar/ugur-gurses alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:17:05+00:00",
-   "durum": "hata"
+   "hata_sayisi": 0,
+   "son_hata": null,
+   "son_deneme": "2026-11-06T20:27:01+00:00",
+   "durum": "tamam",
+   "yedek": "google_haber",
+   "son_basari": "2026-11-06T20:27:01+00:00",
+   "son_bulunan": 25,
+   "not_": "Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
   },
   "1b71fb56e280": {
-   "gorulen": [],
+   "gorulen": [
+    "https://news.google.com/rss/articles/CBMie0FVX3lxTE1IdW5rb1o2RWF4WmRTcVJVVXFMYkwzSlppTVMyOTB0R1RqaWRoQVlyZmlYd2EzU2hqUHRsZEVoSWw0OTg1a24yTDR2UXBKYTVaajJJbENjaGx3NDJaWTRLOE5CTWpYTVZ5SVhOSmpLU0Y5QURIcUk2eHZkWQ?oc=5",
+    "https://news.google.com/rss/articles/CBMifEFVX3lxTFBYeVRZT3RuVGxUOFB2M3Z1eTFUaWl1WVJuUV9VWGlvTmlnOE1NY3Z5LXpweTZlaGc1SkFDWWRhSGNKSVpQZGM0NGFEM3dDQ0pwcDkyQUd2cUtSbFA5dnlyZFZPWldDd19zMTJPNHdkVlNLSWxWZzd5MmZ2a2U?oc=5",
+    "https://news.google.com/rss/articles/CBMic0FVX3lxTE16MnlvbDNWQW9RdHRZdEh0Y1lhcWFrclYxNWxjRnViSHItanpyeEJfa2VZY2w0aER4UjZfcFA1NU5fSk9TTlk2OGpsTjRkb3RSZk96REZJX0d1OW56VW9vNkkxWWE4NUUzU1lOdklLNW9xNEE?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxPaGJNT3dLcV9sQ3V2MHl3UXNGZFJ2YnBDdlV4VGdUcTNYX2ptT3dZSDZ6Zm1ZS3VWMEVYRE5pOGVkaHhVVlNiazJMcVhrQ2dlVTZCbUVXc0liLU1POWdHdU92MFZiVUN2VXVZNl9YcDVMcm5iN0VUc0VVbmg3YThmUU9CWTQxX0JRSzU4a0NDMlhYQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiekFVX3lxTE4wNE5LdjRCcHdXYkE4ckZMblNDamI1Y2VJalAxTUg2UW9felhGWG1hVGYxT2Q1ckRUc2ZrSDdLeEs4TXA4V016VDNNcXFLdkRYX3ZvSFVBNDdWR2ZfWGdDckQyT2kzOV9UOXo0LUlFMEQ1TThzd2d4VzdB?oc=5",
+    "https://news.google.com/rss/articles/CBMihgFBVV95cUxPWklCZFBLemh2ckE1TTc4QWx4a2RNamNRQ0RtbWRVQ24zX3RLS2dIM2FONDFBT1dHYU12VEZXWVZ5LUtwamprMmkwTlkzRVlLSlplSUxVUm15TmNuaE1MSmpUclc2ZjFQN1EwaDFhMUI0bEFnaldtTnRGWVNNNHhuX1B2TmhSZw?oc=5",
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxQcVB0ZU92ckJCRWpaSVE3WnNiVGRoMzQzZDh0MXZueTg5bFNpVXVCNDdQX2Myc29kNGxyNVNjaTFBRkRHVGFFMDgweWlJRmZDZEV0ZWNKRndVQmY0cXpCajZfS0dPTW5vZ28tRWxvbExuNGszRi00T2U5Sktiakp2LVE0SjctNHZreG5kUnA4enBQYllsN0o2T2d6MW9UMXZCbXpWY3pLdjQxTHE5b0xDZ1k1WGs4QQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQVmx6ZHNON1BsaGx0djVJZWFjMVl5Y3l5SG55Z2c1Q2FRVlV0T1MzR2RpaDJ3MFJnYnA3MEw2MTI5ZFpybEdSZF9UVWpxeEtwclpVekZRVHd0cFRDLXRCVm5KUE81STR1MkJvRGlfeU82NWxFcWJkVkZwMHhuVG5CQXdoTXF2ZFRh?oc=5",
+    "https://news.google.com/rss/articles/CBMiekFVX3lxTFAtcWpMUzVKNmlqTXczenl1SEhMNnhKcXZ3bDJyeGhwcXRaM0pBanhmMXpDR0YwZy1lcTlyUm1DWWU3eVZKTy04bUtMWm1hREhCQTItVE5SS0U0MG9YSVRqUktINGR4ZzM5MTlCSW9QNVdDMXQ0c005ZG1B?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1fRGVLeWlNczNtRWJMaXk5c21CeHBrMHp2WU5KeUtCZHB3ZHQ2NmtjMjlZSGpBSFI0enpSSjJqSHg0cnFFYnUtX3JjX1pyQXNmODJOT2ItZHZ0YVJOR3BmTU5ZQTN4ZTFUdkdrT29lSXdtaDl2Sld6UFlXVE9RZw?oc=5",
+    "https://news.google.com/rss/articles/CBMiekFVX3lxTE5RWmo5YzRXTUhmd2xqYUdfTjZDREN3T3RYeGYtaDNubVZqUmdHUGJkeElIdzNGR3FrTHN5d0xUSk8weHF4Y2xoUDEyYUlsUzluUll6SGFuMHdNWnc5bUd0R1RHMmdNWFdZc1lOVTlkNmNCU3NlMVdIajhn?oc=5",
+    "https://news.google.com/rss/articles/CBMif0FVX3lxTE1wY0w2d0ktNlZfRndvQVlOQWJkM1JnMGpmMWxCQXV4OEVULWp6N3ROR1ZBT1gtSUlDZjB2Yy1mdHhrOFVadDBueXRNVUlKYkF6MEtvbmNpYXdObG1mQUNLcTdJV0Q2S3k0b0czeEpBNDJmcmE5bmZzTkhfTWM4bTg?oc=5",
+    "https://news.google.com/rss/articles/CBMifEFVX3lxTE9DczluRWxBTFV0UnpTVmUwLVpnOV8wT1FUMnBEdmJpcXpvZTh1WnU2S0pVTU5hRHU3bXpNNHhvOUVlS2Vqb3F3ZEpLVnhCcm4yVTdlNnM4OGJoUDRvbVlYWmJVYl9YRHZVRC1MNkk2cFhrTS1lUTFib0FiZTM?oc=5",
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxOMnQ1cUZfVFEybXZuS1d5Nmw3cU5YeHliVTZNeXRMMXkxQkN0WERmVGF2aklqRmxMNE5rTDlpTC1ROUhmREtCUGxpS2huMHMyQTVYVW96V0RuWFFnVWhYTGF0QmUxc0dEellZdkZ3ZmdPWjFlSTgwT215QnVHZ3gxUTMzdlo5WmdKTmw2MS1rM0JHWU92?oc=5",
+    "https://news.google.com/rss/articles/CBMihAFBVV95cUxNelNwZE1RRWVCRjZpR0hydjcwM25JWHh1U1dENUFvRHJja0VNM2VmaHR3QmZadGNvZVFxTGlKMmRRU1VtekdDOEcyZktrVVFFZ1paZ3BLWmVKSUJERERJRjNEN3BwNWZDNWV1NklHNnFyUVhSV3hOVjMwNVlGT1RKWTdqRVk?oc=5",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxOekszQVJjcnFmejFtdzZOZTVSWGZpOHA4VlNGSktsTDVaX0FsUzg1Wkh5WndnbGl6UWRtdGRVVWxuRTdfaWx1dDFhQ0tyUG1FUGloMnVVa0JsSDZDMF94ZFpQZGMzbTJJTkYxbjlubUE0ZG1WeGFkbGVDTV9PVzVhVFZ3?oc=5",
+    "https://news.google.com/rss/articles/CBMieEFVX3lxTE90dmJuRzlBTHU1Y0dSRkZCR2RINERqc2gwM2VlcWt6Yko3M2IyN1pjakpQT09jTF9KZ3FrRnc3MExDdk94MlR6RzBhcWdyazgzWHdQQzRuVnIwY3ZXdGctQUVsVGE3Y2RWemhiTXZEUnRnTGk3c0c0UA?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1GU3MxTjR4RmphRUx0N3FnOTZrRXk5eDI4NEpfQ0tHNzhvbTBMRExkYmVyeHFQMTZTMER5bmZfTFBucVNnSWxQYkM3bllTOFhqRWNvSm9uVTVoS3F3UEMxSk9ySGtIR3VrNVJHUk9GcVlyQkFHSjlUaDZGMVdEdw?oc=5",
+    "https://news.google.com/rss/articles/CBMif0FVX3lxTE1yZjhIWFhxcVhaOTB2Zzc2QmRoS3NNUTREZEY5WUVwa21xdWozdFF4ZmhYMHJVMm9UTk54dVhEb1RhazFqU25RSnVPVnBQNktzaWpfaGhjbmJPQTZ6TzdzNU9vLVlQWm5FeEVGSmtyZHVBWUthMS1CRWVlUHFMQ0U?oc=5",
+    "https://news.google.com/rss/articles/CBMilgFBVV95cUxNTXRmcmJ1WnhiUmhPWnNBS3VoZjgyYndzNkpzcXRmdERZQVVIU2UyQkJxamQ0WnBiRUthTFhMblJHZjR5LTlJbm9Dam5zampaWmZqbnB0SkVqa0wxNkF6a1NqZmZqYnBnUTlIRUNSZERBT2ZkYktfMjdVQ01kbnZKR1NsQlkyNFVHMl9zMGs1QnlBTUlWdGc?oc=5",
+    "https://news.google.com/rss/articles/CBMihgFBVV95cUxON2tRREZuajNYdVh4eDFVSmgzNXpBX1VHeUZGWXZ3SUtjeU1NbDA5a1gzNjJvcGYtbnFXWEdEeHM5UVhfcW5YengtTVhmRExtZ0N5bzhBWkJfQjFkaGhVeGFsSFNmVFlMLUdHVkdfQmJKRU5WVXBtVENRRFloV0JWcThuZ2JBUQ?oc=5"
+   ],
    "yazar": "Soner Yalçın",
    "tur": "sayfa",
    "etiket": "Nefes",
    "adres": "https://www.nefes.com.tr/yazarlar/soner-yalcin",
-   "hata_sayisi": 2,
-   "son_hata": "https://www.nefes.com.tr/yazarlar/soner-yalcin alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:17:05+00:00",
-   "durum": "hata"
+   "hata_sayisi": 0,
+   "son_hata": null,
+   "son_deneme": "2026-11-06T20:27:02+00:00",
+   "durum": "tamam",
+   "yedek": "google_haber",
+   "son_basari": "2026-11-06T20:27:02+00:00",
+   "son_bulunan": 21,
+   "not_": "Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
   },
   "9a4155f460ae": {
-   "gorulen": [],
+   "gorulen": [
+    "https://news.google.com/rss/articles/CBMihAFBVV95cUxOWUN4eF9ER3JBVXVmTXN3WEdQQmRVejZZRHlCQ1pwSERZWjFIYWg3QlIzRzc4QVlRbFk1bUE0bVRtS29QZWVjaTkyYXNYYmt3Z011SnpodUUwVTJKb19KNjM1RGgtdnpTd1ZiMVRhdXNyLWw2MFBEMkhaWEtFSjU2czd2Z0Y?oc=5",
+    "https://news.google.com/rss/articles/CBMihgFBVV95cUxQNTlKTERyRkJHNGpYeTJ4NG1LalZxM3hLNm5sdGx0aWEtZktpQUVPWmlnUlRkLV9OdmRsc3V0UXRJNjJRNnR1aVdRX29CMEZGR1ZJb1RxbnVJOVNUTWt6QTJaSUJtSno1OXAtWjlsRlVRV1hGamJxU3JzVkZnc29LanZLMC1XQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxPM0Fic0RDVXY0ck82U25RMmlNaTBtRGxIMGJDY3Y0MlhQS0ZBMGpCc3NaMjNHNlNXZEJhTkNnSlpNbk54bUZoamJNNEJTcjkzdm1tbWczTURBaXpoSEUybUpjZEhQTWNsU01oQVVWLVBGdWFobUdJWHFVNEZKTWtkdThB?oc=5",
+    "https://news.google.com/rss/articles/CBMipwFBVV95cUxNVmd3dGRSMlhaOVhFSUFaWFBJQlFBd2RpYWZobmRGOWpfdjU0SGI3cEcwZ2VEWW9MT0RhaV9uME1kdGd3d2J5a2NNUzNzLVl3RVR2eW8yRnhZWTY1dXZaODhmVEhZeWxXX0IzUEtJX2Ixazlyc2gyME12dDJWRVg5eFl4NGFMYmNrS3RIeTgzOFhUcVNqbGtkdHZKN3BBNnRwLVV4Z1lVRQ?oc=5",
+    "https://news.google.com/rss/articles/CBMinwFBVV95cUxOU2xoT2JDeWJjYUJ0aUowMkVoZm01RndrXzkyVWpySktSb19HZ1MzM3RXT2NYaVloWGxnSnU4Um9EVjVuSFQ2ZDk5S3Z1UUt5T0dJQTJ2NVViSWJjZ2U0Q09nYWJuQ29GcThZYmNONnpMNVBnZWRhYXZBM2FpVHdhT1hocmdiX1M0b2tTZ2Y2YVFOMENNQ3VXS1B6VlpkeGs?oc=5",
+    "https://news.google.com/rss/articles/CBMigwFBVV95cUxPdXI0amlWZ0FaMTFlcEJfOGpWS0ZuT0RTWTV4aVVvYXJ6V1pqZWRzQmJsOExXRGdmbVVWZTk5M2lsWlhPSlg4eTVGWnExeU9LRHhWRVp4U1Y5a0lvTHFBbW15eHlxODBzSEg4RE10WVRYTnJxaC05V1V4bDBnVDVnUVRCNA?oc=5",
+    "https://news.google.com/rss/articles/CBMigwFBVV95cUxOQ09oQjN0QktIaEJibkdYY2MtTkRheFpEZkpPNWZOLUMyMkhEOF94Nmotbmh6RUtzQTBLTzBOYlppUDJUWnk2c3VXN2lvNzBLLUtQM2xHN3FSVUZyOHctUVJxYzR3XzRxTzVfU0xfYkRHSlpVdjBPWUFaZXFVZ0xkYWM5OA?oc=5",
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxNTjBHRVdyNk82Q0V4NlVOYnNFdkVJRC1YZXJDOXRPUWJFVEhrQXBZaW13YVlYdjEtbW9EVU0wVnMzNElkYkFUUTdkVTFuNmo0LVAyZ3EtQzBZUzgyTWV2YktFWEtZbm5oTzVFUlY2WElYUXRxNVZYRFZCZVFER0ktZE52WDQxQ2s?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE9QbG5xMUtuYUtsTVRBN0E1NmJUeDJwTFNpMHNvaWZBV2w3dDE5ZFk0NXB3R0wtMjdnUFZsRm5nenNjb1g0SXl2LU1SVGtDSWxySnp6bHY1WlRZeF90MW9DQWtDdVhJMTJUcmlYVnBXSFhXenBSOWZPcmJnRk0zQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMif0FVX3lxTE1TVlg5QVpzUVNQQ0NGN0pfaE9DQ2N2N1ljVXpudmxQWDMtc29Oamhyd3pHRVh5bVQ3dTUtTF92OFFWcXhzQktYcTJvREdoYTlwLU9pdFN6OHk4QmhLc0FaYzNvak5mdUQ3Tk5pT3pQeV9qZEZrS29hRmsxeGdlNnc?oc=5",
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxNNXppRnNUQUVrcndKWFViaUhqcVozUEFKdXBxLTBBOGFWVWdncGZKamNJdHV4UUVORW9DamhKQmUxQTJyclh4Z3BMemkwUkVONnZobTI5S2RRVldRNFNnT0hpZXRSd1l0bkVSbElnQjNKSXpRd29tUVgybDA4U04zSVRteXNJYlE?oc=5",
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxNcF90eHF4QkNDN1VxQzlhNUpBcVQtNHp6c2FmenNNckhMdVFpQjU2bHphYXh1YU5IcVd6OFNfWl9xX1RpRDlKMlJ4eGtGeVRGRjhtSmNva1B2X3I3dEJUTE1mTThiTlUtMThtSkJhOVVPeGdpcUZZa3NOVDdpNkc5dUhvZUdHczUyR3c?oc=5",
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxNbWlzZjVrWDE1MmhJZ3BNdmJRZUtRN0RDcGh0VWlZeng3ZWc5Z2xlVlAzRHJkV0E3bXhYOUZTVTBHaGtzVkdVaGJpX0padFVfR2RSZElpTEtNcEVZNHZkNVBzelBQdjlPVUlVR0ZSZ0RqY2NEYVYwMm5hZl90T3JuZ0QxLWswc0pyakE?oc=5",
+    "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNzhYNTlYTmF4LThkaWNPdEtCc2VFOVFBOS1VY3VOMTdRMzMyMDNZV3pOb3VaOW40OFpQUWN4ZmRRME9ELTdEcUd1T0dUX2NPZUU0RGlXWWlwZXZmUEFjd01xRGJydl9nNXNXV252WXZhU2MyMGlOZHhoUjR2REFkRFBjT1hSZ3RKTzhWbUI2Sl9SQjhLbDZ1SElweGJ6bVl2TDJLYVhERQ?oc=5",
+    "https://news.google.com/rss/articles/CBMigAFBVV95cUxPQ0UtQnRSMmdwaEUtek9zWENBOXFkUVdzT1BOUnBSclVRejZzeTVtbGNwZ3JGY2s2OTlrQmFWRjJuRE5adUxuU1czeWpBamg5SlpZMGx3d3FsMXFDcENoenFrU0NkX01adHVRVEtNTC1tNE5BQko2N2hnTjZVUVRjdQ?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE96NHcwelNyNF9kMEFBR1h1cXNXVVJ3bGlRZzJyRXhxTE9Sam1na2NuNG4wbUFFNzZlQU1fMGxvWUE0RTVvOE9mckxGQzR0THprR3diUWFTOG1WVVBWampMVld5VHJ2R2M5emZGbDRhdUV0Rmtkc2FScXhxM0NzZw?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxOYzRIbFRWWkZpbWVFcmRSb0t4WDEyRHFmcEhhSWZsQmdGUmZxNFVMcVlNX29ranEteEFHdGFkdER2X3BKN0lfSm9uYVBJZHhrRmJMZk5LWXpzdlZvdGpxQk1zUHlfdkhMcHlWUVBGeURIeDQ0Y0g4YUY0YVBKNzJ1aEZGNVlXWWlyUDdZVE5Zd05pZw?oc=5",
+    "https://news.google.com/rss/articles/CBMigAFBVV95cUxPVUo1cklHNjlTSzV0VEh2alYwN19jZ0tpOTZYNGczUndGei1KR2ltM1RVUDV4aUdGbGxpV1lHVkJ0T2VoY1JlcU9UWXVJUVpZdkFWRFpXVGJtRE9UaVBaX2xBU0g0aFcteUNvV2VUSmZDb21yVHFjVHVXb0xKUTdxQg?oc=5"
+   ],
    "yazar": "Can Ataklı",
    "tur": "sayfa",
    "etiket": "Nefes",
    "adres": "https://www.nefes.com.tr/yazarlar/can-atakli",
-   "hata_sayisi": 2,
-   "son_hata": "https://www.nefes.com.tr/yazarlar/can-atakli alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:17:06+00:00",
-   "durum": "hata"
+   "hata_sayisi": 0,
+   "son_hata": null,
+   "son_deneme": "2026-11-06T20:27:02+00:00",
+   "durum": "tamam",
+   "yedek": "google_haber",
+   "son_basari": "2026-11-06T20:27:02+00:00",
+   "son_bulunan": 18,
+   "not_": "Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
   },
   "f983ca78f028": {
    "gorulen": [
@@ -231,12 +316,13 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/murat-agirel",
-   "son_deneme": "2026-11-06T20:17:06+00:00",
-   "son_basari": "2026-11-06T20:17:06+00:00",
+   "son_deneme": "2026-11-06T20:27:02+00:00",
+   "son_basari": "2026-11-06T20:27:02+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "4e1f3296dace": {
    "gorulen": [
@@ -270,12 +356,13 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/sinan-meydan",
-   "son_deneme": "2026-11-06T20:17:07+00:00",
-   "son_basari": "2026-11-06T20:17:07+00:00",
+   "son_deneme": "2026-11-06T20:27:03+00:00",
+   "son_basari": "2026-11-06T20:27:03+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "05133581170c": {
    "gorulen": [
@@ -309,12 +396,13 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-terkoglu",
-   "son_deneme": "2026-11-06T20:17:08+00:00",
-   "son_basari": "2026-11-06T20:17:08+00:00",
+   "son_deneme": "2026-11-06T20:27:04+00:00",
+   "son_basari": "2026-11-06T20:27:04+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "d01176567c10": {
    "gorulen": [
@@ -341,12 +429,13 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/timur-soykan-353"
    },
-   "son_deneme": "2026-11-06T20:17:08+00:00",
-   "son_basari": "2026-11-06T20:17:08+00:00",
+   "son_deneme": "2026-11-06T20:27:04+00:00",
+   "son_basari": "2026-11-06T20:27:04+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 15,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "bd98a62a803e": {
    "gorulen": [
@@ -379,12 +468,13 @@
    "tur": "sayfa",
    "etiket": "Evrensel",
    "adres": "https://www.evrensel.net/yazar/137/fehim-tastekin",
-   "son_deneme": "2026-11-06T20:17:08+00:00",
-   "son_basari": "2026-11-06T20:17:08+00:00",
+   "son_deneme": "2026-11-06T20:27:04+00:00",
+   "son_basari": "2026-11-06T20:27:04+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 24,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "4d43e995a22b": {
    "gorulen": [
@@ -402,12 +492,13 @@
    "etiket": "YouTube",
    "adres": "https://www.youtube.com/@fehim.tastekin",
    "ekstra": {},
-   "son_deneme": "2026-11-06T20:17:08+00:00",
-   "son_basari": "2026-11-06T20:17:08+00:00",
+   "son_deneme": "2026-11-06T20:27:04+00:00",
+   "son_basari": "2026-11-06T20:27:04+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 8,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "298e4857585d": {
    "gorulen": [
@@ -435,12 +526,13 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/zafer-arapkirli-371"
    },
-   "son_deneme": "2026-11-06T20:17:08+00:00",
-   "son_basari": "2026-11-06T20:17:08+00:00",
+   "son_deneme": "2026-11-06T20:27:05+00:00",
+   "son_basari": "2026-11-06T20:27:05+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 16,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "fc2db4b80ba8": {
    "gorulen": [
@@ -459,12 +551,13 @@
    "tur": "rss",
    "etiket": "farukbildirici.com",
    "adres": "https://www.farukbildirici.com/feed/",
-   "son_deneme": "2026-11-06T20:17:10+00:00",
-   "son_basari": "2026-11-06T20:17:10+00:00",
+   "son_deneme": "2026-11-06T20:27:06+00:00",
+   "son_basari": "2026-11-06T20:27:06+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 10,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   },
   "d1fb34dc45db": {
    "gorulen": [
@@ -492,12 +585,13 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/medya-ombudsmani-faruk-bildirici-372"
    },
-   "son_deneme": "2026-11-06T20:17:10+00:00",
-   "son_basari": "2026-11-06T20:17:10+00:00",
+   "son_deneme": "2026-11-06T20:27:06+00:00",
+   "son_basari": "2026-11-06T20:27:06+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 16,
-   "durum": "tamam"
+   "durum": "tamam",
+   "not_": null
   }
  },
  "ogeler": [
@@ -548,6 +642,54 @@
    "kaynak": "YouTube",
    "kaynak_id": "4d43e995a22b",
    "bulunma": "2026-11-06T20:15:00+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQTTNIQ2xRWHY3c1hkeFczbWozbmNxWExIdmgyQzBlVFVVRnIxNktfREEzaUZScnYwcGY5WC1nQnhPbXpyeDBGZm9tNmpKRUNtWUpxalFHbkxfeXBINEMtUmlxc3B3eVNYRW8zRjF4UWhLRk0tZjUyNzVJSzhFbzlMc0RUN0RGSDZxQWFkbzYwMzM?oc=5",
+   "baslik": "Fatih Karahan: Kira enflasyonunda düşüş sürecek",
+   "tarih": "2026-11-06T17:23:00+00:00",
+   "tur": "yazi",
+   "id": "046e239c7d1f",
+   "yazar": "Uğur Gürses",
+   "kaynak": "Oksijen",
+   "kaynak_id": "83fde5714def",
+   "bulunma": "2026-11-06T20:27:01+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNV2YzMXRCVVVVWS1fTEtVY1VCTHdMZVJ6bjJRWUJxSTJUUXp2WjIxR0o3ODFVLUJWWkZCeEwzSmI5U2JMMXF1cmJOQThIeUVqX3h0X3VKLWpaQlc4cVFjMzJ4WmhsT2lPaWp4WFpNWEJOWWFCRENEMWlXSVhlRVgtSnNWbE1VcXFuTHo2VUYycGRNRVVhWnFnNWpMMEZ4RXpsYkpDVC1ZNGlDSGxEUTZ6MWJKNXRVMkV5X2FCQzRnRkEtRlk3aUNybDN3?oc=5",
+   "baslik": "Cevdet Yılmaz'dan fon açıklaması: Olağanüstü tasfiyeler sürüyor, 130 milyar TL ödeme yapıldı",
+   "tarih": "2026-11-06T16:17:00+00:00",
+   "tur": "yazi",
+   "id": "089f22280f63",
+   "yazar": "Uğur Gürses",
+   "kaynak": "Oksijen",
+   "kaynak_id": "83fde5714def",
+   "bulunma": "2026-11-06T20:27:01+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOc3RKY1BsbS1ndHZQdG5rOVN5eFc3cXBMSHFIZDhWRVMxcXYzS2RDcndCTVRZZVlsbDNCT0dVVHVNQjJWVTczS2ROeTd3c0tSS1RSOWlMeHc5N0VkR1VLRndiNVk4NGw1d0J2WDBDM3pFYTZkalp0alJTMlNaV253S09NcXNKTnBYV1MwTzdCeE1qRXM5Si1aaGVkaTZiTzVoTUd1bTZFaEVkcUtMMmJrNWZoUEU1dw?oc=5",
+   "baslik": "Yargıtay'dan emsal yıllık izin kararı: 33 yıllık müdür öldü, ailesi dava açtı",
+   "tarih": "2026-11-06T15:17:00+00:00",
+   "tur": "yazi",
+   "id": "ace873704113",
+   "yazar": "Uğur Gürses",
+   "kaynak": "Oksijen",
+   "kaynak_id": "83fde5714def",
+   "bulunma": "2026-11-06T20:27:01+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1IdW5rb1o2RWF4WmRTcVJVVXFMYkwzSlppTVMyOTB0R1RqaWRoQVlyZmlYd2EzU2hqUHRsZEVoSWw0OTg1a24yTDR2UXBKYTVaajJJbENjaGx3NDJaWTRLOE5CTWpYTVZ5SVhOSmpLU0Y5QURIcUk2eHZkWQ?oc=5",
+   "baslik": "Siyasetçinin oğlu",
+   "tarih": "2026-11-06T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "16b6896c8a67",
+   "yazar": "Soner Yalçın",
+   "kaynak": "Nefes",
+   "kaynak_id": "1b71fb56e280",
+   "bulunma": "2026-11-06T20:27:02+00:00",
    "ilk": true
   },
   {
@@ -628,6 +770,30 @@
    "ilk": true
   },
   {
+   "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBYeVRZT3RuVGxUOFB2M3Z1eTFUaWl1WVJuUV9VWGlvTmlnOE1NY3Z5LXpweTZlaGc1SkFDWWRhSGNKSVpQZGM0NGFEM3dDQ0pwcDkyQUd2cUtSbFA5dnlyZFZPWldDd19zMTJPNHdkVlNLSWxWZzd5MmZ2a2U?oc=5",
+   "baslik": "Küfürleri bitmiyor",
+   "tarih": "2026-11-05T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "40a0c643b4c2",
+   "yazar": "Soner Yalçın",
+   "kaynak": "Nefes",
+   "kaynak_id": "1b71fb56e280",
+   "bulunma": "2026-11-06T20:27:02+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOWUN4eF9ER3JBVXVmTXN3WEdQQmRVejZZRHlCQ1pwSERZWjFIYWg3QlIzRzc4QVlRbFk1bUE0bVRtS29QZWVjaTkyYXNYYmt3Z011SnpodUUwVTJKb19KNjM1RGgtdnpTd1ZiMVRhdXNyLWw2MFBEMkhaWEtFSjU2czd2Z0Y?oc=5",
+   "baslik": "Onlarda değil bizde de var",
+   "tarih": "2026-11-05T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "17ad408045b1",
+   "yazar": "Can Ataklı",
+   "kaynak": "Nefes",
+   "kaynak_id": "9a4155f460ae",
+   "bulunma": "2026-11-06T20:27:02+00:00",
+   "ilk": true
+  },
+  {
    "url": "https://www.cumhuriyet.com.tr/yazarlar/baris-terkoglu/ahmet-hakkinda-konusmamiz-lazim-2553436",
    "baslik": "Barış Terkoğlu yazdı : Ahmet hakkında konuşmamız lazım",
    "tur": "yazi",
@@ -680,6 +846,30 @@
    "ilk": true
   },
   {
+   "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE16MnlvbDNWQW9RdHRZdEh0Y1lhcWFrclYxNWxjRnViSHItanpyeEJfa2VZY2w0aER4UjZfcFA1NU5fSk9TTlk2OGpsTjRkb3RSZk96REZJX0d1OW56VW9vNkkxWWE4NUUzU1lOdklLNW9xNEE?oc=5",
+   "baslik": "Sanık: Tanrı",
+   "tarih": "2026-11-04T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "86086f26081b",
+   "yazar": "Soner Yalçın",
+   "kaynak": "Nefes",
+   "kaynak_id": "1b71fb56e280",
+   "bulunma": "2026-11-06T20:27:02+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQNTlKTERyRkJHNGpYeTJ4NG1LalZxM3hLNm5sdGx0aWEtZktpQUVPWmlnUlRkLV9OdmRsc3V0UXRJNjJRNnR1aVdRX29CMEZGR1ZJb1RxbnVJOVNUTWt6QTJaSUJtSno1OXAtWjlsRlVRV1hGamJxU3JzVkZnc29LanZLMC1XQQ?oc=5",
+   "baslik": "İtiraf geldi, sonrası önemli",
+   "tarih": "2026-11-04T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "b090c5554550",
+   "yazar": "Can Ataklı",
+   "kaynak": "Nefes",
+   "kaynak_id": "9a4155f460ae",
+   "bulunma": "2026-11-06T20:27:02+00:00",
+   "ilk": true
+  },
+  {
    "url": "https://www.sozcu.com.tr/fon-orgutunun-siyasi-ayagi-yok-mu-p375759",
    "baslik": "Fon örgütünün siyasi ayağı yok mu?",
    "tur": "yazi",
@@ -728,6 +918,18 @@
    "kaynak": "Cumhuriyet",
    "kaynak_id": "4e1f3296dace",
    "bulunma": "2026-11-06T20:14:50+00:00",
+   "ilk": true
+  },
+  {
+   "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPM0Fic0RDVXY0ck82U25RMmlNaTBtRGxIMGJDY3Y0MlhQS0ZBMGpCc3NaMjNHNlNXZEJhTkNnSlpNbk54bUZoamJNNEJTcjkzdm1tbWczTURBaXpoSEUybUpjZEhQTWNsU01oQVVWLVBGdWFobUdJWHFVNEZKTWtkdThB?oc=5",
+   "baslik": "Dikkat, Erdoğan 4 gün yok",
+   "tarih": "2026-11-03T02:00:00+00:00",
+   "tur": "yazi",
+   "id": "92072b3bd1e8",
+   "yazar": "Can Ataklı",
+   "kaynak": "Nefes",
+   "kaynak_id": "9a4155f460ae",
+   "bulunma": "2026-11-06T20:27:02+00:00",
    "ilk": true
   },
   {
@@ -1112,7 +1314,7 @@
    "son_tarama": "2026-11-06T20:15:07+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": [
@@ -1158,7 +1360,7 @@
    "son_tarama": "2026-11-06T20:15:08+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
    "oneriler": [
@@ -1204,7 +1406,7 @@
    "son_tarama": "2026-11-06T20:15:09+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": []
@@ -1265,7 +1467,7 @@
    "son_tarama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": [
@@ -1284,7 +1486,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:10+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
    "oneriler": [
@@ -1370,40 +1572,228 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:06+00:00",
    "sessiz_gun": 3,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "cumhuriyet.com.tr",
+     "ad": "Cumhuriyet",
+     "gecen": 11,
+     "imzali": 4,
+     "ornek_baslik": "Murat Ağırel yazdı : Ucu bize dokundu!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPOFlKWGxRZUpqYkgzMVZwakh2b0N4SDQzLTVGQ2tkeE91TU5sX2RpWnNEMERVbDZUZC1PakJRREpjRmVfYkVDa3BTQWtDRVdxWEhwRFlkNEg5WXNqbzh2VG5hRFJhT19zT1N3aTRfNVBmSEZqVDF2QlNhd1Rla2lXc2JR?oc=5"
+    },
+    {
+     "alan": "birgun.net",
+     "ad": "birgun.net",
+     "gecen": 9,
+     "imzali": 0,
+     "ornek_baslik": "Tutuklu gazeteci Murat Ağırel iddialara yanıt verdi, yaşananları anlattı",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOWWMyeDNZeHdXT1ZsdjFTSDVpUVNXcFFlSTBOd0R3SlhQXzQwSm4xZmVFRjdXOHNhT1JuQVR0cFgwTE4wXzViVGgwX2tySjdZX256OXNMSzhvNDBYWTBNUU9qZHRjSl9PbXRwY2ozQkY4S0NPM2t2aHJPdDM2YVpyQ3EtM3M1V0ZfaGZYN3Y0SERienJFRHFlRDh4T3hSalRkYWE0ZmpJSEV1bkk?oc=5"
+    },
+    {
+     "alan": "haber.sol.org.tr",
+     "ad": "soL Haber",
+     "gecen": 5,
+     "imzali": 0,
+     "ornek_baslik": "Gazeteci Murat Ağırel: Ayağıma kelepçe takabilirsiniz ama bu soruları ortadan kaldıramazsınız",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPTmItOGdxdy1lbUZzWjBjdjlYNGpzSkNaTVd4dktLWUZDaEdOLTd3R00tMDZ3WF92V3F5UzNzM2M5YWM1Z1ZkVWd6b3pNU0lEbjlHRkt4WUloV0hFbmJKRVh1V190b1RUbkQ5ME51TXo0dElhOGhwLXlkZld2YkVWbXU5M2pjaFZWQUxfcTNLUVVhdTg4dllmZGMzeS1ncTFKa3ViejRaY2JvQXRmZ2ZKYUU0aW5YWThfRk5iVWh1bGg?oc=5"
+    },
+    {
+     "alan": "diken.com.tr",
+     "ad": "Diken",
+     "gecen": 5,
+     "imzali": 0,
+     "ornek_baslik": "Gazeteci Murat Ağırel ve Ömer Sarıgül dahil 15 kişi tutuklandı",
+     "ornek_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNZFJwOGJJbjN5bHNwejRHNnhTaEdLeDB2RGVlamhvSFFxU1N1WXdnbDNTXzBXWjFEbm1qQldwcnZjQTlINUYwblBPYlZlM1lEVmN0ZWxYeWNJUl9GV0dMQVNUU1h6R0ZKQkpPQWFoWWV1R1EzbEFUajU3STBhekN5N1lCbXhRazllRjZaNEJWaEhjUQ?oc=5"
+    },
+    {
+     "alan": "t24.com.tr",
+     "ad": "T24",
+     "gecen": 5,
+     "imzali": 0,
+     "ornek_baslik": "Mustafa Sarıgül’den gazeteci Murat Ağırel’in tutuklanmasına tepki: Şantajcıların iddialarını haberleştirmediği için dosyaya dahil edilmesi büyük bir haksızlık",
+     "ornek_link": "https://news.google.com/rss/articles/CBMimAJBVV95cUxPaVB0N3g2R1c1SXhPWFZ6Q2FUd0VzLVVVTWJRekpDM2VXeThKY09KcWVYeEIxYW5XRXE5MkoyQTJzNHFMc2VtRWVQbk9rSFhuSXdUbzVES0dyYTNTc0FGWWZEQ1E2NUF1c2RKVm96V05kcGUtdmVTaUExYndlTm16b3hDcGl3ZGg3dVZvRW1xRTdKNEltQ0Fmc2ZyOXBrbnJkdXJCR0dDM3N2NTFxcXJZZzlrVXphMGpET3BLTmRhLWFuSlZ1TXZRbnYyaTN0TklRS09QVkJlczhic2prR29FT1Rib2dqdWJMS1kwM05mak5EVWpzampQcDRxMHpvVWlnbWdOMDJ1WlY0c2xudlRTdDE4d0NIZFkt?oc=5"
+    },
+    {
+     "alan": "medyascope.tv",
+     "ad": "Medyascope",
+     "gecen": 4,
+     "imzali": 0,
+     "ornek_baslik": "Murat Ağırel hakkında “YÖK aracında uyuşturucu yakalandı” davasında beraat kararı",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVUF0UGtyOWRiNFZwVEd1cnpzbkdCQWN3Z1hZZ1JhTjhUV1BMTjV3NG5XLTB3SDZXTmFHUnViRS0yOWJIeHJkNEtSbVgzaW90V2JhMFpzRS1GLVc3OVI5YjdKY0NIUkpFbndFbnJuaE9iQ2J3OGtNUXR6TjJCemtHZEphOW5mbld6NWdEY3FiOUxSYy01V1VkWkVKYWVoc01rSk1WaDJCdmYyQ3NTUXVMbTRpOA?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:27:06+00:00"
   },
   "Sinan Meydan": {
    "son_yazi": "2026-11-04T01:00:00+00:00",
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:07+00:00",
    "sessiz_gun": 2,
    "esik_gun": 16,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "cumhuriyet.com.tr",
+     "ad": "Cumhuriyet",
+     "gecen": 4,
+     "imzali": 4,
+     "ornek_baslik": "Sinan Meydan yazdı : Cumhuriyet İlan Edilen Gün",
+     "ornek_link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQdjN3MGhEdEZvRVpiVF9zQkZwSGsyNldYalBvQXFwWUdoMk8zeWRJTjdGdWVzekZqWlpsQWw1U3VlVnFLYUMwSVMxOWFDM3E0WU9XUEpCaEx6SEQzb3ozUlZjdFhVWE5CU2MwZl9PNkN5dlNmMDdCMGFsOUZUZy1kbEtMcUhSUmliclQ0Y2Vfcw?oc=5"
+    },
+    {
+     "alan": "milligazete.com.tr",
+     "ad": "Milli Gazete",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Sinan Meydan kimdir, kaç yaşında, nereli? Tarihçi Sinan Meydan'ın eğitimi, kitapları, eşi, çocukları ve yazarlık kariyer",
+     "ornek_link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxOWHpYb2s4RktvOElqYXhMdXY3V1RXSC0wZFdXeWVjLTRrMmRncTFhcjlpUkhweXJaR2l4dTRVRllGRmZyaEtLdEx6Vl9IVUZTOXFWSlNaTDl0VmNkSWh0ZWU2Z0lkRnJaek9COUFfbTZ0bDRBazZFckZIWHpEVldaWmRNcGdMdGY4NGs0UWl5eF83elJCR1lwNTlMMlFBeXNlSHRHSHJtS0E2NzJXX3pxeHFvQVdkdXl0XzJVRHVYcFJjV1lodjZtMVdlVkR3dU1HNVI0VFdCYnBVTy03?oc=5"
+    },
+    {
+     "alan": "ilerigazetesi.com.tr",
+     "ad": "İleri Gazetesi",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Sinan Meydan kimdir? Sinan Meydan kaç yaşında, nereli, eğitim hayatı, eserleri ve yazarlık kariyeri nedir?",
+     "ornek_link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1qY2R1TFRtX1lBNUZtM0VDZEEzOHVLZTJ4YmpuMWRNUTFyRHNXMzVSLTVoYzRvQlZXRjRaWW9iTm1ITjhncHRtS2NLVTRyODJtUTFGWHRGTktwYW94UGFCNFcxc0lCNko3VXN5Y09sWnA5MFVrdlZvMjhMYw?oc=5"
+    },
+    {
+     "alan": "haberdenizli.com",
+     "ad": "Haber Denizli",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Edebiyatın Kalbi Denizli’de Atacak, Murathan Mungan’dan Sinan Meydan’a Dev İsimler Kitap Fuarı’nda!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUWFPNjhnRXhua21zT2pXZ291RWtBMHEtLVB2b2JscExWZFhtRm9nUXh2NFFaY2kwYWRSeFJ2NkdYTHlJZFo2dlpTVVg3OXR5MzFhVlIxY2tyVGV2NHQ5SVIzdDZfanBjWWdwN3IyVWgxbmw4RGdWYmlqR1Z1YmFoekwyRE1CVVZlOGNPSUJ2bWhGSE1ESXpFUTJDcnJFTVA2WW9yYTVMOTJydW5HaXNjSnZfbWFpb0J6clJpc0hxYw?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:27:07+00:00"
   },
   "Barış Terkoğlu": {
    "son_yazi": "2026-11-05T01:00:00+00:00",
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "cumhuriyet.com.tr",
+     "ad": "Cumhuriyet",
+     "gecen": 9,
+     "imzali": 9,
+     "ornek_baslik": "Barış Terkoğlu yazdı : İşimiz tabii ki yolunda gitmez!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOUzdaXzlNQXJwWVN4U3Uwai1yQ0hiRHY1UkFXbEhfQWkyQmNjbm1VUmZsY3BRa3hhOGpFdVVDdmhtUTZwVGZieXg2ZGdwUjlzTGNpS3FHLWtNaC1OdjItM1phZ0lYZTY5SVA2Mno0MXNqcEU2SXMzME9VcmJPeHkxT3dsdFZtdlVZZ01UVS16Yjg3ZW90Yk80?oc=5"
+    },
+    {
+     "alan": "yenicaggazetesi.com",
+     "ad": "Yeniçağ Gazetesi",
+     "gecen": 2,
+     "imzali": 1,
+     "ornek_baslik": "Barış Terkoğlu: Sarıgül dosyası kapsamlı bir operasyona dönebilir",
+     "ornek_link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQRnZiUEdpMjN1ckNmMHY0MjZHdmx0UkJ1c2xsRjVPdzZmTDJibFJJYktxS21fUWlUcHF0VFBqdUY2Q0lNUUNVTVhRYl9nQnVNMDRYQ3FmUTR4Rk9ITkdGUk9CTVU4RzhTTlNOU0RGb3Ewam5tYkRzNlZkcVpGdlJxTHBMc1liMEd1NEw4RnVvaDlUMU42X0ZfYmpFc1E0Z29LdGZfd25ZNUtobjhHd2c?oc=5"
+    },
+    {
+     "alan": "haberhurriyeti.com",
+     "ad": "Haber Hürriyeti",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Yılmaz Özdil’den gazeteci Barış Terkoğlu’na: Düdüğü yuttu",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOd1g0ZEZpaExxNlJFVnZ4WG1JV2QzN0E3ZElZVUdwSXAtenY4WVZVSmx5TkEwYm16UjJ1SGVlWl8wXzZCZVdhUHBrUGVtckRBZlhScHNNcGZLbDBibkVoRkZmYkdSUFdqNFZIT0pBNlRpOFlIN1Q3LW9ZMXZrLUtLcy1fRDJjUFdHNWpxY3RZbTNZUE9yakxrb1lheU1TbFBpeHfSAacBQVVfeXFMTXlaMFJFS0xzNk4xRDBFM0ZaNmZ3QlgycUZBNkFjOFprNTd5MlpSTmo3R2lKUGJNYlFYZWM5NmpiY0k1LWVveFlCOGVZNmNWYldxOHZaLUx1V3BFQ2VqNFNtV1RzMlZZUGtlNENIeklwRkFweTRpa0paQTZoN0lfdjhaeUVtcUZEZlZUMFJyb0YtNlpSbm1FTmdWTy1FQlB2VmVuaHRnbkk?oc=5"
+    },
+    {
+     "alan": "birgun.net",
+     "ad": "birgun.net",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Barış Terkoğlu, Ahmet Şık'a yapılan saldırıların arka planını anlattı: \"Suskunluk teklifi gelmiş!\"",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNWGNKaDZ1cGVrLVNGWnhyaUhLVFl5Zi1oS3ZXN1JqUG9nc3otanBCWi11ZXVFZzhWMW1fUjJiWC1BX3BKbXRLNm1pN2Z0TlRJdkVZTWRIOXBVVmhWby1FRDU4SWtLby0xeHo4VzRhVEZmS1Q3OFlIbU1McUQyQ0w0VC0xdVB6bUJLNi04ZmJCLU9HT2VyM2Q4NlRBLTVsTllKRUdrR3hKejF0RXJrcEN6LWVhaU9XeW81V01CUC1RbnZJd1RIX1RPaw?oc=5"
+    },
+    {
+     "alan": "evrensel.net",
+     "ad": "Evrensel.net",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Barış Terkoğlu'ndan Ahmet Şık iddiası: 'Suskunluk anlaşması teklifi gelmiş, reddetmiş'",
+     "ornek_link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNdF8tX3k0cEJCVEJmQUpodHVQYjliSEUyWDJ0TDViRWRPcTVNV1V3b3llUjJTM2pXOG9tNVJXb1pGMTBraTFqd0RkWjBQMFgyYW8zNnV6c2czZW1oUUxyNUNYS1gxYXpaRWhhd1h6X3hZSXJmeDhLVEVNZk1ELUFVQ08zbHBjZkozSWFTT2pHaVdMaXpyM0FqX3JxTW5ZM2dzSW9MMjZKWHFrbmJiZmE3SFNZMG51c0RSaHNFNA?oc=5"
+    },
+    {
+     "alan": "haber.sol.org.tr",
+     "ad": "soL Haber",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "İzmir'de siyasi ilkesizlik, vurgun düzeni ve çözüm yolları konuşuldu: Barış Terkoğlu ve Kemal Okuyan İzmirlilerle buluştu",
+     "ornek_link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQbnBCM1lHcWxGYmZxMTgzTFIyYk9JS0pqNVJyOEpDUVJrUW5Za1dDVko3alBYRVRmTUJKZ056YU50eHpXMmNVQTVYSDJ3MWhmTWUwVUJhdVp0eVFwcDM1SjZkQkl3Tkw5d1dkcEFQMDNONlA1bUVjNlRod1RzaEsxNkpNOXdWNWZJUmpSZllUWHBrc0pQZ3dkWmd2ckxWSlpoMmFUT2ppaUR1SWxQNFNudlQ0RFBmY2hXdU9oQ25B?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:27:08+00:00"
   },
   "Timur Soykan": {
    "son_yazi": "2026-11-04T02:00:00+00:00",
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 2,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "12punto.com.tr",
+     "ad": "12punto",
+     "gecen": 2,
+     "imzali": 1,
+     "ornek_baslik": "Timur Soykan: Adaletsizlik insanı kahreden bir duygu! | İmamoğlu Davası'ndaki çarpıcı detaylar ne?",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxON05TWkN0elBKQlYtZ0cxa0xUWk10dVR2ZG9yb2kzMHhHM2wtYzZqc01lZWdLQWZtNE1oNXNnWTZrUWVNN2N5alBxUEFlZkpYZ0E5dGpGbnhfdnVxeFBLZ2Y5OVhDTUgydDl5ZXFMMkdWS1NJSEU2YmFzTW5UcFU5b2NpbWNwa2VGX1UtRk1YUWIyNXBpeGZ2blA0U3JVeW5FU1gwbVk5YURscmxfelZIdWYxbXpERWI0Sm5fMlYxS3VES3E4U3ZLaA?oc=5"
+    },
+    {
+     "alan": "youtu.be",
+     "ad": "YouTube",
+     "gecen": 4,
+     "imzali": 0,
+     "ornek_baslik": "VURGUNCU LİSTELERİNİ AÇIKLAYIN! | KARGA KAHVALTISINI YAPMADAN | 9 EKİM CUMA | TİMUR SOYKAN",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1KcGswdVdPMGxVR3p4NkwyR3YzdnlqMWlHMkVwVHByUmoyWFlTdjB6ZGs5N3Q5MkxROGFoVFA1VjlMdlFQT1hMNVQ1d25HVHRla1JGMGIzYUM3QzZV?oc=5"
+    },
+    {
+     "alan": "birgun.net",
+     "ad": "birgun.net",
+     "gecen": 3,
+     "imzali": 0,
+     "ornek_baslik": "AKP'den BirGün TV, Timur Soykan, Şaban Sevinç ve Zeynel Emre'ye tazminat davası",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPWjZkek1hT283d0ViTXYySWxzR0NMRzFCUDNGR2pCTGcyY2pvVG5DdHgzemdnRUhDZkMtLS1qMjVlYWVWdW9VM29XWmllYnpNX2oyV2Q5X1dwWUh5VnJUVmhpNmdlNUxRTTlnSmEwZDJWMzZJbm9ISjNra21KWExONmZDS1FlTkp2Y3dfYXlsUm4yd3gxcHpKOGpKelZtTlQ4SGxISlNHRUxzYlgwbnZJR21sdw?oc=5"
+    },
+    {
+     "alan": "internethaber.com",
+     "ad": "İnternet Haber",
+     "gecen": 2,
+     "imzali": 0,
+     "ornek_baslik": "AK Parti'den Şaban Sevinç, Timur Soykan ve Zeynel Emre hakkında tazminat davası",
+     "ornek_link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNU3pHaXhCYTYtZFJ4T0hBaVVTNklwbi1rQ2RFOWlCNnhscUFUWkVxbGFFTWUxc1drT2NVQXl1dWhTeVJLOFlVS0pDa0RTM0c1UWxVeVRyRU5lSk1hZ091SzRGY3dndnRIbW5wQmFya25nYUlodGdXbF9IZzJ1a0kzM0ZTbDZpdFdGaXo0aHBCQTFScWRiZjllc01rV3lWaUVqTFRBTTVWcW1Qa24xb0lzclkyWENvNUlFWk5seQ?oc=5"
+    },
+    {
+     "alan": "haber7.com",
+     "ad": "Haber 7",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "AK Parti'den Şaban Sevinç, Timur Soykan ve Zeynel Emre'ye tazminat davası",
+     "ornek_link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOV3hlUU9ZQUJqV3VTQXBVN1V6cFoyamlzdkNFdDFSUUpfUTV3RmQ0Zmk2NU1JUnNTQnUzODNNTlJOcXdwQ0c3cFI1UmszZDZ5RFRLVEQ4Mi01d2FTQnU5bEpRa3RWX3QxcEotd0xfWTlfMnR0MUpEakRPRmNlRFpmTXd4RHh5WnBYamN3WjhUeG93V1pON0g0NFF0TXRUQXprR2ZPVDhRMDVFLU9VclluNUdMcU3SAbwBQVVfeXFMTV9mdDRKemtoUVZsVGkxRktCZWdFck1JQktMUkg5dG8zZ1pPTFYtUkZQLWFIVG9pRjRwbE1XbU5ZX01jTXFTRnRiX3FSclFFOTZyMUNQQnplQjN0UXEtcDM2Z2xCd09aSzM1WUZmanptMHRiRkdtdDROeEdYN0NENm1hUUNCeTNCTnBwNEtIcXUzOE55TndMbkN0ZWxVMjE5ZFJZNlRVVllfam55ekFwal9sdFRrM09EM2ZJa0o?oc=5"
+    },
+    {
+     "alan": "sozcu.com.tr",
+     "ad": "Sözcü Gazetesi",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "AKP'den Şaban Sevinç, Timur Soykan, Zeynel Emre ve BirGün TV'ye tazminat davası",
+     "ornek_link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQV3JWWEVaT3RaRkNHd2s2MWFJUC1BZFBHN0NsMzhDT2V4dW9SSDNNZkFlNXdoVlRpeTIyMUVJeGlyTlQyNlN1dmoxQVU2U2xSN0w4RmFTMDg4dHBDM050bWdIMTloV19NY2lqekJWZjBRZ3RrZHBZcEJkbVNzMERfeFB2NFhYSEtCSm1yMjNJT0RsMmNhZ056LTBreUlibDhQZV8wdjA1VkgwOVJiZHZB?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:27:08+00:00"
   },
   "Fehim Taştekin": {
    "son_yazi": "2026-10-31T21:10:00+00:00",
@@ -1411,7 +1801,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 5,
    "esik_gun": 16,
    "oneriler": []
@@ -1421,7 +1811,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": []
@@ -1431,7 +1821,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 2,
    "esik_gun": 16,
    "oneriler": []
@@ -1440,18 +1830,19 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:11+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 16,
    "oneriler": [],
    "haberlerde": [],
-   "son_tarama": "2026-11-06T20:17:11+00:00"
+   "son_tarama": "2026-11-06T20:17:11+00:00",
+   "son_yazi": "2026-11-06T17:23:00+00:00"
   },
   "Soner Yalçın": {
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:11+00:00",
+   "son_denetim": "2026-11-06T20:27:08+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": [],
@@ -1489,14 +1880,15 @@
      "ornek_link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQU1hLSkEyWDhtS0NsSUZQMHZNVGFsOV83V0VDbXFfZlVydVllQzlVVUNWdEtyclI5c2Z6dnBHa3JJbW1HUjRxQng2TTVuMzJwaVl1RmQwSTg5bHYtVVNuV1A3RHFnN3I2cnVpV3otUlR5aGFzcnlQeVJVd1JZd1dzMHVGVzR1LUZFdVd0dExBTHhTUm1SZWhIcmhTV3ZBTkNjcVR6QnhiVXNWUm0x?oc=5"
     }
    ],
-   "son_tarama": "2026-11-06T20:17:11+00:00"
+   "son_tarama": "2026-11-06T20:17:11+00:00",
+   "son_yazi": "2026-11-06T02:00:00+00:00"
   },
   "Can Ataklı": {
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:17:12+00:00",
-   "sessiz_gun": 0,
+   "son_denetim": "2026-11-06T20:27:08+00:00",
+   "sessiz_gun": 1,
    "esik_gun": 10,
    "oneriler": [],
    "haberlerde": [
@@ -1525,9 +1917,10 @@
      "ornek_link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOWkpzNko3bEtYSXpMRGwwajByWnFZdXJMdDlMVVRhNXpaYWM4Ym1sQm9FSk5Wck56UXdvWmhlSlhoU2ZiS2Q5ajJrd2tXVnV0VmY3amRZdmRPRHZKNGZaV05oeXVXMlhfSlVPZXQ1aHZNN2Z2enNqTlI0cF9aWm9wdS1VR0NGenpGVEVWaWlqM0p0N2FCcVpPdDJLSklZSFhlM3Z6X19tUUlZVE52enpSaTItNGZZSU9zWEEyck9XdWdVcEV3?oc=5"
     }
    ],
-   "son_tarama": "2026-11-06T20:17:12+00:00"
+   "son_tarama": "2026-11-06T20:17:12+00:00",
+   "son_yazi": "2026-11-05T02:00:00+00:00"
   }
  },
- "son_calisma": "2026-11-06T20:17:02+00:00",
- "son_calisma_suresi_sn": 10.5
+ "son_calisma": "2026-11-06T20:26:57+00:00",
+ "son_calisma_suresi_sn": 10.9
 }
