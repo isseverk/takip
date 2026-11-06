@@ -61,6 +61,7 @@ TUR_ETIKETLERI = {
     "podcast": "Podcast",
     "eksi": "Ekşi",
     "instagram": "Instagram",
+    "haber": "Haber",
 }
 
 
@@ -325,8 +326,13 @@ def rss_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
         baslik = bosluk(e.get("title", ""))
         if not baslik or baslik == link:  # başlıksız paylaşımlar (Bluesky vb.): metnin kendisi başlık olur
             baslik, ozet = paylasim_bol(ozet) if ozet else (link, "")
-        sonuc.append({"url": url_temizle(link), "baslik": kisalt(baslik, 300),
-                      "ozet": kisalt(ozet, 260), "tarih": iso(tarih), "tur": k.get("icerik_turu", "yazi")})
+        oge = {"url": url_temizle(link), "baslik": kisalt(baslik, 300),
+               "ozet": kisalt(ozet, 260), "tarih": iso(tarih), "tur": k.get("icerik_turu", "yazi")}
+        tam = " ".join(c.get("value", "") for c in e.get("content", []) if isinstance(c, dict))
+        tam = bosluk(BeautifulSoup(tam, "html.parser").get_text(" ")) if tam else ""
+        if len(tam) > 600:
+            oge["_metin"] = tam[:12000]
+        sonuc.append(oge)
     return sonuc
 
 
@@ -763,7 +769,35 @@ def ayrinti_getir(ist: Istemci, oge: dict, yazar_adi: str | None) -> bool:
         dt = iso_oku(t)
         if dt:
             oge["tarih"] = iso(dt)
+    govde = makale_metni(corba)
+    if len(govde) > 600:
+        oge["_metin"] = govde
     return True
+
+
+def makale_metni(corba: BeautifulSoup) -> str:
+    """Haber/köşe yazısı sayfasından yazının gövde metnini çıkarır (en fazla 12.000 karakter)."""
+    for s in corba.find_all("script", type="application/ld+json"):
+        m = re.search(r'"articleBody"\s*:\s*"((?:[^"\\]|\\.)*)"', s.string or s.get_text() or "")
+        if m:
+            try:
+                metin = bosluk(BeautifulSoup(json.loads('"' + m.group(1) + '"'), "html.parser").get_text(" "))
+            except Exception:
+                metin = ""
+            if len(metin) > 600:
+                return metin[:12000]
+    corba = BeautifulSoup(str(corba), "html.parser")  # aslını bozmamak için kopya
+    for t in corba(["script", "style", "noscript", "nav", "header", "footer", "aside", "form", "figure", "iframe"]):
+        t.decompose()
+    adaylar = corba.select('article, [itemprop="articleBody"], [class*="article-body"], [class*="content-text"], '
+                           '[class*="post-content"], [class*="entry-content"], [class*="news-content"], '
+                           '[class*="detail-content"], [class*="yazi-icerik"], [class*="makale"]') or [corba]
+    en_iyi = ""
+    for a in adaylar:
+        metin = " ".join(bosluk(p.get_text(" ")) for p in a.find_all("p") if len(bosluk(p.get_text(" "))) > 40)
+        if len(metin) > len(en_iyi):
+            en_iyi = metin
+    return en_iyi[:12000]
 
 
 def _site_adini_at(baslik: str, url: str) -> str:
@@ -840,11 +874,12 @@ def ayar_oku(yol: Path) -> dict:
                 k["aktif"] = False
                 k["_uygulamada_kapali"] = True
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
-                         "kesif": uyg.get("kesif") or {}}
-    if (uyg.get("bildirim") or {}).get("ntfy_konu"):
-        ayar["ayarlar"].setdefault("bildirim", {})
-        ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"]["bildirim"] or {},
-                                           ntfy_konu=uyg["bildirim"]["ntfy_konu"])
+                         "kesif": uyg.get("kesif") or {},
+                         "konular": _liste(uyg.get("konular"))}
+    # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
+    uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
+    if uyg_bildirim:
+        ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"].get("bildirim") or {}, **uyg_bildirim)
     if os.environ.get("NTFY_KONU"):
         ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"].get("bildirim") or {},
                                            ntfy_konu=os.environ["NTFY_KONU"])
@@ -969,6 +1004,31 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     if sadece_kontrol:
         return 0
 
+    # takip edilen konular: haberlerde de aranması istenenler için Google Haberler taraması
+    konular = konu_listesi(ayar)
+    konu_kaydi = durum.setdefault("konular", {})
+    for konu in konular:
+        if not konu["haberler"]:
+            continue
+        kd = konu_kaydi.setdefault(konu["ad"], {})
+        try:
+            eklenen = 0
+            for o in konu_haberleri(ist, konu, kd, ilk_gosterim):
+                if o["url"] in mevcut_url or _ayni_baslik_var(durum["ogeler"] + yeni_ogeler, o["yazar"], o["baslik"]):
+                    continue
+                o.update(id=kimlik(o["url"]), kaynak_id="konu:" + konu["ad"], bulunma=iso(simdi()))
+                yeni_ogeler.append(o)
+                mevcut_url.add(o["url"])
+                eklenen += 1
+            kd.update(durum="tamam", son_hata=None)
+            print(f"✓ Konu · {konu['ad']}: {eklenen} haber")
+        except Exception as e:
+            kd.update(durum="hata", son_hata=str(e)[:200])
+            print(f"✗ Konu · {konu['ad']}: {e}")
+    for ad in list(konu_kaydi):
+        if ad not in {k["ad"] for k in konular if k["haberler"]}:
+            del konu_kaydi[ad]
+
     # artık ayar dosyasında olmayan kaynakların kayıtlarını temizle
     for anahtar in list(durum["kaynaklar"]):
         if anahtar not in aktif_anahtarlar:
@@ -983,6 +1043,27 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     tum = [o for o in tum if (iso_oku(o.get("bulunma")) or simdi()) >= sinir]
     tum.sort(key=_siralama_anahtari, reverse=True)
     durum["ogeler"] = tum[: int(a.get("akista_en_fazla", 1500))]
+    # isteğe bağlı: yeni köşe/blog yazılarına yapay zekâ özeti (GEMINI_ANAHTAR gizli ayarı varsa)
+    yz_ozetle(ist, durum, os.environ.get("GEMINI_ANAHTAR") or a.get("gemini_anahtar"),
+              sinir=int(a.get("yz_calisma_basina", 10)))
+
+    # bildirimler: konu eşleşmeleri öne, susturulanlar hariç, sessiz saatlerde biriktir
+    gercek_yeni = [o for o in yeni_ogeler if not o.get("ilk")]
+    for o in gercek_yeni:
+        o["konular"] = konulari_bul(o, konular)
+    konulu, diger = bildirimleri_hazirla(a, gercek_yeni, konular)
+    mesajlar = []
+    if kesif_mesajlari:
+        mesajlar.append(("Yeni takip: arama sonucu", kesif_mesajlari))
+    if denetim_mesajlari:
+        print("\nAdres denetimi:")
+        for m in denetim_mesajlari:
+            print("  • " + m)
+        mesajlar.append(("Takip listesi: kontrol et", denetim_mesajlari))
+    bildirimleri_gonder(ist, a, durum, konulu, diger, mesajlar)
+
+    for o in durum["ogeler"]:
+        o.pop("_metin", None)  # tam metinler kayda girmesin (yalnızca özet için alındı)
     durum["son_calisma"] = iso(baslangic)
     durum["son_calisma_suresi_sn"] = round((simdi() - baslangic).total_seconds(), 1)
 
@@ -995,18 +1076,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     sayfa_uret(ayar, durum, cikti_dir / "index.html")
     rss_uret(ayar, durum, cikti_dir / "akis.xml")
 
-    gercek_yeni = [o for o in yeni_ogeler if not o.get("ilk")]
     print(f"\nBitti: {len(gercek_yeni)} yeni öğe, akışta toplam {len(durum['ogeler'])} öğe. "
           f"Sayfa: {cikti_dir / 'index.html'}")
-    if gercek_yeni:
-        bildirim_gonder(ist, a, gercek_yeni)
-    if kesif_mesajlari:
-        bildirim_gonder(ist, a, [], baslik="Yeni takip: arama sonucu", satirlar=kesif_mesajlari)
-    if denetim_mesajlari:
-        print("\nAdres denetimi:")
-        for m in denetim_mesajlari:
-            print("  • " + m)
-        bildirim_gonder(ist, a, [], baslik="Takip listesi: kontrol et", satirlar=denetim_mesajlari)
     return 0
 
 
@@ -1176,8 +1247,146 @@ def _siralama_anahtari(o: dict):
     return tarih
 
 
+# ───────────────────────── konular ─────────────────────────
+
+def konu_listesi(ayar: dict) -> list[dict]:
+    """kaynaklar.yaml'daki 'konular:' ile telefondan eklenen konuları birleştirir."""
+    sonuc, gorulen = [], set()
+    for x in _liste(ayar.get("konular")) + _liste((ayar.get("_uygulama") or {}).get("konular")):
+        if isinstance(x, str):
+            x = {"ad": x}
+        if not isinstance(x, dict):
+            continue
+        ad = bosluk(x.get("ad"))
+        if not ad or sade(ad) in gorulen:
+            continue
+        gorulen.add(sade(ad))
+        kelimeler = [bosluk(k) for k in _liste(x.get("kelimeler")) if bosluk(k)] or [ad]
+        sonuc.append({"ad": ad, "kelimeler": kelimeler, "haberler": bool(x.get("haberler")),
+                      "bildirim": x.get("bildirim", True) is not False})
+    return sonuc
+
+
+def _konu_deseni(kelime: str) -> re.Pattern:
+    # kelimenin başından eşleşir: "asgari ücret" → "asgari ücrete", "asgari ücretin" de tutar
+    return re.compile(r"(?<![a-z0-9])" + re.escape(sade(kelime)))
+
+
+def konulari_bul(o: dict, konular: list[dict]) -> list[str]:
+    metin = sade(" ".join(str(o.get(k) or "") for k in ("baslik", "ozet", "yz_ozet")))
+    bulunan = [k["ad"] for k in konular if any(_konu_deseni(w).search(metin) for w in k["kelimeler"])]
+    if o.get("konu_haberi") and o["konu_haberi"] not in bulunan:
+        bulunan.append(o["konu_haberi"])
+    return bulunan
+
+
+def konu_haberleri(ist: Istemci, konu: dict, kd: dict, ilk_gosterim: int) -> list[dict]:
+    """Konunun kelimeleriyle Google Haberler'de son 2 günün haberlerini arar."""
+    if feedparser is None:
+        return []
+    sorgu = " OR ".join(f'"{w}"' for w in konu["kelimeler"][:5]) + " when:2d"
+    metin = ist.al(f"https://news.google.com/rss/search?q={quote(sorgu)}&hl=tr&gl=TR&ceid=TR:tr", deneme=1)
+    ilk_kez = not kd.get("gorulen")
+    gorulen = set(kd.get("gorulen") or [])
+    sonuc, hepsi = [], []
+    for e in feedparser.parse(metin).entries:
+        link = e.get("link")
+        if not link:
+            continue
+        hepsi.append(link)
+        if link in gorulen:
+            continue
+        kaynak = bosluk((e.get("source") or {}).get("title")) if isinstance(e.get("source"), dict) else ""
+        baslik = bosluk(e.get("title", ""))
+        m = re.match(r"^(.*\S)\s+-\s+([^-]{1,60})$", baslik)
+        if m:
+            baslik, kaynak = m.group(1), kaynak or m.group(2).strip()
+        tarih = datetime(*e["published_parsed"][:6], tzinfo=timezone.utc) if e.get("published_parsed") else None
+        sonuc.append({"url": link, "baslik": kisalt(baslik, 300), "tarih": iso(tarih), "tur": "haber",
+                      "yazar": kaynak or "Haber", "kaynak": "Google Haberler", "konu_haberi": konu["ad"],
+                      "ilk": ilk_kez})
+    sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
+    kd["gorulen"] = (hepsi + [u for u in kd.get("gorulen") or [] if u not in set(hepsi)])[:500]
+    kd["son"] = iso(simdi())
+    return sonuc[:ilk_gosterim if ilk_kez else int(konu.get("en_fazla", 8))]
+
+
+# ───────────────────────── bildirimler ─────────────────────────
+
+def _dakika(s) -> int | None:
+    m = re.match(r"^\s*(\d{1,2})[:.](\d{2})\s*$", str(s or ""))
+    return int(m.group(1)) * 60 + int(m.group(2)) if m else None
+
+
+def sessiz_saatte_mi(b: dict, an: datetime | None = None) -> bool:
+    bas, bit = _dakika(b.get("sessiz_bas")), _dakika(b.get("sessiz_bit"))
+    if bas is None or bit is None or bas == bit:
+        return False
+    yerel = (an or simdi()).astimezone(TR_SAAT)
+    t = yerel.hour * 60 + yerel.minute
+    return bas <= t < bit if bas < bit else (t >= bas or t < bit)
+
+
+def bildirimleri_hazirla(a: dict, yeniler: list[dict], konular: list[dict]) -> tuple[dict, list[dict]]:
+    """Yeni öğeleri bildirim ayarlarına göre süzer → ({konu: [öğeler]}, [diğer öğeler])"""
+    b = a.get("bildirim") or {}
+    sessiz_yazar = set(_liste(b.get("sessiz_yazarlar")))
+    sessiz_tur = set(_liste(b.get("sessiz_turler")))
+    sadece_konular = b.get("kapsam") == "konular"
+    bildirimli_konu = {k["ad"] for k in konular if k["bildirim"]}
+    konulu: dict[str, list[dict]] = {}
+    diger = []
+    for o in yeniler:
+        eslesen = [k for k in o.get("konular") or [] if k in bildirimli_konu]
+        if eslesen:
+            konulu.setdefault(eslesen[0], []).append(o)
+        elif not (sadece_konular or o.get("konu_haberi") or o["yazar"] in sessiz_yazar
+                  or o.get("tur", "yazi") in sessiz_tur):
+            diger.append(o)
+    return konulu, diger
+
+
+def site_adresi(a: dict) -> str:
+    if a.get("site_adresi"):
+        return a["site_adresi"]
+    depo = os.environ.get("GITHUB_REPOSITORY", "")
+    if "/" in depo:
+        sahip, ad = depo.split("/", 1)
+        return f"https://{sahip}.github.io/{ad}/" if ad.lower() != f"{sahip.lower()}.github.io" else f"https://{ad}/"
+    return ""
+
+
+def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger: list[dict],
+                        mesajlar: list[tuple[str, list[str]]]):
+    """Sessiz saatlerde biriktirir; sessiz saat bitince birikenleri tek bildirimde yollar."""
+    b = a.get("bildirim") or {}
+    if not b.get("ntfy_konu"):
+        return
+    bekleyen = durum.setdefault("bekleyen_bildirim", [])
+    if sessiz_saatte_mi(b):
+        for konu, ogeler in konulu.items():
+            bekleyen.extend(f"🔖 {o['yazar']}: {o['baslik']}" for o in ogeler)
+        bekleyen.extend(f"{o['yazar']}: {o['baslik']}" for o in diger)
+        for baslik, satirlar in mesajlar:
+            bekleyen.extend(f"{baslik} — {x}" for x in satirlar)
+        durum["bekleyen_bildirim"] = bekleyen[-60:]
+        if konulu or diger or mesajlar:
+            print("→ sessiz saatler: bildirim sabaha bırakıldı")
+        return
+    if bekleyen:
+        satirlar = bekleyen[:10] + ([f"…ve {len(bekleyen) - 10} tane daha"] if len(bekleyen) > 10 else [])
+        bildirim_gonder(ist, a, [], baslik=f"Sessiz saatlerde gelenler ({len(bekleyen)})", satirlar=satirlar)
+        durum["bekleyen_bildirim"] = []
+    for konu, ogeler in konulu.items():
+        bildirim_gonder(ist, a, ogeler, baslik=f"🔖 {konu}: {len(ogeler)} yeni", oncelik="high", etiket="bookmark")
+    if diger:
+        bildirim_gonder(ist, a, diger)
+    for baslik, satirlar in mesajlar:
+        bildirim_gonder(ist, a, [], baslik=baslik, satirlar=satirlar)
+
+
 def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | None = None,
-                    satirlar: list[str] | None = None):
+                    satirlar: list[str] | None = None, oncelik: str | None = None, etiket: str = "newspaper"):
     """İsteğe bağlı: ntfy.sh üzerinden telefona anlık bildirim."""
     konu = (a.get("bildirim") or {}).get("ntfy_konu")
     if not konu:
@@ -1188,14 +1397,140 @@ def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | No
         if len(yeniler) > 8:
             satirlar.append(f"…ve {len(yeniler) - 8} tane daha")
     baslik = baslik or f"{len(yeniler)} yeni içerik"
-    basliklar = {"Title": baslik.encode("utf-8"), "Tags": "newspaper"}
-    if a.get("site_adresi"):
-        basliklar["Click"] = a["site_adresi"]
+    basliklar = {"Title": baslik.encode("utf-8"), "Tags": etiket}
+    if oncelik:
+        basliklar["Priority"] = oncelik
+    adres = site_adresi(a)
+    if len(yeniler) == 1:  # tek yazıysa bildirime dokununca doğrudan yazı açılsın
+        basliklar["Click"] = yeniler[0]["url"]
+        if adres:
+            basliklar["Actions"] = f"view, Akışı aç, {adres}"
+    elif adres:
+        basliklar["Click"] = adres
     try:
         ist.gonder(f"{sunucu}/{konu}", "\n".join(satirlar).encode("utf-8"), basliklar)
         print("→ telefona bildirim gönderildi")
     except Exception as e:
         print(f"! bildirim gönderilemedi: {e}")
+
+
+# ───────────────────────── yapay zekâ özetleri ─────────────────────────
+
+YZ_TABAN = "https://generativelanguage.googleapis.com/v1beta"
+YZ_ISTEM = ("Aşağıda {yazar} imzalı bir yazının metni var. Bu yazıyı Türkçe olarak en fazla üç cümleyle, "
+            "tarafsız biçimde özetle: yazarın ana iddiası ve dayandığı başlıca olgular. Kendi yorumunu ve "
+            "değerlendirmeni ekleme, \"Bu yazıda\" gibi girişler yapma; yalnızca özeti yaz.\n\n"
+            "Başlık: {baslik}\n\nMetin:\n{metin}")
+
+
+class YzHatasi(Exception):
+    pass
+
+
+def _yz_istek(yontem: str, yol: str, anahtar: str, govde: dict | None = None):
+    basliklar = {"x-goog-api-key": anahtar, "Content-Type": "application/json"}
+    r = http_std.request(yontem, YZ_TABAN + yol, headers=basliklar, json=govde, timeout=60)
+    if r.status_code == 429:
+        raise YzHatasi("kota")
+    if r.status_code in (400, 401, 403) and "API key" in r.text:
+        raise YzHatasi("Gemini anahtarı geçersiz ya da bu hesapta Gemini API açık değil")
+    if r.status_code != 200:
+        raise YzHatasi(f"Gemini HTTP {r.status_code}: {r.text[:200]}")
+    return r.json()
+
+
+def yz_model_sec(anahtar: str, yz: dict) -> str:
+    """Anahtarın erişebildiği modellerden özet için uygun bir 'Flash' modeli seçer (haftada bir yenilenir)."""
+    secim = iso_oku(yz.get("secim"))
+    if yz.get("model") and secim and simdi() - secim < timedelta(days=7):
+        return yz["model"]
+    adlar, sayfa = [], ""
+    for _ in range(5):
+        j = _yz_istek("GET", f"/models?pageSize=200{'&pageToken=' + sayfa if sayfa else ''}", anahtar)
+        adlar += [m["name"].split("/", 1)[-1] for m in j.get("models", [])
+                  if "generateContent" in (m.get("supportedGenerationMethods") or [])]
+        sayfa = j.get("nextPageToken") or ""
+        if not sayfa:
+            break
+    for tercih in ("gemini-flash-lite-latest", "gemini-flash-latest"):
+        if tercih in adlar:
+            yz.update(model=tercih, secim=iso(simdi()))
+            return tercih
+    yasak = ("image", "tts", "audio", "live", "embedding", "native", "exp", "computer", "robotics", "thinking")
+    adaylar = [a for a in adlar if a.startswith("gemini-") and "flash" in a and not any(y in a for y in yasak)]
+    if not adaylar:
+        raise YzHatasi("Gemini'de uygun model bulunamadı")
+
+    def puan(a: str):
+        surum = tuple(int(x) for x in re.findall(r"\d+", a.split("-flash")[0])) or (0,)
+        return ("preview" not in a, surum, "lite" in a, not re.search(r"-\d{3}$|-\d{2}-\d{4}$", a))
+    model = max(adaylar, key=puan)
+    yz.update(model=model, secim=iso(simdi()))
+    return model
+
+
+def yz_ozetle(ist: Istemci, durum: dict, anahtar: str | None, sinir: int = 10, bekleme: float = 4.5) -> int:
+    """Son iki günün özetlenmemiş köşe/blog yazılarına Gemini ile kısa özet ekler."""
+    yz = durum.setdefault("yz", {})
+    if not anahtar:
+        yz.update(durum="kapali")
+        return 0
+    bugun = simdi().astimezone(TR_SAAT).date().isoformat()
+    if yz.get("gun") != bugun:
+        yz.update(gun=bugun, bugun=0)
+    if yz.get("kota_gunu") == bugun and yz.get("kota_saati") and \
+            simdi() - iso_oku(yz["kota_saati"]) < timedelta(hours=3):
+        return 0  # kota doldu; üç saat sonra tekrar denenir
+    sinir_zaman = simdi() - timedelta(days=2)
+    adaylar = [o for o in durum["ogeler"]
+               if o.get("tur", "yazi") == "yazi" and not o.get("yz_ozet") and o.get("yz_deneme", 0) < 2
+               and "news.google.com" not in o["url"] and (iso_oku(o.get("bulunma")) or simdi()) >= sinir_zaman]
+    adaylar.sort(key=lambda o: (bool(o.get("ilk")), not o.get("_metin")))
+    yapilan = 0
+    try:
+        model = yz_model_sec(anahtar, yz)
+        for o in adaylar[:sinir]:
+            metin = o.get("_metin")
+            if not metin:
+                try:
+                    metin = makale_metni(BeautifulSoup(ist.al(o["url"], deneme=1), "html.parser"))
+                except Exception:
+                    metin = ""
+            if len(metin) < 600:
+                o["yz_deneme"] = 2  # metni okunamıyor; bir daha deneme
+                continue
+            if yapilan:
+                time.sleep(bekleme)
+            o["yz_deneme"] = o.get("yz_deneme", 0) + 1
+            try:
+                j = _yz_istek("POST", f"/models/{model}:generateContent", anahtar, {
+                    "contents": [{"role": "user", "parts": [{"text": YZ_ISTEM.format(
+                        yazar=o["yazar"], baslik=o["baslik"], metin=metin[:12000])}]}],
+                    "generationConfig": {"temperature": 0.3, "maxOutputTokens": 2048}})
+            except YzHatasi as e:
+                if "HTTP 404" in str(e):
+                    yz.pop("model", None)  # model emekliye ayrılmış; bir dahaki sefere yenisini seç
+                raise
+            parcalar = ((j.get("candidates") or [{}])[0].get("content") or {}).get("parts") or []
+            ozet = bosluk(" ".join(p.get("text", "") for p in parcalar if not p.get("thought")))
+            if ozet:
+                o["yz_ozet"] = kisalt(ozet, 700)
+                yapilan += 1
+        yz.update(durum="acik", son_hata=None, son_basari=iso(simdi()) if yapilan else yz.get("son_basari"))
+    except YzHatasi as e:
+        if str(e) == "kota":
+            yz.update(durum="acik", kota_gunu=bugun, kota_saati=iso(simdi()),
+                      son_hata="Günlük ücretsiz kullanım sınırı doldu; birkaç saat sonra devam edecek")
+        else:
+            yz.update(durum="hata", son_hata=str(e)[:300])
+        print(f"! yapay zekâ özeti: {yz['son_hata']}")
+    except Exception as e:
+        yz.update(durum="hata", son_hata=f"{type(e).__name__}: {str(e)[:200]}")
+        print(f"! yapay zekâ özeti: {yz['son_hata']}")
+    yz["bugun"] = yz.get("bugun", 0) + yapilan
+    if yapilan:
+        print(f"✨ {yapilan} yazıya yapay zekâ özeti eklendi ({yz.get('model')})")
+    return yapilan
 
 
 # ───────────────────────── çıktılar ─────────────────────────
@@ -1271,10 +1606,17 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "yazar_listesi": _yazar_listesi(ayar, durum),
         "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
+        "konular": konu_listesi(ayar),
+        "konu_durumu": {ad: {k: v for k, v in kd.items() if k != "gorulen"}
+                        for ad, kd in (durum.get("konular") or {}).items()},
+        "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
+            "sessiz_bas", "sessiz_bit", "kapsam", "sessiz_turler", "sessiz_yazarlar")},
+        "yz": {k: (durum.get("yz") or {}).get(k) for k in (
+            "durum", "model", "son_hata", "son_basari", "bugun")},
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",
-                                   "bulunma", "ilk")}
+                                   "bulunma", "ilk", "yz_ozet", "konu_haberi") if k in o or k in ("id", "url")}
             for o in durum["ogeler"]
         ],
         "kaynaklar": kaynaklar,

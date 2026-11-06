@@ -4,7 +4,7 @@ Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, pod
 
 Uygulamanın üç ekranı var:
 - **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
-- **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
+- **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, takip ettiğin konuları yönetirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
 
 ---
@@ -91,9 +91,42 @@ Yeni türlerle ilgili bilmen gerekenler:
 
 **Instagram**, giriş yapmadan otomatik okumayı çoğu zaman engeller. Kalıcı çözüm için **rss.app** gibi bir servisten hesabın RSS adresini alıp telefondan **Blog / RSS** türüyle ekle.
 
+## Konular — bir konudaki her şeyi yakala
+
+Uygulamada **Kaynaklar → Konular → + Konu**'ya bas ve bir konu yaz (ör. *asgari ücret*, *Kanal İstanbul*). Aynı konu için birden fazla kelimeyi virgülle ayırarak yazabilirsin. Kelimenin ekli halleri de bulunur: "asgari ücret" yazarsan "asgari ücrete" de eşleşir.
+
+- Takip ettiğin kişilerin bu konudaki yazıları akışta 🔖 etiketiyle işaretlenir. Akışın üstündeki 🔖 çiplerine dokunarak yalnızca o konuyu görebilirsin.
+- **Haberlerde de ara** kutusunu işaretlersen, takip ettiğin kişilerin dışında Google Haberler'de bu konuda çıkan yeni haberler de akışa **Haber** etiketiyle gelir.
+- Konuna uyan yeni bir şey çıkınca ayrıca, öncelikli bir bildirim gelir. Bunu konu bazında kapatabilirsin.
+- Bir konuyu kaldırınca, onun için gelen haberler de akıştan düşer.
+
 ## Bildirimler
 
 Uygulamada **Ayarlar → Bildirimler → Bildirimleri aç**'a bas. Ücretsiz **ntfy** uygulamasını kurman ve çıkan **ntfy'de abone ol** düğmesine dokunman yeterli.
+
+Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
+- **Ne zaman:** Her yeni içerikte ya da yalnızca konularına uyanlarda.
+- **Türler:** Örneğin Ekşi entry'leri ya da YouTube videoları için bildirim gelmesin.
+- **Sessiz saatler:** Örneğin 23:00–07:30 arası bildirim gelmez. Arada gelenler, sessiz saat bitince tek bildirimde toplanır.
+- **Kişi bazında:** Kaynaklar'da bir kişinin ⋯ menüsünden **Bildirimlerini kapat**'ı seç. Yazıları akışta görünmeye devam eder; adının yanında 🔕 görünür. Bu kişinin bir yazısı konularından birine uyarsa yine bildirim gelir.
+
+Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
+
+## Yapay zekâ özetleri (isteğe bağlı, ücretsiz)
+
+Yeni köşe ve blog yazılarına Google Gemini ile üç cümlelik özet eklenir. Akışta **✨ Özet** olarak görünür, dokununca tamamı açılır. Bir kez ayarlanır; bilgisayardan daha kolay:
+
+1. **aistudio.google.com/apikey** adresine Google hesabınla gir, **Create API key**'e bas ve çıkan anahtarı kopyala.
+2. GitHub'da deponun **Settings → Secrets and variables → Actions** sayfasına git, **New repository secret**'a bas.
+3. **Name** kutusuna `GEMINI_ANAHTAR` yaz, **Secret** kutusuna anahtarı yapıştır ve **Add secret**'e bas.
+
+Sıradaki kontrolden itibaren yeni yazılar özetlenir. Durumu **Ayarlar → Yapay zekâ özetleri** bölümünde görürsün.
+
+- Anahtar yalnızca GitHub'ın gizli ayarlarında durur; depoda ya da telefonda görünmez.
+- Program, anahtarın erişebildiği modeller arasından uygun bir "Flash" modelini kendisi seçer. Google bir modeli emekliye ayırırsa yenisine kendiliğinden geçer.
+- Her kontrolde en çok 10 yazı özetlenir. Günlük ücretsiz sınır dolarsa özetler birkaç saat ara verip kaldığı yerden devam eder.
+- Sitesi doğrudan okunamayan (Google Haberler üzerinden takip edilen) yazarların yazıları özetlenemez.
+- Gemini'ye yalnızca zaten yayımlanmış yazıların metni gönderilir. Ücretsiz kullanımda Google bu metinleri hizmetini geliştirmek için kullanabilir.
 
 ## Adres denetimi — yazarlar hâlâ aynı yerde mi?
 
