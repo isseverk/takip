@@ -58,6 +58,7 @@ jobs:
           TZ: Europe/Istanbul
           NTFY_KONU: ${{ secrets.NTFY_KONU }}
           GEMINI_ANAHTAR: ${{ secrets.GEMINI_ANAHTAR }}
+          VAPID_GIZLI: ${{ secrets.VAPID_GIZLI }}
         run: python takip.py
 
       - name: Durum kaydını sakla
