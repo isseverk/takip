@@ -20,8 +20,8 @@
    "tur": "sayfa",
    "etiket": "fatihaltayli.com.tr",
    "adres": "https://fatihaltayli.com.tr/yazilar/fatih-altayli/kose-yazilari",
-   "son_deneme": "2026-11-06T20:14:36+00:00",
-   "son_basari": "2026-11-06T20:14:36+00:00",
+   "son_deneme": "2026-11-06T20:17:02+00:00",
+   "son_basari": "2026-11-06T20:17:02+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 13,
@@ -43,8 +43,8 @@
    "ekstra": {
     "kanal_id": "UCdS7OE5qbJQc7AG4SwlTzKg"
    },
-   "son_deneme": "2026-11-06T20:14:39+00:00",
-   "son_basari": "2026-11-06T20:14:39+00:00",
+   "son_deneme": "2026-11-06T20:17:02+00:00",
+   "son_basari": "2026-11-06T20:17:02+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 6,
@@ -63,8 +63,8 @@
    "tur": "rss",
    "etiket": "Yetkin Report",
    "adres": "https://yetkinreport.com/feed/",
-   "son_deneme": "2026-11-06T20:14:41+00:00",
-   "son_basari": "2026-11-06T20:14:41+00:00",
+   "son_deneme": "2026-11-06T20:17:03+00:00",
+   "son_basari": "2026-11-06T20:17:03+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 6,
@@ -102,8 +102,8 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-pehlivan",
-   "son_deneme": "2026-11-06T20:14:41+00:00",
-   "son_basari": "2026-11-06T20:14:41+00:00",
+   "son_deneme": "2026-11-06T20:17:04+00:00",
+   "son_basari": "2026-11-06T20:17:04+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
@@ -120,8 +120,8 @@
    "tur": "sayfa",
    "etiket": "Sözcü",
    "adres": "https://www.sozcu.com.tr/ismail-saymaz-a36",
-   "son_deneme": "2026-11-06T20:14:44+00:00",
-   "son_basari": "2026-11-06T20:14:44+00:00",
+   "son_deneme": "2026-11-06T20:17:05+00:00",
+   "son_basari": "2026-11-06T20:17:05+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 4,
@@ -159,8 +159,8 @@
    "tur": "rss",
    "etiket": "Kendime Yazılar",
    "adres": "https://www.mahfiegilmez.com/feeds/posts/default",
-   "son_deneme": "2026-11-06T20:14:46+00:00",
-   "son_basari": "2026-11-06T20:14:46+00:00",
+   "son_deneme": "2026-11-06T20:17:05+00:00",
+   "son_basari": "2026-11-06T20:17:05+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
@@ -172,9 +172,9 @@
    "tur": "sayfa",
    "etiket": "Oksijen",
    "adres": "https://gazeteoksijen.com/yazarlar/ugur-gurses",
-   "hata_sayisi": 1,
+   "hata_sayisi": 2,
    "son_hata": "https://gazeteoksijen.com/yazarlar/ugur-gurses alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:14:46+00:00",
+   "son_deneme": "2026-11-06T20:17:05+00:00",
    "durum": "hata"
   },
   "1b71fb56e280": {
@@ -183,9 +183,9 @@
    "tur": "sayfa",
    "etiket": "Nefes",
    "adres": "https://www.nefes.com.tr/yazarlar/soner-yalcin",
-   "hata_sayisi": 1,
+   "hata_sayisi": 2,
    "son_hata": "https://www.nefes.com.tr/yazarlar/soner-yalcin alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:14:46+00:00",
+   "son_deneme": "2026-11-06T20:17:05+00:00",
    "durum": "hata"
   },
   "9a4155f460ae": {
@@ -194,9 +194,9 @@
    "tur": "sayfa",
    "etiket": "Nefes",
    "adres": "https://www.nefes.com.tr/yazarlar/can-atakli",
-   "hata_sayisi": 1,
+   "hata_sayisi": 2,
    "son_hata": "https://www.nefes.com.tr/yazarlar/can-atakli alınamadı (HTTP 403)",
-   "son_deneme": "2026-11-06T20:14:47+00:00",
+   "son_deneme": "2026-11-06T20:17:06+00:00",
    "durum": "hata"
   },
   "f983ca78f028": {
@@ -231,8 +231,8 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/murat-agirel",
-   "son_deneme": "2026-11-06T20:14:47+00:00",
-   "son_basari": "2026-11-06T20:14:47+00:00",
+   "son_deneme": "2026-11-06T20:17:06+00:00",
+   "son_basari": "2026-11-06T20:17:06+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
@@ -270,8 +270,8 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/sinan-meydan",
-   "son_deneme": "2026-11-06T20:14:50+00:00",
-   "son_basari": "2026-11-06T20:14:50+00:00",
+   "son_deneme": "2026-11-06T20:17:07+00:00",
+   "son_basari": "2026-11-06T20:17:07+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
@@ -309,8 +309,8 @@
    "tur": "sayfa",
    "etiket": "Cumhuriyet",
    "adres": "https://www.cumhuriyet.com.tr/yazarlar/baris-terkoglu",
-   "son_deneme": "2026-11-06T20:14:53+00:00",
-   "son_basari": "2026-11-06T20:14:53+00:00",
+   "son_deneme": "2026-11-06T20:17:08+00:00",
+   "son_basari": "2026-11-06T20:17:08+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 25,
@@ -341,8 +341,8 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/timur-soykan-353"
    },
-   "son_deneme": "2026-11-06T20:14:55+00:00",
-   "son_basari": "2026-11-06T20:14:55+00:00",
+   "son_deneme": "2026-11-06T20:17:08+00:00",
+   "son_basari": "2026-11-06T20:17:08+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 15,
@@ -379,8 +379,8 @@
    "tur": "sayfa",
    "etiket": "Evrensel",
    "adres": "https://www.evrensel.net/yazar/137/fehim-tastekin",
-   "son_deneme": "2026-11-06T20:14:58+00:00",
-   "son_basari": "2026-11-06T20:14:58+00:00",
+   "son_deneme": "2026-11-06T20:17:08+00:00",
+   "son_basari": "2026-11-06T20:17:08+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 24,
@@ -402,8 +402,8 @@
    "etiket": "YouTube",
    "adres": "https://www.youtube.com/@fehim.tastekin",
    "ekstra": {},
-   "son_deneme": "2026-11-06T20:15:00+00:00",
-   "son_basari": "2026-11-06T20:15:00+00:00",
+   "son_deneme": "2026-11-06T20:17:08+00:00",
+   "son_basari": "2026-11-06T20:17:08+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 8,
@@ -435,8 +435,8 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/zafer-arapkirli-371"
    },
-   "son_deneme": "2026-11-06T20:15:01+00:00",
-   "son_basari": "2026-11-06T20:15:01+00:00",
+   "son_deneme": "2026-11-06T20:17:08+00:00",
+   "son_basari": "2026-11-06T20:17:08+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 16,
@@ -459,8 +459,8 @@
    "tur": "rss",
    "etiket": "farukbildirici.com",
    "adres": "https://www.farukbildirici.com/feed/",
-   "son_deneme": "2026-11-06T20:15:04+00:00",
-   "son_basari": "2026-11-06T20:15:04+00:00",
+   "son_deneme": "2026-11-06T20:17:10+00:00",
+   "son_basari": "2026-11-06T20:17:10+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 10,
@@ -492,8 +492,8 @@
    "ekstra": {
     "yazar_sayfasi": "https://www.birgun.net/profil/medya-ombudsmani-faruk-bildirici-372"
    },
-   "son_deneme": "2026-11-06T20:15:05+00:00",
-   "son_basari": "2026-11-06T20:15:05+00:00",
+   "son_deneme": "2026-11-06T20:17:10+00:00",
+   "son_basari": "2026-11-06T20:17:10+00:00",
    "hata_sayisi": 0,
    "son_hata": null,
    "son_bulunan": 16,
@@ -1112,7 +1112,7 @@
    "son_tarama": "2026-11-06T20:15:07+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:07+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": [
@@ -1158,7 +1158,7 @@
    "son_tarama": "2026-11-06T20:15:08+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:08+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
    "oneriler": [
@@ -1204,7 +1204,7 @@
    "son_tarama": "2026-11-06T20:15:09+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:09+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": []
@@ -1265,7 +1265,7 @@
    "son_tarama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": [
@@ -1284,17 +1284,93 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:10+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [
+    {
+     "alan": "ekonomim.com",
+     "ad": "Ekonomim",
+     "gecen": 9,
+     "imzali": 4,
+     "ornek_baslik": "Mahfi Eğilmez yazdı: IMF, Türkiye’nin döviz kuru rejimini 'sürünen kur' olarak sınıflandırıyor",
+     "ornek_link": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPTUg5aVNqLW9iazQ1YlpCTGtrcFMyMnlUVVdKMTBhZWpQQ2RmYzlSejVOcUFsLXlrblZpNVlJNW10bng2Yi1STHB5RWZheTZvV0JRd1V1LTB1eEVmQTA1NVhMWjNYRkM5V2dlSmlJLUpsaF9tMXVPc25oTHZ3THpGY3dQd2c4a1VxeWIxczBReDlLQnpZaXVHc2VqeENKajVETUhFRXFxM245Y1lzU0QyNGpubTU1N0NPZUFZWkVrV0pOZnYxX282RldBT0RYV3JOWUFxMVROZ0s3Zw?oc=5"
+    },
+    {
+     "alan": "haber.doviz.com",
+     "ad": "Doviz.com",
+     "gecen": 2,
+     "imzali": 2,
+     "ornek_baslik": "Mahfi Eğilmez: TÜİK'in enflasyonu yüzde 31,51, kredi kartlarınınki yüzde 42,2",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPcWZ2b3ZaTVFoT1ExUW1GQzVHaTVxZEM0R2VCMnp1MjRhRlpfU20yckxiODhReUt5aUdJWWdQOFNra1NydlV0dlJ5M19ZbW5rUjJiSGlEWkdocmMxLVgyZ29aeHdiSlRNS1ZkdTYwNmtHN1kwRU5UbUQ2Tl9wclpKdURONGlLYlJzOXVzUTdOWlMxZjd4NnJCU2MtU0FPZTFSMUdwV2xFRERjdEdrZ0RYUWJMUkdmTlFBcmdXX09mUXrSAcgBQVVfeXFMT3dsckhLb2liak5KVXhwV0lUSlBxa1ZfSTBPSzJaQVNJNXZ4YTRrT1FEdmlyUUY0Qk9hWmFhOXFPN0hWZ25PWEk0Qy02M3YzekU3alZNQ01iOE5pbTFKb0ZtLUJFRUNpT1lhc0oteXNLSmZhUnZWZmNhNjdqdmtrN2hEZ0RCUFNFNTN1T0ZqV3U5TVY4WVMxRXVyYzZnckQtbUNfbjBaVDljcDZKSTNHeFNob1FyYjFTRmlzREw1XzY5MFJiX1NtUEI?oc=5"
+    },
+    {
+     "alan": "t24.com.tr",
+     "ad": "T24",
+     "gecen": 2,
+     "imzali": 2,
+     "ornek_baslik": "Mahfi Eğilmez: Türkiye döviz kurunu hangi yöntemle belirliyor?",
+     "ornek_link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZmhPMFV3c2xfYUNkSlhLd3psZzRPYnhHV05aTVdhTWd3TDBxNkduQnpEZDZtYncwOTlRaUNQU3JGOE5tTVFReHVBVGNKU0ZtSzlaQktXY1JPQTBWZFUwYlp2V1JhVHZoZ3V1dWpycktad1pkR1JxMFZ1MkNGWXZ5Q0ItVDBjZEQ2S0JITTdFZjBqQ2F5N2pyeWlpZw?oc=5"
+    }
+   ],
+   "haberlerde": [
+    {
+     "alan": "ekonomim.com",
+     "ad": "Ekonomim",
+     "gecen": 9,
+     "imzali": 4,
+     "ornek_baslik": "Mahfi Eğilmez yazdı: IMF, Türkiye’nin döviz kuru rejimini 'sürünen kur' olarak sınıflandırıyor",
+     "ornek_link": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPTUg5aVNqLW9iazQ1YlpCTGtrcFMyMnlUVVdKMTBhZWpQQ2RmYzlSejVOcUFsLXlrblZpNVlJNW10bng2Yi1STHB5RWZheTZvV0JRd1V1LTB1eEVmQTA1NVhMWjNYRkM5V2dlSmlJLUpsaF9tMXVPc25oTHZ3THpGY3dQd2c4a1VxeWIxczBReDlLQnpZaXVHc2VqeENKajVETUhFRXFxM245Y1lzU0QyNGpubTU1N0NPZUFZWkVrV0pOZnYxX282RldBT0RYV3JOWUFxMVROZ0s3Zw?oc=5"
+    },
+    {
+     "alan": "haber.doviz.com",
+     "ad": "Doviz.com",
+     "gecen": 2,
+     "imzali": 2,
+     "ornek_baslik": "Mahfi Eğilmez: TÜİK'in enflasyonu yüzde 31,51, kredi kartlarınınki yüzde 42,2",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPcWZ2b3ZaTVFoT1ExUW1GQzVHaTVxZEM0R2VCMnp1MjRhRlpfU20yckxiODhReUt5aUdJWWdQOFNra1NydlV0dlJ5M19ZbW5rUjJiSGlEWkdocmMxLVgyZ29aeHdiSlRNS1ZkdTYwNmtHN1kwRU5UbUQ2Tl9wclpKdURONGlLYlJzOXVzUTdOWlMxZjd4NnJCU2MtU0FPZTFSMUdwV2xFRERjdEdrZ0RYUWJMUkdmTlFBcmdXX09mUXrSAcgBQVVfeXFMT3dsckhLb2liak5KVXhwV0lUSlBxa1ZfSTBPSzJaQVNJNXZ4YTRrT1FEdmlyUUY0Qk9hWmFhOXFPN0hWZ25PWEk0Qy02M3YzekU3alZNQ01iOE5pbTFKb0ZtLUJFRUNpT1lhc0oteXNLSmZhUnZWZmNhNjdqdmtrN2hEZ0RCUFNFNTN1T0ZqV3U5TVY4WVMxRXVyYzZnckQtbUNfbjBaVDljcDZKSTNHeFNob1FyYjFTRmlzREw1XzY5MFJiX1NtUEI?oc=5"
+    },
+    {
+     "alan": "t24.com.tr",
+     "ad": "T24",
+     "gecen": 2,
+     "imzali": 2,
+     "ornek_baslik": "Mahfi Eğilmez: Türkiye döviz kurunu hangi yöntemle belirliyor?",
+     "ornek_link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZmhPMFV3c2xfYUNkSlhLd3psZzRPYnhHV05aTVdhTWd3TDBxNkduQnpEZDZtYncwOTlRaUNQU3JGOE5tTVFReHVBVGNKU0ZtSzlaQktXY1JPQTBWZFUwYlp2V1JhVHZoZ3V1dWpycktad1pkR1JxMFZ1MkNGWXZ5Q0ItVDBjZEQ2S0JITTdFZjBqQ2F5N2pyeWlpZw?oc=5"
+    },
+    {
+     "alan": "finansingundemi.com",
+     "ad": "Finans Gündem",
+     "gecen": 2,
+     "imzali": 1,
+     "ornek_baslik": "Mahfi Eğilmez yazdı: Gaz Trump’ta, fren Demokratlarda haberi",
+     "ornek_link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPT0lXQm44Mi1tNTg4blZVYWt1LS03eGFwWElrQlpuQ1FZQWRhY1FCNXItaE4tTWFwZ2hKV1lwSkhFUnJsOEtqSTFvNkZ2cmhxeGRfeHFseE9rSlV6U0dLU1hSanVtNGVydVFyZXN5VXNra25zMUhWak41dExCZ2IyRlE0ZVdrU0JDbHF2akxURTQtNXFhM1RDck9iNU0?oc=5"
+    },
+    {
+     "alan": "medyascope.tv",
+     "ad": "Medyascope",
+     "gecen": 1,
+     "imzali": 1,
+     "ornek_baslik": "Mahfi Eğilmez yazdı | Fon krizi: Borsadan ekonomiye uzanan etkiler",
+     "ornek_link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOY200TlhraDl5Y0RDZ2hTbVU5Y29mczVQT1BIaGlOdS1xQjJ1RnpzWkZMU3IyX2JsYXJHY1pudmM0MDM5WVdGVFl6bEJ6MGNvaDQ1dlBnYWVsWVQ1RmJRQkdiRE1PVkZkQTFrdlFjckl2X05tNndFN19CRlJrc3V1VnlUZjBsSTg1d05Na3RZbnJNeEFLTkJhTWFiOXhzZw?oc=5"
+    },
+    {
+     "alan": "borsaningundemi.com",
+     "ad": "Borsanın Gündemi",
+     "gecen": 1,
+     "imzali": 1,
+     "ornek_baslik": "Mahfi Eğilmez yazdı! Trump gerçekten 'topal ördek' mi haberi",
+     "ornek_link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPaWM2aGQ0X3Y0cXJQUlp6V2czcVlZTjRmOGxsUXR3cm1jTGF4ak1NcWYyYUhCQndxX0JnWlFfVHYzbE1kanE2bDQzaU5rdm9VMjcyS3FCQ3dwLS1FbGR4VWtqMktJdFRPUkFEWDgtNktQMFU4eEJ2aUI5NW5wemRLOWE4ZUV6SURfNXh3M09IV2lpWUlYbVBrQ2JDWnA?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:17:10+00:00"
   },
   "Murat Ağırel": {
    "son_yazi": "2026-11-03T01:00:00+00:00",
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 3,
    "esik_gun": 10,
    "oneriler": []
@@ -1304,7 +1380,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 2,
    "esik_gun": 16,
    "oneriler": []
@@ -1314,7 +1390,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 1,
    "esik_gun": 10,
    "oneriler": []
@@ -1324,7 +1400,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 2,
    "esik_gun": 10,
    "oneriler": []
@@ -1335,7 +1411,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 5,
    "esik_gun": 16,
    "oneriler": []
@@ -1345,7 +1421,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
    "oneriler": []
@@ -1355,7 +1431,7 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 2,
    "esik_gun": 16,
    "oneriler": []
@@ -1364,30 +1440,94 @@
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:11+00:00",
    "sessiz_gun": 0,
    "esik_gun": 16,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [],
+   "son_tarama": "2026-11-06T20:17:11+00:00"
   },
   "Soner Yalçın": {
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:11+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "odatv.com",
+     "ad": "Odatv",
+     "gecen": 9,
+     "imzali": 0,
+     "ornek_baslik": "Fon krizinin gösterdiği daha derin değişim: İktidarın kuşak açmazı | Soner Yalçın",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOMXUzZF80aG0xUFQ5d0Vvd2Z2QTdJaEt6N25LRFF2YlktUkxTaVViUzlUVXRiUTJJcWtRSUhHYUlVbkVac0I2NTFvZ2IxNGtTTWpodGdobkE5dTRMX3ZGRkREY2Y3VXp1NjlTMFpGbEdCbEFKaDkxYVBlUzZMaGl6blhMU256MEYyWDF4S0FzWlR4VlBCcWhaSFhWS0c0Mm5DSjE4T1VXOEJISzV2NVhGV05ZZXQtQjI4blE4?oc=5"
+    },
+    {
+     "alan": "gazeteoku.com",
+     "ad": "Gazete Oku",
+     "gecen": 6,
+     "imzali": 0,
+     "ornek_baslik": "İktidara itiraz var, yeni siyaset yok: Muhalefetin umut açmazı - Soner Yalçın - ODATV",
+     "ornek_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOS2xjaXh6cDVpekVWcFp2Y0d3dUhGcm5OelZYVloyV2ZENWNUNE8zRExKMVl6SWp3c1ZkeTN3MzRQR21fMmt1bklJRjNjRmNYQnk2N05yZXdtNTNWejFMSjBsNTQwc1JKU0MxeExNczVMM3NXT1lxZVNMaVo0QTBIZjc4RVVUYW5HazZBaEtjbWFqZHFSckZ1cmRRWFFfUk1adzZ6UjFNc3ctTkJSZ1A1UVd6Yw?oc=5"
+    },
+    {
+     "alan": "onedio.com",
+     "ad": "Onedio",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Sözcü'den Ayrılanların Gazetesiydi: Nevşin Mengü ve Soner Yalçın'lı Yeni Kanalın Açılış Tarihi Ortaya Çıktı!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPQkdHUU16YWdrOWotRy1WZkdoLWktUFF5Wlk4c09JS2xpQzNsVXJ3NG1OY0ZvSWw3LW8wWEVCcnVuZXkwS3pyV3BlY1pNaGxtYWxXYno2eFB0UDZjdmVDZUtyOEJXWDZrVnNXdFdzYzlxXy00NDQ4TUhSQk5zNnRFdmhqMGhtZ01kNE5VSmZaS1ZMcWVrMUNyVXlqa0duVWdwZW9lclZPcEVWOEdia21PTE5xUWp3aXNlaXZRYzdNWkJmVmIxMDZTbzl1eDhVaFFHdEk2a3J3?oc=5"
+    },
+    {
+     "alan": "gazetegercek.com.tr",
+     "ad": "Gazete Gerçek",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Tekkeköy’de Soner Yalçın'ın ölümü sonrası ambulans çağrısında bulunuldu!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQU1hLSkEyWDhtS0NsSUZQMHZNVGFsOV83V0VDbXFfZlVydVllQzlVVUNWdEtyclI5c2Z6dnBHa3JJbW1HUjRxQng2TTVuMzJwaVl1RmQwSTg5bHYtVVNuV1A3RHFnN3I2cnVpV3otUlR5aGFzcnlQeVJVd1JZd1dzMHVGVzR1LUZFdVd0dExBTHhTUm1SZWhIcmhTV3ZBTkNjcVR6QnhiVXNWUm0x?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:17:11+00:00"
   },
   "Can Ataklı": {
    "izlemeye_baslama": "2026-11-06T20:15:10+00:00",
    "durum": "tamam",
    "aciklama": "güncel",
-   "son_denetim": "2026-11-06T20:15:10+00:00",
+   "son_denetim": "2026-11-06T20:17:12+00:00",
    "sessiz_gun": 0,
    "esik_gun": 10,
-   "oneriler": []
+   "oneriler": [],
+   "haberlerde": [
+    {
+     "alan": "nefes.com.tr",
+     "ad": "Nefes Gazetesi",
+     "gecen": 6,
+     "imzali": 0,
+     "ornek_baslik": "Bu kadarı da olmaz yani! | Can Ataklı",
+     "ornek_link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPVUo1cklHNjlTSzV0VEh2alYwN19jZ0tpOTZYNGczUndGei1KR2ltM1RVUDV4aUdGbGxpV1lHVkJ0T2VoY1JlcU9UWXVJUVpZdkFWRFpXVGJtRE9UaVBaX2xBU0g0aFcteUNvV2VUSmZDb21yVHFjVHVXb0xKUTdxQg?oc=5"
+    },
+    {
+     "alan": "yeniakit.com.tr",
+     "ad": "Yeni Akit Gazetesi",
+     "gecen": 6,
+     "imzali": 0,
+     "ornek_baslik": "Can Ataklı, Emir Sarıgül’ün bir dostuna feryadını anlattı! Beni o psikopattan kurtar ne olur!",
+     "ornek_link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPZnRhTGZfRkVxZ3JpNUxpVFlhNW1xQmRoMXU4aE43S2NWT0pBSVp0NnBNTFB4TVJlQnh4OXNBTWxVYTJqdUFRS0F6Yi15cG9sTldGcEpibkkzVmRHb1QzaUNTNlNsUXZ5TmdEVDY3N2tlTGNwRHk2UWJ1RlY3eWtnaXJCOFFLV2pqUjAtZDllWGpvWU80aGUxTS1UUlFST1RXTGRlMGR2aUpsc3lTcUFUTkNjRUU3ZjhaanJIN0Y4M1ZzZlpQeTlXR1lpNDMyYzRScUHSAc4BQVVfeXFMUFBDREppaE5fVHJwZEVPTnFETm1MbVJMWnpWaC04S2owbjBxc3RYekc3bVlsaGVoR3FtMVJWSzF6WTZvZnh6YXAtRFVINUVzS212MHF5SGtCYVJGTkRxWEdsUTR1NjVtRkloQkdid05uTkdOU0xjODBJWTVQTkZRT0hGQUk5WFdZZkZaTDdlclFGcWJlQ2lDUlJvLUVidHJNR3pGNGVsa2VQMEdRSDV4V195YmctQ2pRRjFnbGxVWTZRV2dmaTl4N252cGJWR0E?oc=5"
+    },
+    {
+     "alan": "sonmuhur.com",
+     "ad": "Son Mühür",
+     "gecen": 1,
+     "imzali": 0,
+     "ornek_baslik": "Gazeteci Can Ataklı, \"Herkes aynı soruyu soruyor: Sözcü TV’ye de el konulur mu?'' dedi ve ekledi, bence hayır",
+     "ornek_link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOWkpzNko3bEtYSXpMRGwwajByWnFZdXJMdDlMVVRhNXpaYWM4Ym1sQm9FSk5Wck56UXdvWmhlSlhoU2ZiS2Q5ajJrd2tXVnV0VmY3amRZdmRPRHZKNGZaV05oeXVXMlhfSlVPZXQ1aHZNN2Z2enNqTlI0cF9aWm9wdS1VR0NGenpGVEVWaWlqM0p0N2FCcVpPdDJLSklZSFhlM3Z6X19tUUlZVE52enpSaTItNGZZSU9zWEEyck9XdWdVcEV3?oc=5"
+    }
+   ],
+   "son_tarama": "2026-11-06T20:17:12+00:00"
   }
  },
- "son_calisma": "2026-11-06T20:14:36+00:00",
- "son_calisma_suresi_sn": 33.6
+ "son_calisma": "2026-11-06T20:17:02+00:00",
+ "son_calisma_suresi_sn": 10.5
 }
