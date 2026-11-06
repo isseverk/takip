@@ -1,9 +1,9 @@
 # Takip Akışı
 
-Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
+Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
 
@@ -36,7 +36,9 @@ Kontrolleri GitHub'ın sunucuları yarım saatte bir yapar, bilgisayarının aç
 
 Bundan sonra akış her yarım saatte bir kendiliğinden güncellenir. GitHub zamanlanmış işleri bazen birkaç dakika geciktirebilir.
 
-> GitHub, depoda 60 gün boyunca hiç değişiklik olmazsa zamanlanmış işleri durdurabilir. Program her güncellemede depoya yazdığı için bu normalde olmaz. Olursa GitHub e-posta atar; Actions sekmesinden tek tıkla yeniden açılır.
+> GitHub, depoda 60 gün boyunca hiç değişiklik olmazsa zamanlanmış işleri durdurabilir. Program bunu önlemek için 50 günde bir depoya küçük bir "Canlı tut" kaydı atar. Yine de durursa GitHub e-posta atar; Actions sekmesinden tek tıkla yeniden açılır.
+>
+> Program, daha önce gördüğü yazıların kaydını depodaki ayrı bir **veri** dalında tutar. Bu dal ilk çalışmada kendiliğinden oluşur; silme. Böylece ana depo her yarım saatte büyümez.
 
 ## İsteğe bağlı — Kendi Windows bilgisayarında da çalıştırmak
 
@@ -50,7 +52,22 @@ Bu yol yalnızca bilgisayarda bakmak içindir; telefondaki uygulama GitHub'daki 
 
 ## Yazar / kaynak eklemek ve çıkarmak
 
-**Telefondan (en kolayı):** Uygulamada **Kaynaklar → + Ekle**'ye bas ve adresi yapıştır. Türü (köşe sayfası, YouTube, blog, Ekşi, Instagram) uygulama kendisi tanır. Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
+**Sadece adıyla (en kolayı):** Uygulamada **Kaynaklar → + Ekle → İsimle bul**'a bas, kişinin adını yaz. Program haber sitelerindeki köşe sayfasını, kişisel blogunu ve YouTube kanalını kendisi arar, birkaç dakika içinde bulduklarını ekler. Birden fazla kişiyi aynı anda eklemek için her ismi ayrı satıra yaz (virgülle ayırmak da olur). Bir çalışmada en çok 8 kişi aranır, fazlası sonraki yarım saate kalır.
+
+**Adresi biliyorsan:** **+ Ekle → Adresi biliyorum**'a bas ve adresi yapıştır. Türü uygulama kendisi tanır:
+
+| Yapıştırdığın | Tanınan tür |
+|---|---|
+| Gazete yazar sayfası | Köşe |
+| `youtube.com/@kanal` ya da bir video bağlantısı | YouTube |
+| Blog, Substack, Medium ya da RSS adresi | Blog / RSS |
+| `bsky.app/profile/…` ya da `kullanici.bsky.social` | Bluesky |
+| `t.me/kanaladi` | Telegram (yalnızca herkese açık kanallar) |
+| `podcasts.apple.com/…` ya da `open.spotify.com/show/…` | Podcast |
+| `eksisozluk.com/biri/…` ya da bir başlık | Ekşi Sözlük |
+| `instagram.com/hesap` ya da `@hesap` | Instagram |
+
+Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
 - **Kısayol:** YouTube uygulamasında bir kanalı, ya da Chrome'da bir yazarın sayfasını açıp **Paylaş → Takip** de. Form adres dolu olarak açılır.
 - **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
 - **Adresi değişen yazar:** **⋯ → Adresini değiştir** seç.
@@ -66,6 +83,11 @@ Değişiklik birkaç dakika içinde akışa yansır. Telefondan yapılanlar `kay
         url: https://www.gazete.com/yazarlar/yeni-yazar
         dogrula: true
 ```
+
+Yeni türlerle ilgili bilmen gerekenler:
+- **Bluesky:** Yalnızca kişinin kendi paylaşımları gelir, başkalarına yazdığı yanıtlar atlanır.
+- **Telegram:** Kanalın herkese açık önizlemesi okunur, bu yüzden son 20 kadar mesaj görülür. Yarım saatte 20'den fazla mesaj atan kanallarda arada kalanlar kaçabilir.
+- **Podcast:** Apple Podcasts bağlantısı en sağlam yoldur. Spotify bağlantısında program aynı podcasti Apple'ın listesinde arar; yalnızca Spotify'da yayınlanan podcastler bulunamayabilir.
 
 **Instagram**, giriş yapmadan otomatik okumayı çoğu zaman engeller. Kalıcı çözüm için **rss.app** gibi bir servisten hesabın RSS adresini alıp telefondan **Blog / RSS** türüyle ekle.
 
@@ -105,7 +127,7 @@ Bilgisayarında `python takip.py --kontrol` komutunu çalıştırırsan her kayn
 | `kaynaklar_uygulama.json` | Telefondan yapılan ekleme/çıkarmalar (uygulama yazar, elle düzenlemen gerekmez) |
 | `uygulama/` | Telefon uygulamasının simgeleri ve çevrimdışı çalışma dosyaları |
 | `sablon.html` | Uygulamanın ekranları |
-| `veri/durum.json` | Daha önce görülen yazıların kaydı. Silersen her şey "ilk çalıştırma" sayılır. |
+| `veri/durum.json` | Daha önce görülen yazıların kaydı. Bulutta depodaki **veri** dalında tutulur; o dalı silersen her şey "ilk çalıştırma" sayılır. |
 | `docs/` | Üretilen akış sayfası ve RSS |
 | `.github/workflows/takip.yml` | Bulutta yarım saatlik otomatik çalışma |
 | `calistir.bat`, `zamanlayici_kur.bat` | Windows'ta çalıştırma ve otomatik zamanlama |

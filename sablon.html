@@ -78,8 +78,10 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .tur{font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 6px;background:var(--vurgu-acik);color:var(--vurgu)}
 .tur.video,.tur.youtube{background:#fde4e4;color:#b42318}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#e3f4d8;color:#3c6b1d}
 .tur.instagram{background:#f6e0f1;color:#9c2f86}.tur.rss{background:#e3ecf8;color:#24569c}
+.tur.paylasim,.tur.bluesky,.tur.telegram{background:#dff0fb;color:#0b6aa8}.tur.podcast{background:#efe4fb;color:#6b3fa0}
 @media (prefers-color-scheme: dark){.tur.video,.tur.youtube{background:#3b2222;color:#ff9a8f}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#253322;color:#9fd27a}
-  .tur.instagram{background:#38233a;color:#f0a3e0}.tur.rss{background:#1f2a3b;color:#93b8ee}}
+  .tur.instagram{background:#38233a;color:#f0a3e0}.tur.rss{background:#1f2a3b;color:#93b8ee}
+  .tur.paylasim,.tur.bluesky,.tur.telegram{background:#18303f;color:#86c8f0}.tur.podcast{background:#2c2240;color:#c9a8f2}}
 .etiket-yeni{font-size:11px;font-weight:700;color:var(--yeni);letter-spacing:.04em}
 .baslik{display:block;font:600 17.5px/1.32 var(--serif);text-decoration:none;color:var(--metin);margin:2px 0}
 .baslik::after{content:"";position:absolute;inset:0;border-radius:14px}
@@ -200,6 +202,7 @@ footer a{color:var(--soluk)}
 <main class="kap">
   <!-- AKIŞ -->
   <section id="g-akis">
+    <div id="gecikmeUyari"></div>
     <div id="kurBanner"></div>
     <div id="denetimUyari"></div>
     <div id="akis"></div>
@@ -308,14 +311,16 @@ footer a{color:var(--soluk)}
     </div>
     <div id="isimBlok">
       <label class="alan"><span>Yazarın / kişinin adı</span>
-        <input id="fIsim" autocomplete="off" placeholder="ör. Nevşin Mengü"></label>
+        <textarea id="fIsim" rows="3" autocomplete="off" placeholder="ör. Nevşin Mengü"
+          style="width:100%;border:1px solid var(--cizgi);background:var(--zemin);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;resize:vertical"></textarea>
+        <small>Birden fazla kişi eklemek için her ismi ayrı satıra yaz.</small></label>
       <p style="font-size:13.5px;color:var(--soluk);margin:6px 0 0">Program bu kişinin nerede yazdığını araştırır: haber sitelerindeki köşe sayfası, kişisel blogu ve YouTube kanalı. Bulduklarını birkaç dakika içinde ekler; yanlış bulduğu olursa ⋯ ile kaldırabilirsin.</p>
     </div>
     <div id="adresBlok">
     <label class="alan"><span>Adres</span>
       <input id="fAdres" required autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url"
              placeholder="https://… ya da @kullanici">
-      <small>Yazarın "tüm yazıları" sayfası, YouTube kanalı, blog, Ekşi yazar sayfası ya da Instagram hesabı.</small></label>
+      <small>Köşe yazısı sayfası, YouTube kanalı, blog, Bluesky, Telegram kanalı, podcast (Apple/Spotify), Ekşi ya da Instagram.</small></label>
     <div class="algilanan" id="fAlgilanan"></div>
     <label class="alan"><span>Kişi / kaynak adı</span>
       <input id="fAd" required list="yazarOneri" autocomplete="off" placeholder="ör. Nevşin Mengü">
@@ -326,6 +331,9 @@ footer a{color:var(--soluk)}
         <option value="sayfa">Köşe yazısı sayfası</option>
         <option value="youtube">YouTube kanalı</option>
         <option value="rss">Blog / Substack / RSS</option>
+        <option value="bluesky">Bluesky hesabı</option>
+        <option value="telegram">Telegram kanalı</option>
+        <option value="podcast">Podcast</option>
         <option value="eksi_yazar">Ekşi Sözlük yazarı</option>
         <option value="eksi_baslik">Ekşi Sözlük başlığı</option>
         <option value="instagram">Instagram hesabı</option>
@@ -363,8 +371,8 @@ footer a{color:var(--soluk)}
     yaz(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
     sil(k){ try{ localStorage.removeItem(k); }catch(e){} }
   };
-  const TUR = {yazi:"Yazı", video:"Video", eksi:"Ekşi", instagram:"Instagram"};
-  const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", rss:"Blog/RSS", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
+  const TUR = {yazi:"Yazı", video:"Video", paylasim:"Paylaşım", podcast:"Podcast", eksi:"Ekşi", instagram:"Instagram"};
+  const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", rss:"Blog/RSS", bluesky:"Bluesky", telegram:"Telegram", podcast:"Podcast", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
   const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const GUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
   const HTTP = location.protocol.startsWith("http");
@@ -766,9 +774,22 @@ footer a{color:var(--soluk)}
     let s = (girdi||"").trim();
     const m = s.match(/https?:\/\/\S+/); if (m) s = m[0];
     s = s.replace(/[)\]>.,]+$/,"");
-    if (/^@?[\w.]{2,30}$/.test(s) && !s.includes("/")) return {tur:"instagram", kullanici: s.replace(/^@/,""), adres: s};
+    if (/^@?[\w.-]+\.bsky\.social$/i.test(s)) return {tur:"bluesky", kullanici: s.replace(/^@/,""), adres: s};
+    const alanAdi = !s.startsWith("@") && /\.(com|net|org|info|blog|io|co|me|app|tv|news|tr)(\.[a-z]{2})?$/i.test(s);
+    if (/^@?[\w.]{2,30}$/.test(s) && !s.includes("/") && !alanAdi) return {tur:"instagram", kullanici: s.replace(/^@/,""), adres: s};
     let u; try { u = new URL(/^https?:/.test(s) ? s : "https://" + s); } catch(e){ return null; }
     const h = u.hostname.replace(/^(www|m)\./,""), p = u.pathname;
+    if (h === "bsky.app"){
+      const n = /^\/profile\/([^/?#]+)/.exec(p);
+      return n ? {tur:"bluesky", kullanici: decodeURIComponent(n[1]), adres: u.href} : {tur:"bluesky", adres: u.href, uyari:"Bluesky profil adresini kullan (bsky.app/profile/…)."};
+    }
+    if (h === "t.me" || h === "telegram.me"){
+      const n = /^\/(?:s\/)?([A-Za-z0-9_]{4,})/.exec(p);
+      return n ? {tur:"telegram", kullanici: n[1], adres: u.href} : {tur:"telegram", adres: u.href, uyari:"Kanalın adresini kullan (t.me/kanaladi)."};
+    }
+    if (h === "podcasts.apple.com" || (h === "open.spotify.com" && p.startsWith("/show/")))
+      return {tur:"podcast", url: u.href.split("?")[0], adres: u.href, uyari: h.includes("spotify") ? "Spotify'a özel podcastler takip edilemeyebilir." : ""};
+    if (h === "open.spotify.com") return {tur:"podcast", adres: u.href, uyari:"Bölüm değil, podcastin kendi sayfasının (open.spotify.com/show/…) bağlantısını kullan."};
     if (/(^|\.)youtube\.com$|^youtu\.be$/.test(h)){
       const kanal = /^\/(@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)/.exec(p);
       return {tur:"youtube", kanal: kanal ? `https://www.youtube.com/${kanal[1]}` : u.href, adres: u.href, uyari: kanal ? "" : "Video bağlantısı verdin; videonun kanalı takip edilecek."};
@@ -823,6 +844,7 @@ footer a{color:var(--soluk)}
       k.append("Algılanan: ", el("span",{class:"tur " + a.tur, text: KAYNAK_TUR[a.tur]}), a.uyari ? " " + a.uyari : "");
       if (a.tur === "eksi_yazar" && !$("fAd").value) $("fAd").value = "Ekşi - " + a.kullanici;
       if (a.tur === "instagram" && a.kullanici && !$("fAd").value) $("fAd").value = "@" + a.kullanici;
+      if (a.tur === "telegram" && a.kullanici && !$("fAd").value) $("fAd").value = a.kullanici;
     }
     $("fDogrulaSatir").hidden = $("fTur").value !== "sayfa";
   }
@@ -832,19 +854,22 @@ footer a{color:var(--soluk)}
     if (e.submitter && e.submitter.value === "iptal") return;
     e.preventDefault();
     if (form.mod === "isim"){
-      const isim = $("fIsim").value.trim().replace(/\s+/g," ");
-      if (isim.length < 3){ $("fHata").textContent = "Adı yaz."; return; }
+      const isimler = [...new Set($("fIsim").value.split(/[\n,;]+/).map(x => x.trim().replace(/\s+/g," ")).filter(x => x.length >= 3))];
+      if (!isimler.length){ $("fHata").textContent = "Adı yaz."; return; }
+      const isim = isimler.length === 1 ? isimler[0] : `${isimler.length} kişi`;
       if (!GH.bagli()){ $("fHata").textContent = "Önce Ayarlar'dan GitHub bağlantısını kur."; return; }
       $("fKaydet").disabled = true;
       try {
         await uygDosyaDegistir(i => {
-          i.aranacaklar = (Array.isArray(i.aranacaklar) ? i.aranacaklar : []).filter(x => x.ad !== isim);
-          i.aranacaklar.push({ad: isim, zaman: new Date().toISOString()});
-          if (i.kesif) delete i.kesif[isim];
-          i.kapali_yazarlar = i.kapali_yazarlar.filter(x => x !== isim);
+          i.aranacaklar = (Array.isArray(i.aranacaklar) ? i.aranacaklar : []).filter(x => !isimler.includes(x.ad));
+          for (const ad of isimler){
+            i.aranacaklar.push({ad, zaman: new Date().toISOString()});
+            if (i.kesif) delete i.kesif[ad];
+          }
+          i.kapali_yazarlar = i.kapali_yazarlar.filter(x => !isimler.includes(x));
         }, `${isim} aranıyor`);
-        depo.yaz("aranan_yerel", depo.al("aranan_yerel", []).filter(x => x && x.ad !== isim).concat([{ad: isim, zaman: Date.now()}]));
-        $("ekleLevha").close(); tost(`${isim} aranıyor — birkaç dakika içinde sonuç gelecek`, 4500); sekmeAc("kaynaklar");
+        depo.yaz("aranan_yerel", depo.al("aranan_yerel", []).filter(x => x && !isimler.includes(x.ad)).concat(isimler.map(ad => ({ad, zaman: Date.now()}))));
+        $("ekleLevha").close(); tost(`${isim} aranıyor — ${isimler.length > 8 ? "8'er kişilik gruplar halinde, " : ""}birkaç dakika içinde sonuç gelecek`, 4500); sekmeAc("kaynaklar");
       } catch(err){ $("fHata").textContent = err.message; }
       finally { $("fKaydet").disabled = false; }
       return;
@@ -858,6 +883,9 @@ footer a{color:var(--soluk)}
     else if (tur === "eksi_yazar"){ k.kullanici = a.kullanici || $("fAdres").value.trim().replace(/^@/,""); }
     else if (tur === "eksi_baslik"){ if (!a.url) return void ($("fHata").textContent = "Başlığın adresini yapıştır."); k.url = a.url; }
     else if (tur === "instagram"){ if (!a.kullanici) return void ($("fHata").textContent = "Instagram kullanıcı adını ya da profil adresini gir."); k.kullanici = a.kullanici; }
+    else if (tur === "bluesky"){ const h = a.kullanici || $("fAdres").value.trim().replace(/^@/,""); if (!h || h.includes("/")) return void ($("fHata").textContent = "Bluesky hesabını ya da profil adresini gir."); k.kullanici = h; }
+    else if (tur === "telegram"){ const h = a.kullanici || $("fAdres").value.trim().replace(/^@/,""); if (!/^[A-Za-z0-9_]{4,}$/.test(h)) return void ($("fHata").textContent = "Telegram kanal adresini gir (t.me/kanaladi)."); k.kullanici = h; }
+    else if (tur === "podcast"){ if (!a.url && !/^https?:/.test($("fAdres").value.trim())) return void ($("fHata").textContent = "Podcastin Apple Podcasts, Spotify ya da RSS adresini gir."); k.url = a.url || $("fAdres").value.trim(); }
     if (tur === "sayfa" || tur === "rss"){ try { k.etiket = new URL(k.url).hostname.replace(/^www\./,""); } catch(_){} }
     if (!GH.bagli()){ $("fHata").textContent = "Önce Ayarlar'dan GitHub bağlantısını kur."; return; }
     $("fKaydet").disabled = true; $("fHata").textContent = "";
@@ -1010,7 +1038,19 @@ footer a{color:var(--soluk)}
 
   // ───────── açılış
   veriHazirla();
-  function hepsiniCiz(){ akisCiz(); denetimCiz(); saglikCiz(); kurCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz(); if (durum.sekme === "ayarlar") ayarlarCiz(); rozetler(); }
+  function gecikmeCiz(){
+    const k = $("gecikmeUyari"); k.replaceChildren();
+    const saat = (Date.now() - new Date(V.olusturma).getTime()) / 3600e3;
+    if (!(saat > 2)) return;
+    const depoAdi = GH.depo();
+    k.append(el("div",{class:"uyari-kutu", style:"display:block"},
+      el("b",{text:`⏸ Son kontrol ${onceki(new Date(V.olusturma))} yapıldı`}),
+      el("div",{style:"font-size:13.5px;margin-top:4px",
+        text: navigator.onLine === false ? "İnternet bağlantın yok; son kaydedilen akışı görüyorsun." :
+          "Kontroller normalde yarım saatte bir yapılır. GitHub'daki otomatik çalışma durmuş ya da hata vermiş olabilir."}),
+      depoAdi ? el("div",{style:"margin-top:8px"}, el("a",{class:"dugme", style:"text-decoration:none;display:inline-block", href:`https://github.com/${depoAdi}/actions`, target:"_blank", rel:"noopener", text:"GitHub'da çalışmalara bak"})) : null));
+  }
+  function hepsiniCiz(){ gecikmeCiz(); akisCiz(); denetimCiz(); saglikCiz(); kurCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz(); if (durum.sekme === "ayarlar") ayarlarCiz(); rozetler(); }
   hepsiniCiz();
   const p = new URLSearchParams(location.search);
   const paylasilan = [p.get("p_adres"), p.get("p_metin")].filter(Boolean).join(" ");

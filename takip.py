@@ -57,6 +57,8 @@ TARAYICI_BASLIKLARI = {
 TUR_ETIKETLERI = {
     "yazi": "Yazı",
     "video": "Video",
+    "paylasim": "Paylaşım",
+    "podcast": "Podcast",
     "eksi": "Ekşi",
     "instagram": "Instagram",
 }
@@ -319,10 +321,90 @@ def rss_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
             if e.get(alan):
                 tarih = datetime(*e[alan][:6], tzinfo=timezone.utc)
                 break
-        ozet = BeautifulSoup(e.get("summary", "") or "", "html.parser").get_text(" ")
-        sonuc.append({"url": url_temizle(link), "baslik": kisalt(e.get("title", "") or link, 200),
+        ozet = bosluk(BeautifulSoup(e.get("summary", "") or "", "html.parser").get_text(" "))
+        baslik = bosluk(e.get("title", ""))
+        if not baslik or baslik == link:  # başlıksız paylaşımlar (Bluesky vb.): metnin kendisi başlık olur
+            baslik, ozet = paylasim_bol(ozet) if ozet else (link, "")
+        sonuc.append({"url": url_temizle(link), "baslik": kisalt(baslik, 300),
                       "ozet": kisalt(ozet, 260), "tarih": iso(tarih), "tur": k.get("icerik_turu", "yazi")})
     return sonuc
+
+
+def paylasim_bol(metin: str) -> tuple[str, str]:
+    """Başlıksız paylaşım metnini başlık + devamı olarak böler; aynı metin iki kez görünmesin."""
+    metin = metin.strip()
+    if len(metin) <= 300:
+        return metin, ""
+    kes = metin.rfind(" ", 0, 160)
+    kes = kes if kes > 80 else 160
+    return metin[:kes].rstrip(" ,;:") + "…", "…" + kisalt(metin[kes:].strip(), 300)
+
+
+def bluesky_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
+    """Bluesky profilinin kendi RSS akışı: bsky.app/profile/<hesap>/rss"""
+    hesap = (k.get("kullanici") or "").lstrip("@").strip()
+    if not hesap:
+        raise KaynakHatasi("Bluesky hesap adı yok")
+    ogeler = rss_oku(ist, {"url": f"https://bsky.app/profile/{hesap}/rss", "icerik_turu": "paylasim"}, durum, yazar)
+    if not k.get("yanitlar_dahil"):
+        ogeler = [o for o in ogeler if not o["baslik"].startswith("@")]
+    return ogeler
+
+
+def telegram_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
+    """Herkese açık Telegram kanalının önizleme sayfası: t.me/s/<kanal> (son ~20 mesaj)"""
+    kanal = (k.get("kullanici") or "").lstrip("@").strip()
+    if not kanal:
+        raise KaynakHatasi("Telegram kanal adı yok")
+    corba = BeautifulSoup(ist.al(f"https://t.me/s/{quote(kanal)}"), "html.parser")
+    sonuc = []
+    for m in corba.select(".tgme_widget_message[data-post]"):
+        no = m["data-post"].split("/")[-1]
+        metin_el = m.select_one(".tgme_widget_message_text")
+        metin = bosluk(metin_el.get_text(" ")) if metin_el else ""
+        if not metin:
+            onizleme = m.select_one(".link_preview_title")
+            metin = bosluk(onizleme.get_text(" ")) if onizleme else ("(fotoğraf/video)" if m.select_one(
+                ".tgme_widget_message_photo_wrap, video") else "")
+        if not metin:
+            continue
+        zaman = m.select_one("time[datetime]")
+        baslik, ozet = paylasim_bol(metin)
+        sonuc.append({"url": f"https://t.me/{kanal}/{no}", "baslik": baslik, "ozet": ozet,
+                      "tarih": iso(iso_oku(zaman["datetime"])) if zaman else None, "tur": "paylasim"})
+    if not sonuc and not corba.select_one(".tgme_channel_info, .tgme_widget_message"):
+        raise KaynakHatasi("kanal bulunamadı ya da herkese açık değil")
+    sonuc.reverse()  # sayfa eskiden yeniye sıralı
+    return sonuc
+
+
+def podcast_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
+    """Apple Podcasts / Spotify bağlantısından ya da doğrudan RSS'ten podcast bölümleri."""
+    ekstra = durum.setdefault("ekstra", {})
+    akis = k.get("rss_url") or ekstra.get("akis")
+    adres = k.get("url") or ""
+    if not akis:
+        m = re.search(r"podcasts\.apple\.com/.*?/id(\d+)", adres)
+        if m:
+            j = json.loads(ist.al(f"https://itunes.apple.com/lookup?id={m.group(1)}&entity=podcast"))
+            akis = next((x.get("feedUrl") for x in j.get("results", []) if x.get("feedUrl")), None)
+        elif "spotify.com/show/" in adres:
+            corba = BeautifulSoup(ist.al(adres), "html.parser")
+            og = corba.find("meta", attrs={"property": "og:title"})
+            ad = bosluk(og["content"]) if og and og.get("content") else ""
+            if not ad:
+                raise KaynakHatasi("Spotify podcast adı okunamadı")
+            j = json.loads(ist.al("https://itunes.apple.com/search?media=podcast&limit=10&term=" + quote(ad)))
+            akis = next((x.get("feedUrl") for x in j.get("results", [])
+                         if x.get("feedUrl") and sade(x.get("collectionName", "")) == sade(ad)), None)
+            if not akis:
+                raise KaynakHatasi(f"'{ad}' Spotify'a özel olabilir; Apple Podcasts'ta bulunamadı")
+        else:
+            akis = adres
+        if not akis:
+            raise KaynakHatasi("podcast akışı bulunamadı")
+        ekstra["akis"] = akis
+    return rss_oku(ist, {"url": akis, "icerik_turu": "podcast"}, durum, yazar)
 
 
 def rss_kesfet(ist: Istemci, sayfa: str) -> str:
@@ -608,7 +690,7 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
     uyg.setdefault("yazarlar", [])
     kesif = uyg.setdefault("kesif", {})
     mesajlar = []
-    for a in aranacaklar[:5]:  # bir çalışmada en fazla 5 kişi
+    for a in aranacaklar[:8]:  # bir çalışmada en fazla 8 kişi; kalanlar sonraki kontrolde
         ad = bosluk(a["ad"])
         print(f"🔍 {ad} için kaynak aranıyor…")
         kaynaklar, aciklama = yazar_kesfet(ist, ad)
@@ -625,7 +707,7 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
             kesif[ad] = {"durum": "bulunamadi", "zaman": iso(simdi()), "aciklama": aciklama}
             mesajlar.append(f"{ad}: {aciklama}")
         print(f"   → {aciklama}")
-    islenen = {bosluk(a["ad"]) for a in aranacaklar[:5]}
+    islenen = {bosluk(a["ad"]) for a in aranacaklar[:8]}
     uyg["aranacaklar"] = [a for a in aranacaklar if bosluk(a["ad"]) not in islenen]
     yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return mesajlar
@@ -633,6 +715,9 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
 
 OKUYUCULAR = {
     "google_haber": google_haber_kaynak_oku,
+    "bluesky": bluesky_oku,
+    "telegram": telegram_oku,
+    "podcast": podcast_oku,
     "sayfa": sayfa_oku,
     "rss": rss_oku,
     "youtube": youtube_oku,
@@ -1064,6 +1149,12 @@ def _etiket_tahmin(k: dict, tur: str) -> str:
         return "Instagram"
     if tur == "google_haber":
         return (k.get("site") or "") + " (Google Haberler)"
+    if tur == "bluesky":
+        return "Bluesky"
+    if tur == "telegram":
+        return "Telegram"
+    if tur == "podcast":
+        return "Podcast"
     adres = k.get("url") or k.get("yazar_dizini") or ""
     host = urlparse(adres).netloc.replace("www.", "")
     return host.split(".")[0].capitalize() if host else tur
