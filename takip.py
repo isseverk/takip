@@ -174,7 +174,17 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
         url = yazar_sayfasini_bul(ist, k["yazar_dizini"], k.get("bul") or yazar, durum)
     if not url:
         raise KaynakHatasi("sayfa adresi yok")
-    html_metin = ist.al(url)
+    durum.pop("yedek", None)
+    try:
+        html_metin = ist.al(url)
+    except KaynakHatasi as e:
+        # Bazı siteler (ör. Cloudflare arkasındakiler) bulut sunucularını engeller.
+        # O zaman yazarın o sitedeki yazılarını Google Haberler üzerinden buluruz.
+        if k.get("yedek", True) is False or not re.search(r"HTTP (403|429|503)", str(e)):
+            raise
+        ogeler = google_haber_oku(ist, k.get("bul") or yazar, _alan_adi(url))
+        durum["yedek"] = "google_haber"
+        return ogeler[: int(k.get("en_fazla", 25))]
     corba = BeautifulSoup(html_metin, "html.parser")
 
     desen = k.get("link_deseni")
@@ -198,6 +208,30 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
     for a in adaylar:
         a["tur"] = "yazi"
     return adaylar[: int(k.get("en_fazla", 25))]
+
+
+def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
+    """Google Haberler'de "<ad>" site:<site> aramasıyla son 30 günün yazılarını getirir."""
+    if feedparser is None:
+        raise KaynakHatasi("feedparser kurulu değil")
+    sorgu = quote(f'"{ad}" site:{site} when:30d')
+    try:
+        metin = ist.al(f"https://news.google.com/rss/search?q={sorgu}&hl=tr&gl=TR&ceid=TR:tr", deneme=1)
+    except KaynakHatasi as e:
+        raise KaynakHatasi(f"site bulut sunucularını engelliyor ve Google Haberler yedeği de açılamadı ({e})")
+    sonuc = []
+    for e in feedparser.parse(metin).entries:
+        baslik = re.sub(r"\s+-\s+[^-]{2,40}$", "", e.get("title", "")).strip()
+        # "Can Ataklı yazdı: ..." / "... | Can Ataklı" gibi ekleri at
+        baslik = re.sub(r"^" + re.escape(ad) + r"\s*(yazdı)?\s*[:|-]\s*", "", baslik, flags=re.I)
+        baslik = re.sub(r"\s*[|-]\s*" + re.escape(ad) + r"\s*$", "", baslik, flags=re.I).strip()
+        if not baslik or not e.get("link"):
+            continue
+        tarih = datetime(*e["published_parsed"][:6], tzinfo=timezone.utc) if e.get("published_parsed") else None
+        sonuc.append({"url": e["link"], "baslik": kisalt(baslik, 200), "tarih": iso(tarih), "tur": "yazi",
+                      "_yedek": True})
+    sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
+    return sonuc
 
 
 def _makaleye_benziyor(u: str, sayfa: str) -> bool:
@@ -620,7 +654,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             continue
 
         kd.update(son_deneme=iso(simdi()), son_basari=iso(simdi()), hata_sayisi=0, son_hata=None,
-                  son_bulunan=len(ogeler), durum="uyari" if not ogeler else "tamam")
+                  son_bulunan=len(ogeler), durum="uyari" if not ogeler else "tamam",
+                  not_=("Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
+                        if kd.get("yedek") else None))
         if sadece_kontrol:
             print(f"✓ {etiket}: {len(ogeler)} öğe" + (" (tahmini desen)" if kd.get("tahmini") else ""))
             for o in ogeler[:3]:
@@ -641,7 +677,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         dogrula = k.get("dogrula", bool(k.get("yazar_dizini")) or kd.get("tahmini", False))
         eklenen = 0
         for o in taze:
-            if tur == "sayfa" and ayrinti_sayaci < ayrinti_siniri and k.get("ayrinti", True):
+            if tur == "sayfa" and not o.pop("_yedek", False) and ayrinti_sayaci < ayrinti_siniri \
+                    and k.get("ayrinti", True):
                 ayrinti_sayaci += 1
                 try:
                     if not ayrinti_getir(ist, o, (k.get("bul") or y["ad"]) if dogrula else None):
@@ -931,6 +968,7 @@ def _yazar_listesi(ayar: dict, durum: dict) -> list[dict]:
                 "durum": kd.get("durum") or ("bekliyor" if k.get("aktif") is not False else None),
                 "son_hata": kd.get("son_hata"),
                 "son_basari": kd.get("son_basari"),
+                "not_": kd.get("not_"),
             })
         sonuc.append({"ad": y["ad"], "kok": y.get("_kok", "yaml"), "kapali": y.get("aktif") is False,
                       "kaynaklar": kayitlar})
@@ -943,7 +981,7 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
     kaynaklar = []
     for anahtar, kd in durum["kaynaklar"].items():
         kaynaklar.append(dict({k: kd.get(k) for k in ("yazar", "tur", "etiket", "adres", "durum", "son_basari",
-                                                       "son_deneme", "son_hata", "son_bulunan", "hata_sayisi")},
+                                                       "son_deneme", "son_hata", "son_bulunan", "hata_sayisi", "not_")},
                               anahtar=anahtar))
     kaynaklar.sort(key=lambda x: (x["durum"] == "tamam", x["yazar"] or ""))
     yazarlar = [y["ad"] for y in ayar["yazarlar"] if y.get("aktif") is not False]

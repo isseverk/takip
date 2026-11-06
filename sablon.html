@@ -521,6 +521,7 @@ footer a{color:var(--soluk)}
       const acik = el("td", null, el("div",{text: `${k.yazar} · ${k.etiket || k.tur}`}));
       if (k.durum === "hata" && k.son_hata) acik.append(el("div",{class:"hata-metni", text:k.son_hata}));
       if (k.durum === "uyari") acik.append(el("div",{class:"hata-metni", text:"Sayfa açıldı ama içerik bulunamadı; adres değişmiş olabilir."}));
+      if (k.not_) acik.append(el("div",{style:"color:var(--soluk);font-size:12.5px", text:k.not_}));
       t.append(el("tr", null, el("td",{class:"ikon-" + (k.durum || "tamam"), text: ikon}), acik,
         el("td",{style:"white-space:nowrap;color:var(--soluk)", text: k.son_basari ? onceki(new Date(k.son_basari)) : "hiç"})));
     }
@@ -664,7 +665,7 @@ footer a{color:var(--soluk)}
           el("span",{class:sinif, text:ikon}),
           el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || ""),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
       }
       return kart;
