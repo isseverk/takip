@@ -3,7 +3,8 @@
 Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, takip ettiğin konuları yönetirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
 
@@ -107,10 +108,19 @@ Uygulamada **Ayarlar → Bildirimler → Bildirimleri aç**'a bas. Ücretsiz **n
 Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
 - **Ne zaman:** Her yeni içerikte ya da yalnızca konularına uyanlarda.
 - **Türler:** Örneğin Ekşi entry'leri ya da YouTube videoları için bildirim gelmesin.
+- **Sabah bülteni:** Her gün seçtiğin saatte (ör. 08:00) son bültenden beri gelenleri kişiye göre toplayan tek bir bildirim gelir. Dokununca Günün özeti ekranı açılır. İstersen **Anlık bildirimleri kapat** kutusunu da işaretle; o zaman gün içinde yalnızca konularına uyan içerikler anında bildirilir, gerisi bültende toplanır. Bülten, GitHub'ın zamanlaması nedeniyle seçtiğin saatten sonraki yarım saat içinde gelir.
 - **Sessiz saatler:** Örneğin 23:00–07:30 arası bildirim gelmez. Arada gelenler, sessiz saat bitince tek bildirimde toplanır.
 - **Kişi bazında:** Kaynaklar'da bir kişinin ⋯ menüsünden **Bildirimlerini kapat**'ı seç. Yazıları akışta görünmeye devam eder; adının yanında 🔕 görünür. Bu kişinin bir yazısı konularından birine uyarsa yine bildirim gelir.
 
 Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
+
+## Yazar sayfası
+
+Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun. Açılan sayfada şunlar var:
+- Son 30 günde kaç içerik geldiği ve haftada ortalama kaç yazdığı.
+- Kaynaklarının durumu ve varsa adres denetimi uyarısı.
+- Son içerikleri, yapay zekâ özetleriyle.
+- **Akışta yalnızca bunu göster**, **Bildirimleri kapat/aç** ve **Kaynakları düzenle** düğmeleri.
 
 ## Yapay zekâ özetleri (isteğe bağlı, ücretsiz)
 

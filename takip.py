@@ -1061,6 +1061,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             print("  • " + m)
         mesajlar.append(("Takip listesi: kontrol et", denetim_mesajlari))
     bildirimleri_gonder(ist, a, durum, konulu, diger, mesajlar)
+    bulten_gonder(ist, a, durum, konular)
 
     for o in durum["ogeler"]:
         o.pop("_metin", None)  # tam metinler kayda girmesin (yalnızca özet için alındı)
@@ -1340,8 +1341,8 @@ def bildirimleri_hazirla(a: dict, yeniler: list[dict], konular: list[dict]) -> t
         eslesen = [k for k in o.get("konular") or [] if k in bildirimli_konu]
         if eslesen:
             konulu.setdefault(eslesen[0], []).append(o)
-        elif not (sadece_konular or o.get("konu_haberi") or o["yazar"] in sessiz_yazar
-                  or o.get("tur", "yazi") in sessiz_tur):
+        elif not (sadece_konular or b.get("anlik") is False or o.get("konu_haberi")
+                  or o["yazar"] in sessiz_yazar or o.get("tur", "yazi") in sessiz_tur):
             diger.append(o)
     return konulu, diger
 
@@ -1366,7 +1367,8 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
     if sessiz_saatte_mi(b):
         for konu, ogeler in konulu.items():
             bekleyen.extend(f"🔖 {o['yazar']}: {o['baslik']}" for o in ogeler)
-        bekleyen.extend(f"{o['yazar']}: {o['baslik']}" for o in diger)
+        if _dakika(b.get("bulten_saat")) is None:
+            bekleyen.extend(f"{o['yazar']}: {o['baslik']}" for o in diger)
         for baslik, satirlar in mesajlar:
             bekleyen.extend(f"{baslik} — {x}" for x in satirlar)
         durum["bekleyen_bildirim"] = bekleyen[-60:]
@@ -1378,7 +1380,7 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
         bildirim_gonder(ist, a, [], baslik=f"Sessiz saatlerde gelenler ({len(bekleyen)})", satirlar=satirlar)
         durum["bekleyen_bildirim"] = []
     for konu, ogeler in konulu.items():
-        bildirim_gonder(ist, a, ogeler, baslik=f"🔖 {konu}: {len(ogeler)} yeni", oncelik="high", etiket="bookmark")
+        bildirim_gonder(ist, a, ogeler, baslik=f"{konu}: {len(ogeler)} yeni", oncelik="high", etiket="bookmark")
     if diger:
         bildirim_gonder(ist, a, diger)
     for baslik, satirlar in mesajlar:
@@ -1386,7 +1388,8 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
 
 
 def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | None = None,
-                    satirlar: list[str] | None = None, oncelik: str | None = None, etiket: str = "newspaper"):
+                    satirlar: list[str] | None = None, oncelik: str | None = None, etiket: str = "newspaper",
+                    tikla: str | None = None):
     """İsteğe bağlı: ntfy.sh üzerinden telefona anlık bildirim."""
     konu = (a.get("bildirim") or {}).get("ntfy_konu")
     if not konu:
@@ -1407,11 +1410,63 @@ def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | No
             basliklar["Actions"] = f"view, Akışı aç, {adres}"
     elif adres:
         basliklar["Click"] = adres
+    if tikla:
+        basliklar["Click"] = tikla
     try:
         ist.gonder(f"{sunucu}/{konu}", "\n".join(satirlar).encode("utf-8"), basliklar)
         print("→ telefona bildirim gönderildi")
     except Exception as e:
         print(f"! bildirim gönderilemedi: {e}")
+
+
+def bulten_icerigi(durum: dict, konular: list[dict], baslangic: datetime) -> tuple[int, list[str]]:
+    """baslangic'tan beri gelen öğeleri kişiye göre gruplayıp bülten satırlarını üretir."""
+    ogeler = [o for o in durum["ogeler"]
+              if not o.get("ilk") and (iso_oku(o.get("bulunma")) or baslangic) > baslangic]
+    if not ogeler:
+        return 0, []
+    satirlar = []
+    konu_say: dict[str, int] = {}
+    for o in ogeler:
+        for k in konulari_bul(o, konular):
+            konu_say[k] = konu_say.get(k, 0) + 1
+    for k, n in sorted(konu_say.items(), key=lambda x: -x[1]):
+        satirlar.append(f"🔖 {k}: {n} içerik")
+    kisiler: dict[str, list[dict]] = {}
+    for o in ogeler:
+        if not o.get("konu_haberi"):
+            kisiler.setdefault(o["yazar"], []).append(o)
+    sirali = sorted(kisiler.items(), key=lambda x: (-len(x[1]), x[0]))
+    for ad, liste in sirali[:14]:
+        bas = kisalt(liste[0]["baslik"], 90)
+        satirlar.append(f"• {ad}: {bas}" if len(liste) == 1 else f"• {ad} ({len(liste)}): {bas} …")
+    if len(sirali) > 14:
+        satirlar.append(f"…ve {len(sirali) - 14} kişiden daha")
+    return len(ogeler), satirlar
+
+
+def bulten_gonder(ist: Istemci, a: dict, durum: dict, konular: list[dict], an: datetime | None = None) -> bool:
+    """Bülten saati geldiyse (günde bir kez) son bültenden beri gelenleri tek bildirimde yollar."""
+    b = a.get("bildirim") or {}
+    saat = _dakika(b.get("bulten_saat"))
+    if saat is None or not b.get("ntfy_konu"):
+        return False
+    an = an or simdi()
+    yerel = an.astimezone(TR_SAAT)
+    bugun = yerel.date().isoformat()
+    if durum.get("bulten_gun") == bugun or yerel.hour * 60 + yerel.minute < saat or sessiz_saatte_mi(b, an):
+        return False
+    son = iso_oku(durum.get("bulten_son"))
+    baslangic = max(son, an - timedelta(days=2)) if son else an - timedelta(hours=24)
+    sayi, satirlar = bulten_icerigi(durum, konular, baslangic)
+    durum.update(bulten_gun=bugun, bulten_son=iso(an))
+    if not sayi:
+        print("☀ bülten: son bültenden beri yeni içerik yok, gönderilmedi")
+        return False
+    adres = site_adresi(a)
+    bildirim_gonder(ist, a, [], baslik=f"Günün özeti: {sayi} yeni içerik", satirlar=satirlar,
+                    etiket="sunny", tikla=(adres + "?bulten=1") if adres else None)
+    return True
 
 
 # ───────────────────────── yapay zekâ özetleri ─────────────────────────
@@ -1610,7 +1665,7 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "konu_durumu": {ad: {k: v for k, v in kd.items() if k != "gorulen"}
                         for ad, kd in (durum.get("konular") or {}).items()},
         "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
-            "sessiz_bas", "sessiz_bit", "kapsam", "sessiz_turler", "sessiz_yazarlar")},
+            "sessiz_bas", "sessiz_bit", "kapsam", "sessiz_turler", "sessiz_yazarlar", "bulten_saat", "anlik")},
         "yz": {k: (durum.get("yz") or {}).get(k) for k in (
             "durum", "model", "son_hata", "son_basari", "bugun")},
         "yazarlar": yazarlar,

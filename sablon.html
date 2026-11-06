@@ -47,6 +47,7 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .yeni-rozet{display:inline-block;background:var(--yeni-acik);color:var(--yeni);font-weight:600;border-radius:99px;padding:1px 8px;margin-left:6px}
 .ikon-dugme{width:40px;height:40px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);display:grid;place-items:center;cursor:pointer;flex:none}
 .ikon-dugme svg{width:20px;height:20px}
+.ikon-dugme[aria-pressed=true]{background:var(--vurgu-acik);color:var(--vurgu);border-color:var(--vurgu)}
 .ikon-dugme.donuyor svg{animation:don 0.9s linear infinite}
 @keyframes don{to{transform:rotate(360deg)}}
 .dugme{border:1px solid var(--cizgi);background:var(--kart);border-radius:10px;padding:8px 12px;font-size:14.5px;cursor:pointer}
@@ -95,9 +96,21 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .zaman-alan{display:flex;gap:10px;align-items:center;margin:6px 0 0 28px}
 .zaman-alan input{border:1px solid var(--cizgi);background:var(--zemin);color:inherit;border-radius:10px;padding:8px 10px;font-size:16px}
 .alt-baslik{font-size:13px;font-weight:600;color:var(--soluk);margin:14px 0 2px;text-transform:uppercase;letter-spacing:.04em}
+.yazar[role=button]{cursor:pointer}
+.bulten-ozet{font-size:14.5px;color:var(--soluk);margin:4px 2px 10px}
+.bulten-oge{padding:10px 14px;border-top:1px solid var(--cizgi)}
+.bulten-oge a{font:600 16.5px/1.3 var(--serif);color:var(--metin);text-decoration:none;display:block}
+.bulten-oge.okundu a{opacity:.55}
+.bulten-oge small{display:block;color:var(--soluk);font-size:12.5px;margin-top:3px}
+.bulten-oge .yz{margin-top:6px}
+.kart-ust .say-rozet{margin-left:auto;font-size:12.5px;color:var(--soluk)}
+.yazar-istatistik{font-size:14px;color:var(--soluk);margin:2px 0 10px}
+.yazar-kaynak{display:flex;gap:8px;align-items:center;font-size:14px;padding:6px 0;border-top:1px solid var(--cizgi)}
+.yazar-kaynak .adres{color:var(--soluk);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
 .etiket-yeni{font-size:11px;font-weight:700;color:var(--yeni);letter-spacing:.04em}
 .baslik{display:block;font:600 17.5px/1.32 var(--serif);text-decoration:none;color:var(--metin);margin:2px 0}
 .baslik::after{content:"";position:absolute;inset:0;border-radius:14px}
+.oge .yazar,.oge .yz{position:relative;z-index:1}
 .baslik:focus-visible{outline:none}.oge:focus-within{outline:2px solid var(--vurgu);outline-offset:2px}
 .ozet{font-size:14.5px;color:var(--soluk);margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bos{text-align:center;color:var(--soluk);padding:48px 12px}
@@ -197,6 +210,9 @@ footer a{color:var(--soluk)}
   <div class="kap">
     <div class="ust">
       <h1><span id="baslik">__BASLIK__</span><div class="durum-satir" id="durumSatir"></div></h1>
+      <button class="ikon-dugme" id="bultenBtn" title="Günün özeti" aria-label="Günün özeti">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
       <button class="ikon-dugme" id="yenileBtn" title="Yenile" aria-label="Yenile">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
       </button>
@@ -230,6 +246,12 @@ footer a{color:var(--soluk)}
       <table class="kaynak-tablo" id="kaynakTablo"></table>
     </details>
     <footer>RSS: <a href="akis.xml">akis.xml</a></footer>
+  </section>
+
+  <!-- GÜNÜN ÖZETİ -->
+  <section id="g-bulten" hidden>
+    <div class="filtreler" id="bultenAralik" role="group" aria-label="Zaman aralığı" style="margin-top:12px"></div>
+    <div id="bultenIcerik"></div>
   </section>
 
   <!-- KAYNAKLAR -->
@@ -388,6 +410,15 @@ footer a{color:var(--soluk)}
   </form>
 </dialog>
 
+<!-- Yazar sayfası -->
+<dialog class="levha" id="yazarLevha">
+  <form method="dialog">
+    <div class="levha-tutamak"></div>
+    <div id="yazarIcerik"></div>
+    <div class="levha-alt"><button class="dugme" value="">Kapat</button></div>
+  </form>
+</dialog>
+
 <!-- İşlem menüsü -->
 <dialog class="levha" id="menuLevha">
   <form method="dialog">
@@ -542,7 +573,7 @@ footer a{color:var(--soluk)}
       const tur = o.tur || "yazi";
       const li = el("li", {class: "oge" + (okunanlar.has(o.id) ? " okundu" : "") + (yeniMi(o) ? " yeni" : "")});
       const meta = el("div",{class:"meta"},
-        el("span",{class:"yazar"}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar),
+        el("span",{class:"yazar", role:"button", tabindex:"0", title:"Yazar sayfası", onclick: () => yazarAc(o.yazar)}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar),
         el("span",{class:"tur " + tur, text: TUR[tur] || tur}),
         el("span",{text: o.kaynak || ""}),
         el("span",{text: saat(o._t), title: o._t.toLocaleString("tr-TR")}));
@@ -573,6 +604,105 @@ footer a{color:var(--soluk)}
     if ("setAppBadge" in navigator) { try { okunmamisYeni ? navigator.setAppBadge(okunmamisYeni) : navigator.clearAppBadge(); } catch(e){} }
     const sorun = (V.denetim||[]).filter(d => d.durum && d.durum !== "tamam").length;
     const k = $("kaynakRozet"); k.hidden = !sorun; k.textContent = sorun;
+  }
+
+  // ───────── GÜNÜN ÖZETİ
+  const ARALIKLAR = [["24","Son 24 saat"], ["72","Son 3 gün"], ["168","Son 7 gün"]];
+  function okunduYap(o, kap){ okunanlar.add(o.id); depo.yaz("okunanlar", [...okunanlar].slice(-3000)); if (kap) kap.classList.add("okundu"); rozetler(); }
+  function bultenOge(o, onEk){
+    const kap = el("div",{class:"bulten-oge" + (okunanlar.has(o.id) ? " okundu" : "")});
+    const a = el("a",{href:o.url, target:"_blank", rel:"noopener noreferrer", text: (onEk || "") + o.baslik});
+    a.addEventListener("click", () => okunduYap(o, kap));
+    const gun = gunEtiketi(o._t);
+    kap.append(a, el("small",{text:[TUR[o.tur||"yazi"] || o.tur, o.kaynak, (gun === "Bugün" ? "" : gun + " ") + saat(o._t)].filter(Boolean).join(" · ")}));
+    for (const k of (o._konular||[]).slice(0,2)) kap.querySelector("small").append(" ", el("span",{class:"konu-etiket", text:"🔖 " + k}));
+    if (o.yz_ozet){ const p = el("p",{class:"yz"}, el("b",{text:"✨ Özet"}), o.yz_ozet); p.onclick = () => p.classList.toggle("acik"); kap.append(p); }
+    return kap;
+  }
+  function bultenCiz(){
+    const aralik = depo.al("b_aralik", "24");
+    const kap = $("bultenAralik"); kap.replaceChildren();
+    for (const [d, yazi] of ARALIKLAR){
+      kap.append(el("button",{class:"cip", type:"button", "aria-pressed": String(d === aralik), text: yazi,
+        onclick: () => { depo.yaz("b_aralik", d); bultenCiz(); }}));
+    }
+    const sinir = Date.now() - Number(aralik) * 3600e3;
+    const liste = ogeler.filter(o => o._t.getTime() > sinir);
+    const ic = $("bultenIcerik"); ic.replaceChildren();
+    if (!liste.length){ ic.append(el("div",{class:"bos", text:"Bu aralıkta yeni içerik yok."})); return; }
+    const kisiler = new Map(), haberler = new Map(), konuSay = {};
+    for (const o of liste){
+      for (const k of o._konular||[]) konuSay[k] = (konuSay[k]||0) + 1;
+      if (o.konu_haberi){ if (!haberler.has(o.konu_haberi)) haberler.set(o.konu_haberi, []); haberler.get(o.konu_haberi).push(o); }
+      else { if (!kisiler.has(o.yazar)) kisiler.set(o.yazar, []); kisiler.get(o.yazar).push(o); }
+    }
+    const haberSay = [...haberler.values()].reduce((t, l) => t + l.length, 0);
+    ic.append(el("p",{class:"bulten-ozet", text:[`${liste.length - haberSay} içerik, ${kisiler.size} kişiden`, haberSay ? `${haberSay} konu haberi` : null].filter(Boolean).join(" · ")}));
+    const konular = Object.entries(konuSay).sort((a,b) => b[1] - a[1]);
+    if (konular.length){
+      const satir = el("div",{class:"filtreler"});
+      for (const [k, n] of konular) satir.append(el("button",{class:"cip", type:"button", onclick: () => { durum.konu = k; depo.yaz("f_konu", k); sekmeAc("akis"); }}, "🔖 " + k, el("span",{class:"say", text:String(n)})));
+      ic.append(satir);
+    }
+    const sirali = [...kisiler.entries()].sort((a,b) => b[1].length - a[1].length || b[1][0]._t - a[1][0]._t);
+    for (const [ad, l] of sirali){
+      const kart = el("div",{class:"kart"}, el("div",{class:"kart-ust"},
+        el("span",{class:"nokta", style:`background:${renk(ad)}`}), el("b",{text:ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(ad)}),
+        el("span",{class:"say-rozet", text: l.length > 1 ? `${l.length} içerik` : ""})));
+      l.forEach(o => kart.append(bultenOge(o)));
+      ic.append(kart);
+    }
+    for (const [k, l] of haberler){
+      const kart = el("div",{class:"kart"}, el("div",{class:"kart-ust"}, el("span",{text:"🔖"}), el("b",{text:`${k} — haberler`}),
+        el("span",{class:"say-rozet", text:`${l.length} haber`})));
+      l.slice(0, 12).forEach(o => kart.append(bultenOge(o, o.yazar + ": ")));
+      ic.append(kart);
+    }
+  }
+
+  // ───────── YAZAR SAYFASI
+  function yazarAc(ad){
+    const y = (V.yazar_listesi||[]).find(x => x.ad === ad);
+    const d = (V.denetim||[]).find(x => x.ad === ad);
+    const kendi = ogeler.filter(o => o.yazar === ad);
+    const ay = kendi.filter(o => Date.now() - o._t < 30*864e5);
+    const ic = $("yazarIcerik"); ic.replaceChildren();
+    ic.append(el("h2", null, el("span",{class:"nokta", style:`background:${renk(ad)};display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle`}), ad));
+    const haftalik = ay.length / (30/7);
+    const turSay = {}; for (const o of ay){ const t = TUR[o.tur||"yazi"] || o.tur; turSay[t] = (turSay[t]||0) + 1; }
+    ic.append(el("div",{class:"yazar-istatistik", text:[
+      `Son 30 günde ${ay.length} içerik` + (ay.length ? " (" + Object.entries(turSay).map(([t,n]) => `${t.toLocaleLowerCase("tr-TR")} ${n}`).join(", ") + ")" : ""),
+      ay.length >= 2 ? `haftada ~${haftalik < 3 ? haftalik.toFixed(1).replace(".", ",") : Math.round(haftalik)}` : null,
+      kendi[0] ? "son içerik " + onceki(kendi[0]._t) : null].filter(Boolean).join(" · ")}));
+    if (d && d.durum && d.durum !== "tamam") ic.append(el("div",{class:"uyari-kutu", style:"display:block;margin:0 0 10px"}, el("b",{text:"⚠ "}), d.aciklama || ""));
+    const dugmeler = el("div",{class:"satir", style:"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"},
+      el("button",{class:"dugme", type:"button", text:"Akışta yalnızca bunu göster", onclick: () => { $("yazarLevha").close(); durum.yazar = (V.yazarlar||[]).includes(ad) ? ad : "hepsi"; depo.yaz("f_yazar", durum.yazar); if (durum.yazar === "hepsi"){ durum.ara = ad; $("arama").value = ad; } sekmeAc("akis"); }}));
+    if (y){
+      const sessiz = (bildirimAyari().sessiz_yazarlar || []).includes(ad);
+      dugmeler.append(el("button",{class:"dugme", type:"button", text: sessiz ? "🔔 Bildirimleri aç" : "🔕 Bildirimleri kapat", onclick: async () => {
+        const ok = await bildirimDegistir(b => { const l = new Set(b.sessiz_yazarlar || []); sessiz ? l.delete(ad) : l.add(ad); b.sessiz_yazarlar = [...l]; },
+          sessiz ? `${ad}: bildirimler açıldı` : `${ad}: bildirimler kapatıldı`);
+        if (ok) yazarAc(ad);
+      }}),
+      el("button",{class:"dugme", type:"button", text:"Kaynakları düzenle", onclick: () => { $("yazarLevha").close(); durum.kaynakAra = ad; $("kaynakAra").value = ad; sekmeAc("kaynaklar"); }}));
+    }
+    ic.append(dugmeler);
+    if (y && y.kaynaklar.length){
+      ic.append(el("div",{class:"alt-baslik", text:"Kaynaklar"}));
+      for (const k of y.kaynaklar){
+        const ikon = k.kapali ? "–" : k.durum === "hata" ? "✗" : k.durum === "uyari" ? "!" : k.durum === "bekliyor" ? "…" : "✓";
+        const sinif = k.kapali ? "" : k.durum === "hata" ? "ikon-hata" : (k.durum === "uyari" || k.durum === "bekliyor") ? "ikon-uyari" : "ikon-tamam";
+        const adres = /^https?:/.test(k.adres||"") ? el("a",{class:"adres", href:k.adres, target:"_blank", rel:"noopener", text:kisaAdres(k.adres)}) : el("span",{class:"adres", text:kisaAdres(k.adres)});
+        ic.append(el("div",{class:"yazar-kaynak"}, el("span",{class:sinif, text:ikon}), el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), adres));
+      }
+    }
+    if (kendi.length){
+      ic.append(el("div",{class:"alt-baslik", text:"Son içerikler"}));
+      const kart = el("div",{class:"kart", style:"margin:4px -4px 0"});
+      kendi.slice(0, 8).forEach(o => kart.append(bultenOge(o)));
+      ic.append(kart);
+    }
+    if (!$("yazarLevha").open) $("yazarLevha").showModal();
   }
 
   function denetimCiz(){
@@ -773,7 +903,7 @@ footer a{color:var(--soluk)}
     const ciz = (y) => {
       const d = denetim[y.ad];
       const kart = el("div",{class:"kart" + (y.kapali ? " kapali" : "")});
-      const ust = el("div",{class:"kart-ust"}, el("span",{class:"nokta", style:`background:${renk(y.ad)}`}), el("b",{text:y.ad}));
+      const ust = el("div",{class:"kart-ust"}, el("span",{class:"nokta", style:`background:${renk(y.ad)}`}), el("b",{text:y.ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(y.ad)}));
       if (d && d.durum && d.durum !== "tamam") ust.append(el("span",{class:"ikon-uyari", title:d.aciklama, text:"⚠"}));
       if (y.kapali) ust.append(el("span",{style:"font-size:12.5px;color:var(--soluk)", text:"kapalı"}));
       else if (susturulan.has(y.ad)) ust.append(el("span",{title:"Bildirimleri kapalı", style:"font-size:13px", text:"🔕"}));
@@ -1134,6 +1264,12 @@ footer a{color:var(--soluk)}
       el("div",{class:"alt-baslik", text:"Bildirim gelecek türler"}),
       ...BILDIRIM_TURLERI.map(([t, yazi]) => el("label",{class:"onay"},
         el("input",{type:"checkbox", "data-tur":t, ...(sessizTur.has(t) ? {} : {checked:""})}), el("span",{text:yazi}))),
+      el("div",{class:"alt-baslik", text:"Sabah bülteni"}),
+      el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bBulten", ...(b.bulten_saat ? {checked:""} : {})}),
+        el("span", null, "Her gün günün özetini tek bildirimle gönder", el("br"), el("small",{style:"color:var(--soluk)", text:"Son bültenden beri gelenler kişiye göre toplanır. Bildirime dokununca Günün özeti ekranı açılır."}))),
+      el("div",{class:"zaman-alan"}, el("input",{type:"time", id:"bBultenSaat", value: b.bulten_saat || "08:00"})),
+      el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bAnlik", ...(b.anlik === false ? {checked:""} : {})}),
+        el("span", null, "Anlık bildirimleri kapat, yalnızca bülten gelsin", el("br"), el("small",{style:"color:var(--soluk)", text:"Konularına uyan yeni içerikler yine anında bildirilir."}))),
       el("div",{class:"alt-baslik", text:"Sessiz saatler"}),
       el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bGece", ...(gece ? {checked:""} : {})}),
         el("span", null, "Bu saatler arasında bildirim gönderme", el("br"), el("small",{style:"color:var(--soluk)", text:"Arada gelenler, sessiz saat bitince tek bildirimde toplanır."}))),
@@ -1147,7 +1283,12 @@ footer a{color:var(--soluk)}
       const turler = [...kutu.querySelectorAll("input[data-tur]")].filter(x => !x.checked).map(x => x.dataset.tur);
       const geceAcik = $("bGece").checked, bas = $("bBas").value, bit = $("bBit").value;
       if (geceAcik && (!bas || !bit || bas === bit)){ tost("Sessiz saatlerin başlangıcı ve bitişi farklı olmalı"); return; }
+      const bultenAcik = $("bBulten").checked, bultenSaat = $("bBultenSaat").value, anlikKapali = $("bAnlik").checked;
+      if (bultenAcik && !bultenSaat){ tost("Bülten saatini seç"); return; }
+      if (anlikKapali && !bultenAcik){ tost("Anlık bildirimleri kapatmak için önce sabah bültenini aç"); return; }
       await bildirimDegistir(x => { x.kapsam = kapsam; x.sessiz_turler = turler;
+        if (bultenAcik) x.bulten_saat = bultenSaat; else delete x.bulten_saat;
+        if (bultenAcik && anlikKapali) x.anlik = false; else delete x.anlik;
         if (geceAcik){ x.sessiz_bas = bas; x.sessiz_bit = bit; } else { delete x.sessiz_bas; delete x.sessiz_bit; } }, "Bildirim ayarları kaydedildi");
     }}));
     a.append(kutu);
@@ -1207,11 +1348,13 @@ footer a{color:var(--soluk)}
   // ───────── sekmeler
   function sekmeAc(ad){
     durum.sekme = ad;
-    for (const s of ["akis","kaynaklar","ayarlar"]) $("g-" + s).hidden = s !== ad;
+    for (const s of ["akis","bulten","kaynaklar","ayarlar"]) $("g-" + s).hidden = s !== ad;
     $("akisUst").hidden = ad !== "akis";
     $("okunduBtn").hidden = ad !== "akis";
     document.querySelectorAll("nav.alt button").forEach(b => b.setAttribute("aria-current", b.dataset.sekme === ad ? "page" : "false"));
-    $("baslik").textContent = ad === "akis" ? V.baslik : ad === "kaynaklar" ? "Kaynaklar" : "Ayarlar";
+    $("baslik").textContent = ad === "akis" ? V.baslik : ad === "bulten" ? "Günün özeti" : ad === "kaynaklar" ? "Kaynaklar" : "Ayarlar";
+    $("bultenBtn").setAttribute("aria-pressed", String(ad === "bulten"));
+    if (ad === "bulten") bultenCiz();
     if (ad === "kaynaklar") kaynaklarCiz();
     if (ad === "ayarlar") ayarlarCiz();
     if (ad === "akis") akisCiz();
@@ -1225,11 +1368,12 @@ footer a{color:var(--soluk)}
   $("dahaBtn").addEventListener("click", () => { durum.limit += 120; akisCiz(); });
   $("ekleBtn").addEventListener("click", () => ekleAc());
   $("yenileBtn").addEventListener("click", () => yenile(false));
+  $("bultenBtn").addEventListener("click", () => sekmeAc(durum.sekme === "bulten" ? "akis" : "bulten"));
   $("okunduBtn").addEventListener("click", () => {
     for (const o of filtrele()) okunanlar.add(o.id);
     depo.yaz("okunanlar", [...okunanlar].slice(-3000)); akisCiz(); tost("Hepsi okundu olarak işaretlendi");
   });
-  for (const d of [$("ekleLevha"), $("menuLevha"), $("konuLevha")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });
+  for (const d of [$("ekleLevha"), $("menuLevha"), $("konuLevha"), $("yazarLevha")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });
 
   // aşağı çekip yenile
   (function(){
@@ -1264,7 +1408,7 @@ footer a{color:var(--soluk)}
           "Kontroller normalde yarım saatte bir yapılır. GitHub'daki otomatik çalışma durmuş ya da hata vermiş olabilir."}),
       depoAdi ? el("div",{style:"margin-top:8px"}, el("a",{class:"dugme", style:"text-decoration:none;display:inline-block", href:`https://github.com/${depoAdi}/actions`, target:"_blank", rel:"noopener", text:"GitHub'da çalışmalara bak"})) : null));
   }
-  function hepsiniCiz(){ gecikmeCiz(); akisCiz(); denetimCiz(); saglikCiz(); kurCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz(); if (durum.sekme === "ayarlar") ayarlarCiz(); rozetler(); }
+  function hepsiniCiz(){ gecikmeCiz(); akisCiz(); denetimCiz(); saglikCiz(); kurCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz(); if (durum.sekme === "ayarlar") ayarlarCiz(); if (durum.sekme === "bulten") bultenCiz(); rozetler(); }
   hepsiniCiz();
   const p = new URLSearchParams(location.search);
   const paylasilan = [p.get("p_adres"), p.get("p_metin")].filter(Boolean).join(" ");
@@ -1276,6 +1420,9 @@ footer a{color:var(--soluk)}
     if (ad.length > 60 || /^https?:/.test(ad)) ad = "";
     ekleAc({adres: a ? (a.kanal || a.url || a.adres) : paylasilan, ad});
     formAlgila(true);
+  } else if (p.get("bulten")){
+    sekmeAc("bulten");
+    history.replaceState(null, "", location.pathname);
   } else if (p.get("sekme")){
     sekmeAc(p.get("sekme"));
     if (p.get("ekle")) ekleAc();
