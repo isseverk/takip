@@ -50,7 +50,7 @@ jobs:
         run: |
           git config user.name "takip-botu"
           git config user.email "takip-botu@users.noreply.github.com"
-          git add veri docs
+          git add veri docs $(ls kaynaklar_uygulama.json 2>/dev/null)
           if git diff --cached --quiet; then
             echo "Değişiklik yok"
           else
