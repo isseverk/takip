@@ -351,6 +351,137 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "murat batı",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/murat-bati",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCQ7dVG8U36Ieby_pvea2ueg",
+          "kanal_id": "UCQ7dVG8U36Ieby_pvea2ueg",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "erdoğan sağlam",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/erdogan-saglam",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCRKWwkFNUbY7sQbicRzW-RQ",
+          "kanal_id": "UCRKWwkFNUbY7sQbicRzW-RQ",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "barçın yinanç",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/barcin-yinanc",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "evren balta",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/evren-balta",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UC1QNBHelIFLF6oUjGt5tDyg",
+          "kanal_id": "UC1QNBHelIFLF6oUjGt5tDyg",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "hakan aksay",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/hakan-aksay",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCrEpaYIuD2rjG9RYGPPaQLw",
+          "kanal_id": "UCrEpaYIuD2rjG9RYGPPaQLw",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "füsun sarp nebil",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/fusun-sarp-nebil",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "evrim kepenek",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://bianet.org/yazar/evrim-kepenek-116",
+          "etiket": "Bianet",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCfEs5vgW_VBtiy8oAf8sTxQ",
+          "kanal_id": "UCfEs5vgW_VBtiy8oAf8sTxQ",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "bülent şık",
+      "kaynaklar": [
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UC45zSK992ldIOF7zI2d-yDw",
+          "kanal_id": "UC45zSK992ldIOF7zI2d-yDw",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -388,40 +519,7 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [
-    {
-      "ad": "murat batı",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "erdoğan sağlam",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "barçın yinanç",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "evren balta",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "hakan aksay",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "füsun sarp nebil",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "evrim kepenek",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "bülent şık",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    }
-  ],
+  "aranacaklar": [],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
@@ -557,6 +655,46 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:53:24+00:00",
       "aciklama": "T24, YouTube"
+    },
+    "murat batı": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T07:56:37+00:00",
+      "aciklama": "T24, YouTube"
+    },
+    "erdoğan sağlam": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T07:56:58+00:00",
+      "aciklama": "T24, YouTube"
+    },
+    "barçın yinanç": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T07:59:47+00:00",
+      "aciklama": "T24"
+    },
+    "evren balta": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T08:00:03+00:00",
+      "aciklama": "T24, YouTube"
+    },
+    "hakan aksay": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T08:00:20+00:00",
+      "aciklama": "T24, YouTube"
+    },
+    "füsun sarp nebil": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T08:00:27+00:00",
+      "aciklama": "T24"
+    },
+    "evrim kepenek": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T08:00:32+00:00",
+      "aciklama": "Bianet, YouTube"
+    },
+    "bülent şık": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T08:01:00+00:00",
+      "aciklama": "YouTube"
     }
   }
 }
