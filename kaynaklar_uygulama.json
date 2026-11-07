@@ -1,5 +1,18 @@
 {
-  "yazarlar": [],
+  "yazarlar": [
+    {
+      "ad": "mustafa demirtaş",
+      "kaynaklar": [
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCnkmkjurhROT8cptmWScvsA",
+          "kanal_id": "UCnkmkjurhROT8cptmWScvsA",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    }
+  ],
   "kapali": [
     "bd18cc8f160c",
     "4d43e995a22b"
@@ -35,14 +48,12 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [
-    {
-      "ad": "mustafa demirtaş",
-      "zaman": "2026-11-07T06:09:48.579Z"
-    },
-    {
-      "ad": "emre özcan",
-      "zaman": "2026-11-07T06:10:01.324Z"
+  "aranacaklar": [],
+  "kesif": {
+    "mustafa demirtaş": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:11:01+00:00",
+      "aciklama": "YouTube"
     }
-  ]
+  }
 }
