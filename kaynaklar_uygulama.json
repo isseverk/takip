@@ -257,6 +257,100 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "yalçın karatepe",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.birgun.net/yazarlar/yalcin-karatepe",
+          "etiket": "birgun.net",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCj9avQWHaoEQ-hyVAvQw9Pg",
+          "kanal_id": "UCj9avQWHaoEQ-hyVAvQw9Pg",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "ruşen çakır",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "medyascope.tv",
+          "etiket": "Medyascope",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCfeZdjH_RKcQgJCebxUpBSw",
+          "kanal_id": "UCfeZdjH_RKcQgJCebxUpBSw",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "bekir ağırdır",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/bekir-agirdir",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://mediacat.com/yazarlar/bekir-agirdir",
+          "etiket": "MediaCat",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "cansu çamlıbel",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/cansu-camlibel",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCfLi20wH6C3t1Tw5_tn-2sQ",
+          "kanal_id": "UCfLi20wH6C3t1Tw5_tn-2sQ",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "tolga şirin",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/tolga-sirin",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCe-6U1uccGKLpZ2eJScryFw",
+          "kanal_id": "UCe-6U1uccGKLpZ2eJScryFw",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -295,38 +389,6 @@
     "sessiz_bit": "07:30"
   },
   "aranacaklar": [
-    {
-      "ad": "yalçın karatepe",
-      "zaman": "2026-11-07T06:26:12.820Z"
-    },
-    {
-      "ad": "selva demiralp",
-      "zaman": "2026-11-07T06:26:12.820Z"
-    },
-    {
-      "ad": "ruşen çakır",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "bekir ağırdır",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "cansu çamlıbel",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "tolga şardan",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "gökçer tahincioğlu",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
-    {
-      "ad": "tolga şirin",
-      "zaman": "2026-11-07T06:32:03.369Z"
-    },
     {
       "ad": "murat batı",
       "zaman": "2026-11-07T06:32:03.369Z"
@@ -455,6 +517,46 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:40:33+00:00",
       "aciklama": "Medyascope, YouTube"
+    },
+    "yalçın karatepe": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:51:35+00:00",
+      "aciklama": "birgun.net, YouTube"
+    },
+    "selva demiralp": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T06:51:58+00:00",
+      "aciklama": "Adı haberlerde geçiyor (dunya.com, cnbce.com, haber.doviz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
+    },
+    "ruşen çakır": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:51:59+00:00",
+      "aciklama": "Medyascope, YouTube"
+    },
+    "bekir ağırdır": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:52:10+00:00",
+      "aciklama": "T24, MediaCat"
+    },
+    "cansu çamlıbel": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:52:22+00:00",
+      "aciklama": "T24, YouTube"
+    },
+    "tolga şardan": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T06:52:44+00:00",
+      "aciklama": "Adı haberlerde geçiyor (t24.com.tr, evrensel.net, birgun.net) ama köşe sayfası bulunamadı; adresi elle ekle"
+    },
+    "gökçer tahincioğlu": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T06:53:13+00:00",
+      "aciklama": "Adı haberlerde geçiyor (evrensel.net, medyascope.tv, t24.com.tr) ama köşe sayfası bulunamadı; adresi elle ekle"
+    },
+    "tolga şirin": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:53:24+00:00",
+      "aciklama": "T24, YouTube"
     }
   }
 }
