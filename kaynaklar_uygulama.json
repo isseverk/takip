@@ -235,6 +235,17 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "Mustafa demirtaş",
+      "kaynaklar": [
+        {
+          "tur": "youtube_ara",
+          "arama": "Mustafa demirtaş",
+          "etiket": "YouTube'da adı geçen",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -425,9 +436,9 @@
       "aciklama": "YouTube"
     },
     "Mustafa demirtaş": {
-      "durum": "onay_bekliyor",
-      "zaman": "2026-11-07T15:14:49+00:00",
-      "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
+      "durum": "bulundu",
+      "zaman": "2026-11-07T15:27:01.705Z",
+      "aciklama": "YouTube'da adı geçen (onaylandı)"
     },
     "Emre özcan": {
       "durum": "bulundu",
@@ -461,61 +472,6 @@
     }
   },
   "oneriler": {
-    "Mustafa demirtaş": {
-      "zaman": "2026-11-07T15:14:49+00:00",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.sondakika.com/mustafa-demirtas",
-          "etiket": "Son Dakika",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "sondakika.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Hisarcık Kaymakamı Atam, Halk Eğitimi Merkezi kurslarını ziyaret ederek kursiyerlerin çalışmalarını inceledi. Ziyarete…",
-                "url": "https://www.sondakika.com/egitim/haber-hisarcik-kaymakami-atam-halk-egitimi-kurslarinda-20372740/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Kütahya Dumlupınar Üniversitesi Hisarcık MYO, çevre bilinci oluşturmak için Millet Bahçesi'nde temizlik etkinliği…",
-                "url": "https://www.sondakika.com/cevre/haber-hisarcik-myo-ogrencileri-millet-bahcesi-nde-cevre-20369125/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Kütahya Hisarcık'ta Kaymakam Erkan Atam ve Belediye Başkanı Mustafa Demirtaş, 19 Ekim Muhtarlar Günü'nde muhtarlarla…",
-                "url": "https://www.sondakika.com/yerel/haber-hisarcik-ta-kaymakam-atam-ve-belediye-baskani-20344960/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          }
-        },
-        {
-          "tur": "youtube_ara",
-          "arama": "Mustafa demirtaş",
-          "etiket": "YouTube'da adı geçen",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "başlığında adı geçen son bir haftanın videoları (farklı kanallardan); 1 video",
-            "ornekler": [
-              {
-                "baslik": "Totem Avrupa S2 #13 | Batrakov, PSG, Jesus de Miguel | Sinem Ökten & Mustafa Demirtaş",
-                "url": "https://www.youtube.com/watch?v=tOix_-9nDKM",
-                "tarih": "2026-11-04T15:14:49+00:00",
-                "kanal": "Totem "
-              }
-            ],
-            "sayi": 1
-          }
-        }
-      ],
-      "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
-    },
     "refet gürkaynak": {
       "zaman": "2026-11-07T15:15:49+00:00",
       "kaynaklar": [
