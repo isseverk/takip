@@ -8,13 +8,6 @@
           "site": "gazeteoku.com",
           "etiket": "Gazete Oku",
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCrG27KDq7eW4YoEOYsalU9g",
-          "kanal_id": "UCrG27KDq7eW4YoEOYsalU9g",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
