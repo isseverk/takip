@@ -307,6 +307,9 @@ def google_haber_adresi_coz(ist: Istemci, gn_url: str, onbellek: dict) -> str | 
 def _yedek_notu(kd: dict) -> str:
     n = "Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
     c = kd.get("yedek_cozum") or {}
+    if c.get("cozulen", 0) >= 3 and not c.get("yazara_ait"):
+        return (f"Bu sitede kişinin kendi yazısı bulunamadı (son taramada {c['cozulen']} sonucun hiçbiri onun değil); "
+                "büyük olasılıkla yanlış eşleşme, bu kaynağı kaldırman önerilir")
     if c.get("cozulen"):
         diger = c["cozulen"] - c["yazara_ait"]
         n += f". Son taramada {c['yazara_ait']} yazı yazara ait" + (f", {diger} başka haber elendi" if diger else "")
@@ -710,7 +713,16 @@ def google_haber_kaynak_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> l
     ogeler = google_haber_oku(ist, k.get("bul") or yazar, k["site"])
     for o in ogeler:
         o.pop("_yedek", None)
-    return ogeler
+    # Haber derleyen siteler (ör. gazeteoku.com) kişinin adının geçtiği her haberi getirir. Asıl adresi çözüp
+    # yalnızca yolunda kişinin adı bir bölüm olarak geçenleri al: …/yazarlar/deniz-zeyrek/yazi-basligi
+    durum["yedek"] = "google_haber"
+    k2 = dict(k, link_deseni=k.get("link_deseni") or _yazar_yolu_deseni(k.get("bul") or yazar), yedek_dogrula=True)
+    return yedek_sonuclarini_suz(ist, ogeler, k2, f"https://{k['site']}/", durum)
+
+
+def _yazar_yolu_deseni(ad: str) -> str:
+    """Adresin son bölümü dışındaki bir bölümde kişinin adı geçsin (yazar klasörü)."""
+    return r"https?://[^/]+/(?:[^?#]*/)?[^/?#]*" + re.escape(_slug(ad)) + r"[^/?#]*/[^?#]+"
 
 
 # ───────────────────────── isimden kaynak bulma ─────────────────────────
@@ -871,8 +883,20 @@ def _youtube_kanali_bul(ist: Istemci, ad: str) -> dict | None:
     for m in re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})","title":\{"simpleText":"([^"]+)"', metin):
         baslik = json.loads('"' + m.group(2) + '"')
         if hedef == sade(baslik) or (hedef in sade(baslik) and len(sade(baslik)) <= len(hedef) + 12):
-            return {"tur": "youtube", "kanal": f"https://www.youtube.com/channel/{m.group(1)}",
-                    "kanal_id": m.group(1), "etiket": "YouTube", "otomatik": True}
+            kanal = {"tur": "youtube", "kanal": f"https://www.youtube.com/channel/{m.group(1)}",
+                     "kanal_id": m.group(1), "etiket": "YouTube", "otomatik": True}
+            # adı aynı ama artık kullanılmayan (ya da başka birine ait eski) kanalları önerme
+            try:
+                videolar = youtube_oku(ist, {"kanal_id": m.group(1)}, {}, ad)
+            except Exception:
+                return kanal          # kontrol edilemedi; kanalı yine de öner
+            tarihler = [iso_oku(v.get("tarih")) for v in videolar if v.get("tarih")]
+            en_yeni = max(tarihler) if tarihler else None
+            if en_yeni is None or simdi() - en_yeni > timedelta(days=120):
+                ne_zaman = en_yeni.astimezone(TR_SAAT).strftime("%Y") if en_yeni else "hiç"
+                return {"_elendi": f"YouTube kanalı ({baslik}) {ne_zaman}'den beri video yüklemiyor"
+                        if en_yeni else f"YouTube kanalında ({baslik}) video yok"}
+            return kanal
     return None
 
 
@@ -882,6 +906,39 @@ def _tek_yazi_adresi(u: str) -> bool:
     son = yol.rsplit("/", 1)[-1]
     return bool(re.search(r"/(haber|haberler|news|video|galeri|foto|gundem|makale|yazi)/", yol + "/")
                 and not re.search(r"/(yazar|yazarlar|author)/", yol)) or son.count("-") >= 4
+
+
+def _sitede_kendi_yazisi_var(ist: Istemci, linkler: list[str], ad: str, alan: str) -> bool:
+    desen = re.compile(_yazar_yolu_deseni(ad))
+    onbellek: dict = {}
+    for gn in linkler[:4]:
+        gercek = google_haber_adresi_coz(ist, gn, onbellek)
+        if gercek and _alan_adi(gercek) == alan and desen.search(gercek):
+            return True
+    return False
+
+
+def _son_yazi_yasi(ist: Istemci, sayfa_url: str) -> int | None:
+    """Yazar sayfasındaki en yeni yazının kaç gün önce yayımlandığı (bulunamazsa None)."""
+    try:
+        corba = BeautifulSoup(ist.al(sayfa_url, deneme=0), "html.parser")
+    except Exception:
+        return None
+    on_ek = urlparse(sayfa_url).path.rstrip("/") + "/"
+    linkler = _linkleri_topla(corba, sayfa_url, lambda u: urlparse(u).path.startswith(on_ek)
+                              and len(urlparse(u).path) > len(on_ek) + 3)
+    if len(linkler) < 2:
+        linkler = _linkleri_topla(corba, sayfa_url, lambda u: _makaleye_benziyor(u, sayfa_url))
+    tarihler = []
+    for l in linkler[:2]:
+        o = {"url": l["url"]}
+        try:
+            ayrinti_getir(ist, o, None)
+        except Exception:
+            continue
+        if iso_oku(o.get("tarih")):
+            tarihler.append(iso_oku(o["tarih"]))
+    return (simdi() - max(tarihler)).days if tarihler else None
 
 
 def _haberden_yazar_sayfasi(ist: Istemci, linkler: list[str], slug: str, alan: str) -> str | None:
@@ -930,6 +987,7 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
     slug = _slug(ad)
     bulunan: list[dict] = []
     engelli: list[dict] = []
+    elenen: list[str] = []      # neden eklenmediğini açıklamak için
     # 1) kişisel site: alan adında kişinin adı geçiyorsa (ör. farukbildirici.com)
     for s in alanlar.values():
         if slug.replace("-", "") in s["alan"].replace("-", "").replace(".", ""):
@@ -973,15 +1031,26 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
             if aday and _yazar_sayfasi_mi(ist, aday, ad)[0]:
                 bulundu = aday
         if bulundu:
+            yas = _son_yazi_yasi(ist, bulundu)
+            if yas is not None and yas > 120:
+                elenen.append(f"{s['alan']} sayfası var ama son yazısı {yas} gün önce")
+                bulundu = None
+        if bulundu:
             bulunan.append({"tur": "sayfa", "url": bulundu, "etiket": s["ad"], "dogrula": True, "otomatik": True})
-        elif any(k in ("403", "429", "503") for k in kodlar) and s["say"] >= 3:
-            engelli.append({"tur": "google_haber", "site": s["alan"], "etiket": s["ad"], "otomatik": True})
+        elif any(k in ("403", "429", "503") for k in kodlar) and s["say"] >= 2:
+            # adın geçmesi yazdığı anlamına gelmez (haber derleyen siteler); asıl adreste yazar klasörü arıyoruz
+            if _sitede_kendi_yazisi_var(ist, s.get("linkler") or [], ad, s["alan"]):
+                engelli.append({"tur": "google_haber", "site": s["alan"], "etiket": s["ad"], "otomatik": True})
+            else:
+                elenen.append(f"{s['alan']} (adı geçiyor ama orada yazmıyor)")
     # site doğrudan açılmıyorsa ve başka yer bulunamadıysa: Google Haberler üzerinden izle
     if not any(b["tur"] in ("sayfa", "rss") for b in bulunan):
         bulunan.extend(engelli[:1])
     # 3) YouTube kanalı
     yt = _youtube_kanali_bul(ist, ad)
-    if yt:
+    if yt and yt.get("_elendi"):
+        elenen.append(yt["_elendi"])
+    elif yt:
         bulunan.append(yt)
     # 4) başka kanallardaki programlar: istendiyse ya da köşe yazısı bulunamadıysa, adı başlıkta geçen videolar
     yazili = any(b["tur"] in ("sayfa", "rss", "google_haber") for b in bulunan)
@@ -1001,6 +1070,8 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
                     ") ama köşe sayfası bulunamadı; adresi elle ekle")
     else:
         aciklama = "Son 2 ayda haberlerde adı geçmiyor; adresi elle ekle"
+    if elenen:
+        aciklama += " · Önerilmeyenler: " + "; ".join(elenen[:3])
     return bulunan, aciklama
 
 
