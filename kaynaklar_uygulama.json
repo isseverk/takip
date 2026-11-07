@@ -16,13 +16,6 @@
       "ad": "emre özcan",
       "kaynaklar": [
         {
-          "tur": "sayfa",
-          "url": "https://www.ulketv.com/emre-ozcan",
-          "etiket": "Ülke TV",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
           "tur": "youtube",
           "kanal": "https://www.youtube.com/channel/UCvNHJbVCR1VZSKyur5FiWJA",
           "kanal_id": "UCvNHJbVCR1VZSKyur5FiWJA",
