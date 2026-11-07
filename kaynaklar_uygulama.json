@@ -224,6 +224,17 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "Emre özcan",
+      "kaynaklar": [
+        {
+          "tur": "youtube_ara",
+          "arama": "Emre özcan",
+          "etiket": "YouTube'da adı geçen",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -419,9 +430,9 @@
       "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
     },
     "Emre özcan": {
-      "durum": "onay_bekliyor",
-      "zaman": "2026-11-07T15:15:25+00:00",
-      "aciklama": "Ülke TV, YouTube'da adı geçen"
+      "durum": "bulundu",
+      "zaman": "2026-11-07T15:26:54.917Z",
+      "aciklama": "YouTube'da adı geçen (onaylandı)"
     },
     "refet gürkaynak": {
       "durum": "onay_bekliyor",
@@ -504,61 +515,6 @@
         }
       ],
       "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
-    },
-    "Emre özcan": {
-      "zaman": "2026-11-07T15:15:25+00:00",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.ulketv.com/emre-ozcan",
-          "etiket": "Ülke TV",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "ulketv.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Canlı Yayın",
-                "url": "https://www.ulketv.com/ulke-tv-canli-yayin",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Süper Lig Puan Durumu ve Fikstür",
-                "url": "https://www.ulketv.com/futbol/super-lig-puan-durumu-ve-fikstur",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Kritik tarih geldi! Milyonlarca hesap kapanabilir",
-                "url": "https://www.ulketv.com/milyonlarca-hesap-kapanabilir-kritik-tarih-1-kasim",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          }
-        },
-        {
-          "tur": "youtube_ara",
-          "arama": "Emre özcan",
-          "etiket": "YouTube'da adı geçen",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "başlığında adı geçen son bir haftanın videoları (farklı kanallardan); 1 video",
-            "ornekler": [
-              {
-                "baslik": "Galatasaray 2-0 Stuttgart | Batrakov Büyülüyor | Fenerbahçe - Liverpool | Ersin Düzen, Emre Özcan",
-                "url": "https://www.youtube.com/watch?v=v2hsxgd-9mk",
-                "tarih": "2026-11-04T15:15:25+00:00",
-                "kanal": "NOW Spor"
-              }
-            ],
-            "sayi": 1
-          }
-        }
-      ],
-      "aciklama": "Ülke TV, YouTube'da adı geçen"
     },
     "refet gürkaynak": {
       "zaman": "2026-11-07T15:15:49+00:00",
