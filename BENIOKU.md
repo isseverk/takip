@@ -3,7 +3,7 @@
 Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazıyı sonra okumak için kartındaki ☆ işaretine dokun; **★ Sonra oku** çipinde toplanır. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, takip ettiğin konuları yönetirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
@@ -121,6 +121,17 @@ Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarl
 
 Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
 
+## Sonra oku ve cihazlar arası eşitleme
+
+Bir yazıyı sonra okumak için kartının sağ üstündeki ☆ işaretine dokun. Akışın üstündeki **★ Sonra oku** çipinde toplanırlar. Kaydettiğin yazılar 45 gün sonra akıştan düşse de bu listede kalır; okuduktan sonra ★'e dokunup çıkarabilirsin.
+
+Okundu işaretlerini ve Sonra oku listeni telefonunla bilgisayarın arasında eşitleyebilirsin:
+1. Her iki cihazda da Takip'i aç ve **Ayarlar → GitHub bağlantısı** bölümüne anahtarı gir (telefonda kullandığın anahtarı bilgisayarda da kullanabilirsin).
+2. Birinci cihazda **Ayarlar → Cihazlar arası eşitleme** bölümünde bir parola belirle ve **Eşitlemeyi aç**'a bas.
+3. Diğer cihazda aynı parolayı gir.
+
+Bundan sonra uygulama her açılışta ve bir yazıyı okuduğunda ya da kaydettiğinde birkaç saniye içinde eşitlenir. Bu bilgiler depodaki ayrı bir **okundu** dalında, senin parolanla şifrelenmiş olarak durur; depo herkese açık olsa da kimse okuyamaz. Parolayı unutursan aynı bölümden yeni parola belirleyip baştan başlayabilirsin; bu cihazdaki işaretlerin kaybolmaz.
+
 ## Yazar sayfası
 
 Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun. Açılan sayfada şunlar var:
@@ -178,6 +189,7 @@ Bilgisayarında `python takip.py --kontrol` komutunu çalıştırırsan her kayn
 | `uygulama/` | Telefon uygulamasının simgeleri ve çevrimdışı çalışma dosyaları |
 | `sablon.html` | Uygulamanın ekranları |
 | `veri/durum.json` | Daha önce görülen yazıların kaydı. Bulutta depodaki **veri** dalında tutulur; o dalı silersen her şey "ilk çalıştırma" sayılır. |
+| `okundu` dalı | Eşitleme açıksa okundu işaretleri ve Sonra oku listesi (şifreli). Silersen eşitleme baştan başlar, cihazlardaki kayıtlar kaybolmaz. |
 | `docs/` | Üretilen akış sayfası ve RSS |
 | `.github/workflows/takip.yml` | Bulutta yarım saatlik otomatik çalışma |
 | `calistir.bat`, `zamanlayici_kur.bat` | Windows'ta çalıştırma ve otomatik zamanlama |

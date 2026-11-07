@@ -114,7 +114,11 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .etiket-yeni{font-size:11px;font-weight:700;color:var(--yeni);letter-spacing:.04em}
 .baslik{display:block;font:600 17.5px/1.32 var(--serif);text-decoration:none;color:var(--metin);margin:2px 0}
 .baslik::after{content:"";position:absolute;inset:0;border-radius:14px}
-.oge .yazar,.oge .yz{position:relative;z-index:1}
+.oge .yazar,.oge .yz,.oge .kaydet-dugme{position:relative;z-index:1}
+.kaydet-dugme{border:0;background:none;font-size:19px;line-height:1;padding:8px;cursor:pointer;color:var(--soluk)}
+.oge .kaydet-dugme{position:absolute;top:2px;right:2px}
+.oge .meta{padding-right:30px}
+.kaydet-dugme.dolu{color:var(--uyari)}
 .baslik:focus-visible{outline:none}.oge:focus-within{outline:2px solid var(--vurgu);outline-offset:2px}
 .ozet{font-size:14.5px;color:var(--soluk);margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bos{text-align:center;color:var(--soluk);padding:48px 12px}
@@ -319,9 +323,10 @@ footer a{color:var(--soluk)}
         <button class="dugme" id="simdiBtn">Kontrolü başlat</button>
         <div class="durum-yazi" id="simdiDurum"></div>
       </div>
+      <div class="ayar" id="esitAyar"></div>
       <div class="ayar">
         <h3>Okundu işaretleri</h3>
-        <p>Okundu olarak işaretlediğin yazıların kaydı bu telefonda tutulur.</p>
+        <p>Okundu olarak işaretlediğin yazıların kaydı. Eşitleme açıksa temizlemek tüm cihazlarında geçerli olur.</p>
         <button class="dugme" id="okunduSifirla">Okundu işaretlerini temizle</button>
       </div>
       <div class="ayar" id="hakkinda"></div>
@@ -454,7 +459,205 @@ footer a{color:var(--soluk)}
 
   const oncekiZiyaret = depo.al("son_ziyaret", null);
   depo.yaz("son_ziyaret", Date.now());
-  let okunanlar = new Set(depo.al("okunanlar", []));
+  // ───────── KİŞİSEL KAYIT: okundu işaretleri + Sonra oku (istenirse cihazlar arasında şifreli eşitlenir)
+  const bugunGun = () => Math.floor(Date.now() / 864e5);
+  function kisiselOku(){
+    const v = depo.al("kisisel", null);
+    if (v && v.okunan) return Object.assign({sifirlama: 0, okunan: {}, kayitli: {}, silinen: {}}, v);
+    const g = bugunGun(), okunan = {};
+    for (const id of depo.al("okunanlar", [])) okunan[id] = g;   // önceki sürümün kaydını taşı
+    return {sifirlama: 0, okunan, kayitli: {}, silinen: {}};
+  }
+  let K = kisiselOku();
+  let okunanlar = new Set(Object.keys(K.okunan));
+  function budaK(v){
+    const sinir = bugunGun() - 60;
+    for (const [id, g] of Object.entries(v.okunan)) if (g < sinir) delete v.okunan[id];
+    const idler = Object.keys(v.okunan);
+    if (idler.length > 5000) idler.sort((a, b) => v.okunan[a] - v.okunan[b]).slice(0, idler.length - 5000).forEach(id => delete v.okunan[id]);
+    for (const [id, z] of Object.entries(v.silinen)) if (z < Date.now() - 60*864e5) delete v.silinen[id];
+    return v;
+  }
+  function kisiselKaydet(planla = true){
+    budaK(K); depo.yaz("kisisel", K); okunanlar = new Set(Object.keys(K.okunan));
+    if (planla) esitlemePlanla();
+  }
+  function okunduIsaretle(idler){ const g = bugunGun(); for (const id of idler) if (!K.okunan[id]) K.okunan[id] = g; kisiselKaydet(); rozetler(); }
+  const kayitliMi = id => !!K.kayitli[id];
+  function kayitDegistir(o){
+    if (K.kayitli[o.id]){ delete K.kayitli[o.id]; K.silinen[o.id] = Date.now(); }
+    else {
+      K.kayitli[o.id] = {url: o.url, baslik: o.baslik, yazar: o.yazar, kaynak: o.kaynak || "", tur: o.tur || "yazi",
+        tarih: o.tarih || o.bulunma || null, yz_ozet: o.yz_ozet ? o.yz_ozet.slice(0, 700) : undefined, zaman: Date.now()};
+      delete K.silinen[o.id];
+    }
+    kisiselKaydet();
+  }
+  function kayitliOgeler(){
+    const mevcut = new Map(ogeler.map(o => [o.id, o]));
+    return Object.entries(K.kayitli).map(([id, k]) => mevcut.get(id) ||
+      Object.assign({id, _konular: [], _t: new Date(k.tarih || k.zaman), _b: new Date(k.zaman)}, k)).sort((a, b) => b._t - a._t);
+  }
+
+  // ───────── CİHAZLAR ARASI EŞİTLEME
+  // Kayıt, depodaki ayrı "okundu" dalında okunanlar.json olarak durur; içeriği parolayla şifrelidir
+  // (AES-GCM, anahtar PBKDF2 ile paroladan türetilir). Depo herkese açık olsa da kimse okuyamaz.
+  const ES = {dal: "okundu", dosya: "okunanlar.json", calisiyor: false, zamanlayici: null, anahtarOnbellek: null};
+  const esitlemeAcik = () => GH.bagli() && !!depo.al("esit_parola", "");
+  function esitlemePlanla(){
+    if (!esitlemeAcik()) return;
+    clearTimeout(ES.zamanlayici); ES.zamanlayici = setTimeout(() => esitle(), 15000);
+  }
+  function kanonik(x){
+    if (Array.isArray(x)) return "[" + x.map(kanonik).join(",") + "]";
+    if (x && typeof x === "object") return "{" + Object.keys(x).filter(k => x[k] !== undefined).sort().map(k => JSON.stringify(k) + ":" + kanonik(x[k])).join(",") + "}";
+    return JSON.stringify(x);
+  }
+  function birlestir(a, b){
+    const s = Math.max(a.sifirlama || 0, b.sifirlama || 0), sGun = Math.floor(s / 864e5);
+    const okunan = {}, silinen = {}, kayitli = {};
+    for (const v of [a, b]){
+      const guncel = (v.sifirlama || 0) === s;   // sıfırlamayı görmemiş cihazın eski işaretleri geri gelmesin
+      for (const [id, g] of Object.entries(v.okunan || {})) if (guncel || g > sGun) okunan[id] = Math.min(okunan[id] ?? g, g);
+      for (const [id, z] of Object.entries(v.silinen || {})) silinen[id] = Math.max(silinen[id] || 0, z);
+      for (const [id, k] of Object.entries(v.kayitli || {})) if (!kayitli[id] || k.zaman > kayitli[id].zaman) kayitli[id] = k;
+    }
+    for (const id of Object.keys(kayitli)) if ((silinen[id] || 0) >= kayitli[id].zaman) delete kayitli[id];
+    return {sifirlama: s, okunan, kayitli, silinen};
+  }
+  const b64uB = by => { let x = ""; for (let i = 0; i < by.length; i += 0x8000) x += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000));
+    return btoa(x).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); };
+  const b64uC = t => Uint8Array.from(atob(t.replace(/-/g,"+").replace(/_/g,"/") + "===".slice((t.length + 3) % 4)), c => c.charCodeAt(0));
+  async function esAnahtar(parola, tuz){
+    const o = ES.anahtarOnbellek;
+    if (o && o.parola === parola && o.tuz === tuz) return o.anahtar;
+    const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(parola), "PBKDF2", false, ["deriveKey"]);
+    const anahtar = await crypto.subtle.deriveKey({name: "PBKDF2", salt: b64uC(tuz), iterations: 210000, hash: "SHA-256"},
+      km, {name: "AES-GCM", length: 256}, false, ["encrypt", "decrypt"]);
+    ES.anahtarOnbellek = {parola, tuz, anahtar};
+    return anahtar;
+  }
+  async function esSifrele(v, parola, tuz){
+    tuz = tuz || b64uB(crypto.getRandomValues(new Uint8Array(16)));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const c = new Uint8Array(await crypto.subtle.encrypt({name: "AES-GCM", iv}, await esAnahtar(parola, tuz), new TextEncoder().encode(JSON.stringify(v))));
+    return {surum: 1, tuz, iv: b64uB(iv), veri: b64uB(c)};
+  }
+  async function esCoz(d, parola){
+    let duz;
+    try { duz = await crypto.subtle.decrypt({name: "AES-GCM", iv: b64uC(d.iv)}, await esAnahtar(parola, d.tuz), b64uC(d.veri)); }
+    catch(e){ throw new Error("PAROLA"); }
+    return Object.assign({sifirlama: 0, okunan: {}, kayitli: {}, silinen: {}}, JSON.parse(new TextDecoder().decode(duz)));
+  }
+  async function esUzakOku(){
+    const r = await GH.istek(`/repos/${GH.depo()}/contents/${ES.dosya}?ref=${ES.dal}`);
+    if (r.status === 404) return {icerik: null, sha: null};
+    if (!r.ok) throw new Error(hataMetni(r));
+    const j = await r.json();
+    return {icerik: JSON.parse(b64.coz(j.content)), sha: j.sha};
+  }
+  async function esDalOlustur(){
+    const v = await GH.istek(`/repos/${GH.depo()}/git/ref/heads/${ES.dal}`);
+    if (v.ok) return;
+    const m = await GH.istek(`/repos/${GH.depo()}/git/ref/heads/main`);
+    if (!m.ok) throw new Error(hataMetni(m));
+    const c = await GH.istek(`/repos/${GH.depo()}/git/refs`, {method: "POST",
+      body: JSON.stringify({ref: `refs/heads/${ES.dal}`, sha: (await m.json()).object.sha})});
+    if (!c.ok && c.status !== 422) throw new Error(hataMetni(c));
+  }
+  async function esUzakYaz(icerik, sha){
+    const govde = () => JSON.stringify(Object.assign({message: "Eşitleme", branch: ES.dal, content: b64.kodla(JSON.stringify(icerik))}, sha ? {sha} : {}));
+    let r = await GH.istek(`/repos/${GH.depo()}/contents/${ES.dosya}`, {method: "PUT", body: govde()});
+    if (!r.ok && !sha && (r.status === 404 || r.status === 422)){   // dal henüz yok
+      await esDalOlustur();
+      r = await GH.istek(`/repos/${GH.depo()}/contents/${ES.dosya}`, {method: "PUT", body: govde()});
+    }
+    if (r.ok) return true;
+    if (r.status === 409 || r.status === 422) return false;   // arada başka cihaz yazmış; yeniden birleştir
+    throw new Error(hataMetni(r));
+  }
+  async function esitle(zorla){
+    if (!esitlemeAcik() || ES.calisiyor) return false;
+    ES.calisiyor = true; clearTimeout(ES.zamanlayici); ES.zamanlayici = null;
+    const parola = depo.al("esit_parola", "");
+    try {
+      for (let deneme = 0; deneme < 4; deneme++){
+        const {icerik, sha} = await esUzakOku();
+        const uzak = icerik ? await esCoz(icerik, parola) : {sifirlama: 0, okunan: {}, kayitli: {}, silinen: {}};
+        const once = kanonik(K);
+        const birlesik = budaK(birlestir(K, uzak));
+        K = birlesik; kisiselKaydet(false);
+        if (kanonik(K) !== once){ akisCiz(); if (durum.sekme === "bulten") bultenCiz(); }
+        if (icerik && !zorla && kanonik(K) === kanonik(budaK(uzak))) break;   // uzaktaki zaten güncel
+        if (await esUzakYaz(await esSifrele(K, parola, icerik && icerik.tuz), sha)) break;
+        if (deneme === 3) throw new Error("Kaydedilemedi, birazdan tekrar denenecek.");
+      }
+      depo.yaz("esit_son", Date.now()); depo.sil("esit_hata");
+      return true;
+    } catch(e){
+      depo.yaz("esit_hata", e.message === "PAROLA" ? "PAROLA" : (e.message || String(e)));
+      return false;
+    } finally {
+      ES.calisiyor = false;
+      if (durum.sekme === "ayarlar") esitlemeCiz();
+    }
+  }
+  async function esUzagiDegistir(){
+    // parola unutulduysa: uzaktaki kaydı bu cihazdakiyle (yeni parolayla) değiştir
+    const parola = depo.al("esit_parola", "");
+    const {sha} = await esUzakOku();
+    ES.anahtarOnbellek = null;
+    if (!(await esUzakYaz(await esSifrele(K, parola), sha))) throw new Error("Kaydedilemedi, tekrar dene.");
+    depo.yaz("esit_son", Date.now()); depo.sil("esit_hata");
+  }
+  function esitlemeCiz(){
+    const a = $("esitAyar"); if (!a) return; a.replaceChildren();
+    a.append(el("h3",{text:"Cihazlar arası eşitleme"}));
+    if (!GH.bagli()){
+      a.append(el("p",{text:"Okundu işaretlerini ve Sonra oku listeni telefonunla bilgisayarın arasında eşitlemek için önce bu cihazda GitHub bağlantısını kur (yukarıda)."}));
+      return;
+    }
+    const parola = depo.al("esit_parola", ""), hata = depo.al("esit_hata", ""), son = depo.al("esit_son", 0);
+    if (!parola){
+      const giris = el("input",{type:"password", id:"esitParola", autocomplete:"new-password", placeholder:"en az 6 karakter"});
+      a.append(el("p",{text:"Okundu işaretlerin ve Sonra oku listen, telefonun ile bilgisayarın arasında eşitlenir. Bu bilgiler senin belirlediğin parolayla şifrelenip depoda saklanır; depo herkese açık olsa da kimse okuyamaz."}),
+        el("label",{class:"alan"}, el("span",{text:"Eşitleme parolası"}), giris,
+          el("small",{text:"Her cihazda aynı parolayı gir. Unutursan yenisini belirleyip baştan başlayabilirsin; bir şey kaybolmaz, yalnızca diğer cihazlara da yeni parolayı girmen gerekir."})),
+        el("button",{class:"dugme ana", type:"button", text:"Eşitlemeyi aç", onclick: async () => {
+          const p = giris.value;
+          if (p.length < 6){ tost("Parola en az 6 karakter olmalı"); return; }
+          depo.yaz("esit_parola", p); ES.anahtarOnbellek = null;
+          tost("Eşitleniyor…", 15000);
+          const ok = await esitle(true);
+          tost(ok ? "Eşitleme açıldı" : (depo.al("esit_hata", "") === "PAROLA" ? "Parola diğer cihazda girilenle aynı değil" : "Eşitlenemedi: " + depo.al("esit_hata", "")), 5000);
+        }}));
+      return;
+    }
+    if (hata === "PAROLA"){
+      const giris = el("input",{type:"password", autocomplete:"current-password", placeholder:"diğer cihazdaki parola"});
+      a.append(el("div",{class:"durum-yazi kotu", text:"Bu cihazdaki parola, diğer cihazda belirlediğin parolayla aynı değil."}),
+        el("label",{class:"alan"}, el("span",{text:"Doğru parolayı gir"}), giris),
+        el("div",{class:"satir"},
+          el("button",{class:"dugme ana", type:"button", text:"Parolayı güncelle", onclick: async () => {
+            if (giris.value.length < 6){ tost("Parola en az 6 karakter olmalı"); return; }
+            depo.yaz("esit_parola", giris.value); ES.anahtarOnbellek = null; tost("Eşitleniyor…", 15000);
+            tost(await esitle(true) ? "Eşitlendi" : "Parola yine eşleşmedi", 4500);
+          }}),
+          el("button",{class:"dugme tehlike", type:"button", text:"Parolayı unuttum: baştan başla", onclick: async () => {
+            if (!confirm("Depodaki eşitleme kaydı, bu cihazdaki okundu işaretleri ve Sonra oku listesiyle, bu cihazdaki parolayla yeniden oluşturulacak. Diğer cihazlarda da bu parolayı girmen gerekecek. Devam edilsin mi?")) return;
+            try { await esUzagiDegistir(); tost("Eşitleme bu cihazdaki kayıtla yeniden başlatıldı", 4500); } catch(e){ tost(e.message, 6000); }
+            esitlemeCiz();
+          }})));
+      return;
+    }
+    a.append(el("p",{text: hata ? "! Son eşitleme başarısız: " + hata : "✓ Eşitleme açık" + (son ? " — son eşitleme " + onceki(new Date(son)) : "")}),
+      el("p",{style:"font-size:13px;color:var(--soluk)", text:`${Object.keys(K.okunan).length} okundu işareti · Sonra oku listesinde ${Object.keys(K.kayitli).length} yazı`}),
+      el("div",{class:"satir"},
+        el("button",{class:"dugme", type:"button", text:"Şimdi eşitle", onclick: async () => { tost("Eşitleniyor…", 15000); tost(await esitle(true) ? "Eşitlendi" : "Eşitlenemedi", 3500); }}),
+        el("button",{class:"dugme tehlike", type:"button", text:"Bu cihazda kapat", onclick: () => {
+          depo.sil("esit_parola"); depo.sil("esit_hata"); ES.anahtarOnbellek = null; tost("Bu cihazda eşitleme kapatıldı"); esitlemeCiz();
+        }})));
+  }
   const durum = { sekme: "akis", tur: depo.al("f_tur", "hepsi"), yazar: depo.al("f_yazar", "hepsi"), konu: depo.al("f_konu", "hepsi"), ara: "", limit: 80, kaynakAra: "" };
   let ogeler = [];
 
@@ -552,15 +755,18 @@ footer a{color:var(--soluk)}
   }
   function filtrele(){
     const q = sade(durum.ara.trim());
-    return ogeler.filter(o =>
-      (durum.tur === "hepsi" || (o.tur||"yazi") === durum.tur) &&
+    const kayitli = durum.tur === "kayitli";
+    return (kayitli ? kayitliOgeler() : ogeler).filter(o =>
+      (kayitli || durum.tur === "hepsi" || (o.tur||"yazi") === durum.tur) &&
       (durum.yazar === "hepsi" || o.yazar === durum.yazar) &&
       (durum.konu === "hepsi" || (o._konular||[]).includes(durum.konu)) &&
       (!q || sade(o.baslik + " " + o.yazar + " " + (o.ozet||"") + " " + (o.yz_ozet||"")).includes(q)));
   }
   function akisCiz(){
     const turSay = {}; for (const o of ogeler){ const t = o.tur||"yazi"; turSay[t] = (turSay[t]||0)+1; }
-    const turlar = [["hepsi","Tümü"]].concat(Object.keys(TUR).filter(t => turSay[t]).map(t => [t, TUR[t], turSay[t]]));
+    const kayitSay = Object.keys(K.kayitli).length;
+    const turlar = [["hepsi","Tümü"]].concat((kayitSay || durum.tur === "kayitli") ? [["kayitli", "★ Sonra oku", kayitSay]] : [],
+      Object.keys(TUR).filter(t => turSay[t]).map(t => [t, TUR[t], turSay[t]]));
     if (!turlar.some(x => x[0] === durum.tur)) durum.tur = "hepsi";
     cipler($("turFiltre"), turlar, durum.tur, "tur");
     const yazarSay = {}; for (const o of ogeler) yazarSay[o.yazar] = (yazarSay[o.yazar]||0)+1;
@@ -577,7 +783,7 @@ footer a{color:var(--soluk)}
     const liste = filtrele();
     const akis = $("akis"); akis.replaceChildren();
     if (!liste.length){
-      akis.append(el("div",{class:"bos", text: ogeler.length ? "Bu filtreye uyan içerik yok." :
+      akis.append(el("div",{class:"bos", text: durum.tur === "kayitli" ? "Henüz kaydettiğin yazı yok. Bir yazıyı sonra okumak için kartındaki ☆ işaretine dokun." : ogeler.length ? "Bu filtreye uyan içerik yok." :
         "Henüz içerik yok. İlk kontrol tamamlanınca burada görünecek."}));
     }
     let sonGun = null, ul = null;
@@ -594,7 +800,11 @@ footer a{color:var(--soluk)}
       if (yeniMi(o)) meta.append(el("span",{class:"etiket-yeni", text:"YENİ"}));
       for (const k of (o._konular||[]).slice(0,2)) meta.append(el("span",{class:"konu-etiket", text:"🔖 " + k}));
       const a = el("a",{class:"baslik", href:o.url, target:"_blank", rel:"noopener noreferrer", text:o.baslik});
-      a.addEventListener("click", () => { okunanlar.add(o.id); depo.yaz("okunanlar", [...okunanlar].slice(-3000)); li.classList.add("okundu"); rozetler(); });
+      a.addEventListener("click", () => { okunduIsaretle([o.id]); li.classList.add("okundu"); });
+      meta.append(el("button",{class:"kaydet-dugme" + (kayitliMi(o.id) ? " dolu" : ""), type:"button",
+        title: kayitliMi(o.id) ? "Sonra oku listesinden çıkar" : "Sonra okumak için kaydet", "aria-label": kayitliMi(o.id) ? "Sonra oku listesinden çıkar" : "Sonra oku",
+        text: kayitliMi(o.id) ? "★" : "☆", onclick: e => { e.preventDefault(); const vardi = kayitliMi(o.id); kayitDegistir(o); akisCiz();
+          tost(vardi ? "Sonra oku listesinden çıkarıldı" : "Sonra oku listesine kaydedildi"); }}));
       li.append(meta, a);
       if (o.yz_ozet){
         const p = el("p",{class:"yz", title:"Tamamını görmek için dokun"}, el("b",{text:"✨ Özet"}), o.yz_ozet);
@@ -622,7 +832,7 @@ footer a{color:var(--soluk)}
 
   // ───────── GÜNÜN ÖZETİ
   const ARALIKLAR = [["24","Son 24 saat"], ["72","Son 3 gün"], ["168","Son 7 gün"]];
-  function okunduYap(o, kap){ okunanlar.add(o.id); depo.yaz("okunanlar", [...okunanlar].slice(-3000)); if (kap) kap.classList.add("okundu"); rozetler(); }
+  function okunduYap(o, kap){ okunduIsaretle([o.id]); if (kap) kap.classList.add("okundu"); }
   function bultenOge(o, onEk){
     const kap = el("div",{class:"bulten-oge" + (okunanlar.has(o.id) ? " okundu" : "")});
     const a = el("a",{href:o.url, target:"_blank", rel:"noopener noreferrer", text: (onEk || "") + o.baslik});
@@ -1219,6 +1429,7 @@ footer a{color:var(--soluk)}
     if (GH.bagli() && !$("ghDurum").textContent) { $("ghDurum").className = "durum-yazi iyi"; $("ghDurum").textContent = "✓ Bağlantı kayıtlı"; }
     bildirimCiz();
     yzCiz();
+    esitlemeCiz();
     const h = $("hakkinda"); h.replaceChildren(el("h3",{text:"Hakkında"}),
       el("p",{text:`Son kontrol: ${new Date(V.olusturma).toLocaleString("tr-TR")} · ${(V.yazar_listesi||[]).filter(y => !y.kapali).length} kişi takipte`}));
     if (GH.depo()) h.append(el("p", null, el("a",{href:`https://github.com/${GH.depo()}/actions`, target:"_blank", rel:"noopener", text:"GitHub'daki çalışma kayıtları"})));
@@ -1490,7 +1701,10 @@ footer a{color:var(--soluk)}
       else throw new Error(hataMetni(r));
     } catch(e){ s.className = "durum-yazi kotu"; s.textContent = e.message; }
   });
-  $("okunduSifirla").addEventListener("click", () => { okunanlar = new Set(); depo.yaz("okunanlar", []); akisCiz(); tost("Okundu işaretleri temizlendi"); });
+  $("okunduSifirla").addEventListener("click", () => {
+    if (!confirm("Tüm okundu işaretleri temizlensin mi?")) return;
+    K.okunan = {}; K.sifirlama = Date.now(); kisiselKaydet(); akisCiz(); tost("Okundu işaretleri temizlendi");
+  });
 
   // ───────── sekmeler
   function sekmeAc(ad){
@@ -1517,8 +1731,7 @@ footer a{color:var(--soluk)}
   $("yenileBtn").addEventListener("click", () => yenile(false));
   $("bultenBtn").addEventListener("click", () => sekmeAc(durum.sekme === "bulten" ? "akis" : "bulten"));
   $("okunduBtn").addEventListener("click", () => {
-    for (const o of filtrele()) okunanlar.add(o.id);
-    depo.yaz("okunanlar", [...okunanlar].slice(-3000)); akisCiz(); tost("Hepsi okundu olarak işaretlendi");
+    okunduIsaretle(filtrele().map(o => o.id)); akisCiz(); tost("Hepsi okundu olarak işaretlendi");
   });
   for (const d of [$("ekleLevha"), $("menuLevha"), $("konuLevha"), $("yazarLevha")]) d.addEventListener("click", e => { if (e.target === d) d.close(); });
 
@@ -1536,7 +1749,8 @@ footer a{color:var(--soluk)}
   // uygulama arka plandan dönünce sessizce yenile
   let sonYenileme = Date.now();
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && Date.now() - sonYenileme > 3*60e3){ sonYenileme = Date.now(); yenile(true); }
+    if (document.visibilityState === "visible" && Date.now() - sonYenileme > 3*60e3){ sonYenileme = Date.now(); yenile(true); esitle(); }
+    if (document.visibilityState === "hidden" && ES.zamanlayici) esitle();   // bekleyen değişikliği kaçırmadan gönder
   });
 
   if (HTTP && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
@@ -1576,6 +1790,7 @@ footer a{color:var(--soluk)}
     history.replaceState(null, "", location.pathname);
   }
   if (HTTP) setTimeout(() => yenile(true), 400);
+  if (HTTP) setTimeout(() => esitle(), 1500);
 })();
 </script>
 </body>
