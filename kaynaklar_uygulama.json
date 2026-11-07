@@ -1,24 +1,6 @@
 {
   "yazarlar": [
     {
-      "ad": "yılmaz özdil",
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "haberhurriyeti.com",
-          "etiket": "Haber Hürriyeti",
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCQmDWRUf_X8BSrrDOSZA-NA",
-          "kanal_id": "UCQmDWRUf_X8BSrrDOSZA-NA",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "deniz zeyrek",
       "kaynaklar": [
         {
