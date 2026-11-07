@@ -11,18 +11,6 @@
           "otomatik": true
         }
       ]
-    },
-    {
-      "ad": "emre özcan",
-      "kaynaklar": [
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCvNHJbVCR1VZSKyur5FiWJA",
-          "kanal_id": "UCvNHJbVCR1VZSKyur5FiWJA",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
     }
   ],
   "kapali": [
