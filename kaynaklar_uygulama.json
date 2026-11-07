@@ -261,7 +261,18 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [],
+  "aranacaklar": [
+    {
+      "ad": "Mustafa demirtaş",
+      "zaman": "2026-11-07T15:12:51.886Z",
+      "youtube": true
+    },
+    {
+      "ad": "Emre özcan",
+      "zaman": "2026-11-07T15:12:51.887Z",
+      "youtube": true
+    }
+  ],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
