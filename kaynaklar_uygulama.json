@@ -279,6 +279,10 @@
     {
       "ad": "aslı aydıntaşbaş",
       "zaman": "2026-11-07T15:13:04.952Z"
+    },
+    {
+      "ad": "selva demiralp",
+      "zaman": "2026-11-07T15:13:07.081Z"
     }
   ],
   "kesif": {
@@ -371,11 +375,6 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:51:35+00:00",
       "aciklama": "birgun.net, YouTube"
-    },
-    "selva demiralp": {
-      "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:51:58+00:00",
-      "aciklama": "Adı haberlerde geçiyor (dunya.com, cnbce.com, haber.doviz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "ruşen çakır": {
       "durum": "bulundu",
