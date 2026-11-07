@@ -202,6 +202,16 @@ dialog.levha h2{font:600 20px var(--serif);margin:2px 0 4px}
 .mod-sec button[aria-pressed=true]{background:var(--kart);color:var(--metin);font-weight:600;box-shadow:var(--golge)}
 .oto{font-size:11px;font-weight:600;color:var(--soluk);border:1px solid var(--cizgi);border-radius:6px;padding:0 5px;margin-left:4px}
 .aranan{display:flex;gap:10px;align-items:center;padding:12px 14px;font-size:14.5px}
+.kart.oneri{border-color:var(--vurgu)}
+.oneri-kaynak{padding:10px 14px;border-top:1px solid var(--cizgi)}
+.oneri-bas{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer}
+.oneri-bas input{width:20px;height:20px;accent-color:var(--vurgu);margin:0}
+.oneri-gerekce{font-size:13px;color:var(--soluk);margin:4px 0 0 28px}
+.oneri-ornek{list-style:none;margin:6px 0 0 28px;padding:0}
+.oneri-ornek li{font-size:14px;line-height:1.35;padding:3px 0}
+.oneri-ornek li a{color:var(--metin)}
+.oneri-ornek li small{display:block;color:var(--soluk);font-size:12px}
+.oneri-dugmeler{padding:10px 14px 12px;border-top:1px solid var(--cizgi);display:flex;gap:8px;flex-wrap:wrap}
 .aranan .yazi{flex:1;min-width:0}
 .aranan small{display:block;color:var(--soluk);font-size:12.5px}
 .tost{position:fixed;left:50%;bottom:calc(var(--alt-bar) + 14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;
@@ -361,7 +371,7 @@ footer a{color:var(--soluk)}
       <label class="alan"><span>Yazarın / kişinin adı</span>
         <textarea id="fIsim" rows="3" autocomplete="off" placeholder="ör. Nevşin Mengü"
           style="width:100%;border:1px solid var(--cizgi);background:var(--zemin);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;resize:vertical"></textarea>
-        <small>Birden fazla kişi eklemek için her ismi ayrı satıra yaz.</small></label>
+        <small>Birden fazla kişi eklemek için her ismi ayrı satıra yaz. Program bulduklarını örnek yazılarıyla Kaynaklar'daki "Onay bekleyenler" bölümüne koyar; takip sen onaylayınca başlar.</small></label>
       <label class="onay"><input type="checkbox" id="fYoutubeAra">
         <span>YouTube'da adının geçtiği programları da takip et<br><small style="color:var(--soluk)">Kendi kanalı olmayan, başka kanallarda program yapan ya da konuk olan kişiler için (ör. futbol yorumcuları). Başlığında adı geçen yeni videolar, hangi kanalda olursa olsun gelir.</small></span></label>
       <p style="font-size:13.5px;color:var(--soluk);margin:6px 0 0">Program bu kişinin nerede yazdığını araştırır: haber sitelerindeki köşe sayfası, kişisel blogu ve YouTube kanalı. Bulduklarını birkaç dakika içinde ekler; yanlış bulduğu olursa ⋯ ile kaldırabilirsin.</p>
@@ -828,7 +838,7 @@ footer a{color:var(--soluk)}
     const okunmamisYeni = ogeler.filter(o => yeniMi(o) && !okunanlar.has(o.id)).length;
     const r = $("akisRozet"); r.hidden = !okunmamisYeni; r.textContent = okunmamisYeni > 99 ? "99+" : okunmamisYeni;
     if ("setAppBadge" in navigator) { try { okunmamisYeni ? navigator.setAppBadge(okunmamisYeni) : navigator.clearAppBadge(); } catch(e){} }
-    const sorun = (V.denetim||[]).filter(d => d.durum && d.durum !== "tamam").length;
+    const sorun = (V.denetim||[]).filter(d => d.durum && d.durum !== "tamam").length + bekleyenOneriler().length;
     const k = $("kaynakRozet"); k.hidden = !sorun; k.textContent = sorun;
   }
 
@@ -1121,6 +1131,12 @@ footer a{color:var(--soluk)}
           {yazi:"Listeden kaldır", tehlike:true, fn: () => islem(i => { if (i.kesif) delete i.kesif[ad]; }, "Kaldırıldı", `${ad} listeden kaldırıldı`)}])})));
       liste.append(kart);
     }
+    // "İsimle bul"un bulduğu kaynaklar: senin onayını bekliyor
+    const oneriler = bekleyenOneriler();
+    if (oneriler.length && !q){
+      liste.append(el("h2",{class:"bolum-baslik", text:`Onay bekleyenler (${oneriler.length})`}));
+      for (const [ad, o] of oneriler) liste.append(oneriKarti(ad, o));
+    }
     if (!q) liste.append(konularKarti());
     const susturulan = new Set(bildirimAyari().sessiz_yazarlar || []);
     const yazarlar = (V.yazar_listesi || []).filter(y => !q || sade(y.ad).includes(q));
@@ -1226,6 +1242,68 @@ footer a{color:var(--soluk)}
     } else if (!i.kapali.includes(k.anahtar)) i.kapali.push(k.anahtar);
   }
   function ayniKaynak(x, k){ return (x.url || x.kanal || x.kullanici || x.rss_url || x.site) === k.adres && (x.tur || "sayfa") === k.tur; }
+  // ───────── ONAY BEKLEYEN ÖNERİLER
+  function bekleyenOneriler(){
+    const karar = depo.al("oneri_karar", {});
+    return Object.entries(V.oneriler || {}).filter(([ad, o]) => o && Array.isArray(o.kaynaklar) &&
+      !(karar[ad] && new Date(o.zaman).getTime() < karar[ad]));
+  }
+  function oneriKarti(ad, o){
+    const kart = el("div",{class:"kart oneri"});
+    kart.append(el("div",{class:"kart-ust"}, el("span",{text:"🔎"}), el("b",{text:ad}),
+      el("span",{class:"say-rozet", text: o.kaynaklar.length > 1 ? `${o.kaynaklar.length} öneri` : "1 öneri"})));
+    const secim = o.kaynaklar.map(() => true);
+    o.kaynaklar.forEach((k, i) => {
+      const kutu = el("input",{type:"checkbox", checked:"", "aria-label": (k.etiket || k.tur) + " önerisini seç"});
+      kutu.addEventListener("change", () => { secim[i] = kutu.checked; });
+      const kn = k.kanit || {};
+      const blok = el("div",{class:"oneri-kaynak"},
+        el("label",{class:"oneri-bas"}, kutu, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), el("b",{text: k.etiket || ""})),
+        el("div",{class:"oneri-gerekce", text: kn.gerekce || ""}));
+      if ((kn.ornekler || []).length){
+        const ul = el("ul",{class:"oneri-ornek"});
+        for (const x of kn.ornekler) ul.append(el("li", null,
+          el("a",{href: x.url, target:"_blank", rel:"noopener noreferrer", text: x.baslik}),
+          el("small",{text: [x.kanal, x.tarih ? onceki(new Date(x.tarih)) : null].filter(Boolean).join(" · ")})));
+        blok.append(el("div",{class:"oneri-gerekce", text:"Son içerikler — kişinin kendi yazısı/programı mı, kontrol et:"}), ul);
+      }
+      kart.append(blok);
+    });
+    const i = (o.aciklama || "").indexOf("Önerilmeyen");
+    if (i >= 0) kart.append(el("div",{class:"oneri-gerekce", style:"margin:0;padding:8px 14px 0", text: o.aciklama.slice(i)}));
+    kart.append(el("div",{class:"oneri-dugmeler"},
+      el("button",{class:"dugme ana", type:"button", text:"Seçilenleri takip et", onclick: () => oneriKabul(ad, o, secim)}),
+      el("button",{class:"dugme", type:"button", text:"Hiçbiri doğru değil", onclick: () => oneriRed(ad)}),
+      el("button",{class:"dugme", type:"button", text:"Adresi elle ekle", onclick: () => ekleAc({ad, mod:"adres"})})));
+    return kart;
+  }
+  function oneriKararVer(ad){ const k = depo.al("oneri_karar", {}); k[ad] = Date.now(); depo.yaz("oneri_karar", k); }
+  async function oneriKabul(ad, o, secim){
+    if (!GH.bagli()){ tost("Önce Ayarlar'dan GitHub bağlantısını kur"); return; }
+    const secilen = o.kaynaklar.filter((_, i) => secim[i]).map(k => { const x = Object.assign({}, k); delete x.kanit; x.otomatik = true; return x; });
+    if (!secilen.length){ tost("En az bir kaynak seç ya da 'Hiçbiri doğru değil'e bas", 4000); return; }
+    const ok = await islem(i => {
+      i.yazarlar = Array.isArray(i.yazarlar) ? i.yazarlar : [];
+      let y = i.yazarlar.find(x => x.ad === ad);
+      if (!y){ y = {ad, kaynaklar: []}; i.yazarlar.push(y); }
+      y.kaynaklar = (y.kaynaklar || []).concat(secilen);
+      i.kapali_yazarlar = (i.kapali_yazarlar || []).filter(x => x !== ad);
+      if (i.oneriler) delete i.oneriler[ad];
+      i.kesif = i.kesif || {};
+      i.kesif[ad] = {durum: "bulundu", zaman: new Date().toISOString(), aciklama: secilen.map(k => k.etiket).join(", ") + " (onaylandı)"};
+    }, `${ad} takibe alındı`, `${ad}: ${secilen.length} kaynak onaylandı`);
+    if (ok){ oneriKararVer(ad); kaynaklarCiz(); rozetler(); }
+  }
+  async function oneriRed(ad){
+    if (!GH.bagli()){ tost("Önce Ayarlar'dan GitHub bağlantısını kur"); return; }
+    const ok = await islem(i => {
+      if (i.oneriler) delete i.oneriler[ad];
+      i.kesif = i.kesif || {};
+      i.kesif[ad] = {durum: "bulunamadi", zaman: new Date().toISOString(), aciklama: "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"};
+    }, `${ad}: öneriler reddedildi`, `${ad}: öneriler reddedildi`);
+    if (ok){ oneriKararVer(ad); kaynaklarCiz(); rozetler(); }
+  }
+
   async function islem(fn, tostMetni, bekleyenMetni){
     tost("Kaydediliyor…", 15000);
     try { await uygDosyaDegistir(fn, bekleyenMetni); bekleyenEkle(bekleyenMetni); tost(tostMetni + " — birkaç dakika içinde yansır"); kaynaklarCiz(); return true; }
@@ -1408,7 +1486,7 @@ footer a{color:var(--soluk)}
           i.kapali_yazarlar = i.kapali_yazarlar.filter(x => !isimler.includes(x));
         }, `${isim} aranıyor`);
         depo.yaz("aranan_yerel", depo.al("aranan_yerel", []).filter(x => x && !isimler.includes(x.ad)).concat(isimler.map(ad => ({ad, zaman: Date.now()}))));
-        $("ekleLevha").close(); tost(`${isim} aranıyor — ${isimler.length > 8 ? "8'er kişilik gruplar halinde, " : ""}birkaç dakika içinde sonuç gelecek`, 4500); sekmeAc("kaynaklar");
+        $("ekleLevha").close(); tost(`${isim} aranıyor — ${isimler.length > 8 ? "8'er kişilik gruplar halinde, " : ""}birkaç dakika içinde öneriler onayına gelecek`, 4500); sekmeAc("kaynaklar");
       } catch(err){ $("fHata").textContent = err.message; }
       finally { $("fKaydet").disabled = false; }
       return;

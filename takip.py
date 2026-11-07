@@ -1079,6 +1079,44 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
     return bulunan, aciklama
 
 
+def oneri_kaniti(ist: Istemci, ad: str, k: dict) -> dict:
+    """Önerilen kaynağı bir kez okur: son birkaç içerik ve neden önerildiği (onay ekranında gösterilir)."""
+    okuyucu = OKUYUCULAR.get(k.get("tur"))
+    if okuyucu is None:
+        return {"gerekce": "bu tür denenemedi"}
+    kd: dict = {}
+    try:
+        ogeler = okuyucu(ist, {x: v for x, v in k.items() if x not in ("kanit", "otomatik")}, kd, ad)
+    except Exception as e:
+        return {"gerekce": f"denenemedi ({str(e)[:80]})"}
+    ogeler = [o for o in ogeler if o.get("baslik")]
+    if not ogeler:
+        return {"gerekce": "içerik bulunamadı"}
+    ogeler.sort(key=lambda o: o.get("tarih") or "", reverse=True)
+    son = iso_oku(ogeler[0].get("tarih"))
+    gun = (simdi() - son).days if son else None
+    ne_zaman = "" if gun is None else ", en yenisi bugün" if gun <= 0 else ", en yenisi dün" if gun == 1 else f", en yenisi {gun} gün önce"
+    n = len(ogeler)
+    tur = k.get("tur")
+    if tur == "sayfa":
+        gerekce = f"{_alan_adi(k.get('url') or k.get('yazar_dizini'))} sitesindeki yazar sayfası; {n} yazı{ne_zaman}"
+    elif tur == "rss":
+        gerekce = f"kişinin kendi sitesi/blogu ({_alan_adi(k.get('kesfet') or k.get('url'))}); {n} yazı{ne_zaman}"
+    elif tur == "google_haber":
+        c = kd.get("yedek_cozum") or {}
+        gerekce = (f"{k.get('site')} sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler "
+                   f"üzerinden; adresi yazar klasöründe olanlar: {c.get('yazara_ait', n)}){ne_zaman}")
+    elif tur == "youtube":
+        gerekce = f"adı birebir tutan YouTube kanalı; {n} video{ne_zaman} — kanalın gerçekten o kişiye ait olduğunu örneklerden kontrol et"
+    elif tur == "youtube_ara":
+        gerekce = f"başlığında adı geçen son bir haftanın videoları (farklı kanallardan); {n} video"
+    else:
+        gerekce = f"{n} içerik{ne_zaman}"
+    ornekler = [{"baslik": kisalt(o["baslik"], 120), "url": o["url"], "tarih": o.get("tarih"),
+                 "kanal": o.get("_kaynak")} for o in ogeler[:3]]
+    return {"gerekce": gerekce, "ornekler": ornekler, "sayi": n}
+
+
 def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
     """kaynaklar_uygulama.json'daki 'aranacaklar' listesini işler. Bildirim mesajları döner."""
     yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
@@ -1098,15 +1136,20 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
         ad = bosluk(a["ad"])
         print(f"🔍 {ad} için kaynak aranıyor…")
         kaynaklar, aciklama = yazar_kesfet(ist, ad, bool(a.get("youtube")))
-        if kaynaklar:
-            y = next((x for x in uyg["yazarlar"] if x.get("ad") == ad), None)
-            if not y:
-                y = {"ad": ad, "kaynaklar": []}
-                uyg["yazarlar"].append(y)
-            y.setdefault("kaynaklar", []).extend(kaynaklar)
-            uyg["kapali_yazarlar"] = [x for x in _liste(uyg.get("kapali_yazarlar")) if x != ad]
-            kesif[ad] = {"durum": "bulundu", "zaman": iso(simdi()), "aciklama": aciklama}
-            mesajlar.append(f"{ad} eklendi: {aciklama}")
+        # Bulunanlar doğrudan takibe alınmaz: her biri bir kez okunur, örnek yazılarıyla onaya sunulur.
+        oneriler, bos = [], []
+        for k in kaynaklar:
+            kanit = oneri_kaniti(ist, ad, k)
+            if kanit.get("ornekler"):
+                oneriler.append(dict(k, kanit=kanit))
+            else:
+                bos.append(f"{k.get('etiket')}: {kanit.get('gerekce')}")
+        if bos:
+            aciklama += " · İçerik gelmediği için önerilmeyenler: " + "; ".join(bos[:3])
+        if oneriler:
+            uyg.setdefault("oneriler", {})[ad] = {"zaman": iso(simdi()), "kaynaklar": oneriler, "aciklama": aciklama}
+            kesif[ad] = {"durum": "onay_bekliyor", "zaman": iso(simdi()), "aciklama": aciklama}
+            mesajlar.append(f"{ad}: {len(oneriler)} kaynak önerisi onayını bekliyor (Kaynaklar → Onay bekleyenler)")
         else:
             kesif[ad] = {"durum": "bulunamadi", "zaman": iso(simdi()), "aciklama": aciklama}
             mesajlar.append(f"{ad}: {aciklama}")
@@ -1280,7 +1323,8 @@ def ayar_oku(yol: Path) -> dict:
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
                          "konular": _liste(uyg.get("konular")),
-                         "push": uyg.get("push") if isinstance(uyg.get("push"), dict) else {}}
+                         "push": uyg.get("push") if isinstance(uyg.get("push"), dict) else {},
+                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}}
     # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
     uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
     if uyg_bildirim:
@@ -2268,6 +2312,7 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "yazar_listesi": _yazar_listesi(ayar, durum),
         "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
+        "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
         "konular": konu_listesi(ayar),
         "konu_durumu": {ad: {k: v for k, v in kd.items() if k != "gorulen"}
                         for ad, kd in (durum.get("konular") or {}).items()},
