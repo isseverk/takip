@@ -271,6 +271,10 @@
       "ad": "Emre özcan",
       "zaman": "2026-11-07T15:12:51.887Z",
       "youtube": true
+    },
+    {
+      "ad": "refet gürkaynak",
+      "zaman": "2026-11-07T15:13:02.232Z"
     }
   ],
   "kesif": {
@@ -328,11 +332,6 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:32:36+00:00",
       "aciklama": "Odatv, YouTube"
-    },
-    "refet gürkaynak": {
-      "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:38:03+00:00",
-      "aciklama": "Adı haberlerde geçiyor (sigortadunyasi.com.tr, ilerigazetesi.com.tr, milligazete.com.tr) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "erdal sağlam": {
       "durum": "bulundu",
