@@ -98,32 +98,6 @@
       ]
     },
     {
-      "ad": "ahmet şık",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/yazarlar/ahmet-sik",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://t24.com.tr/yazarlar/ahmet-sik",
-          "etiket": "T24",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UC40m24EicjICCsvnOy60k8w",
-          "kanal_id": "UC40m24EicjICCsvnOy60k8w",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "can dündar",
       "kaynaklar": [
         {
