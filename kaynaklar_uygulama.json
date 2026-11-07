@@ -48,7 +48,56 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [],
+  "aranacaklar": [
+    {
+      "ad": "şirin payzın",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "nevşin mengü",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "yılmaz özdil",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "deniz zeyrek",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "ayşenur arslan",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "ismail arı",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "bahadır özgür",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "şaban sevinç",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "refet gürkaynak",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "erdal sağlam",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "amberin zaman",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    },
+    {
+      "ad": "aslı aydıntaşbaş",
+      "zaman": "2026-11-07T06:24:42.545Z"
+    }
+  ],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
