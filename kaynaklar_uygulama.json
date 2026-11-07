@@ -86,25 +86,6 @@
       ]
     },
     {
-      "ad": "erdal sağlam",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://10haber.net/yazarlar/erdal-saglam",
-          "etiket": "10Haber",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCHd6-EqcvwS_Fli2qk06bKA",
-          "kanal_id": "UCHd6-EqcvwS_Fli2qk06bKA",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "amberin zaman",
       "kaynaklar": [
         {
