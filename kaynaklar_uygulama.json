@@ -244,10 +244,9 @@
       "ad": "can dündar",
       "kaynaklar": [
         {
-          "tur": "sayfa",
-          "url": "https://politikahaber.com/yazarlar/can-dundar",
-          "etiket": "Politika Haber",
-          "dogrula": true,
+          "tur": "google_haber",
+          "site": "medyascope.tv",
+          "etiket": "Medyascope",
           "otomatik": true
         },
         {
@@ -419,43 +418,43 @@
     },
     "refet gürkaynak": {
       "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:33:57+00:00",
+      "zaman": "2026-11-07T06:38:03+00:00",
       "aciklama": "Adı haberlerde geçiyor (sigortadunyasi.com.tr, ilerigazetesi.com.tr, milligazete.com.tr) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "erdal sağlam": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:34:24+00:00",
+      "zaman": "2026-11-07T06:38:29+00:00",
       "aciklama": "10Haber, YouTube"
     },
     "amberin zaman": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:34:30+00:00",
+      "zaman": "2026-11-07T06:38:35+00:00",
       "aciklama": "TR724, YouTube"
     },
     "aslı aydıntaşbaş": {
       "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:34:57+00:00",
+      "zaman": "2026-11-07T06:39:23+00:00",
       "aciklama": "Adı haberlerde geçiyor (bbc.com, sabah.com.tr, paraanaliz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "enver aysever": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:35:13+00:00",
+      "zaman": "2026-11-07T06:39:39+00:00",
       "aciklama": "YouTube"
     },
     "merdan yanardağ": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:35:40+00:00",
+      "zaman": "2026-11-07T06:40:05+00:00",
       "aciklama": "birgun.net"
     },
     "ahmet şık": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:35:51+00:00",
+      "zaman": "2026-11-07T06:40:16+00:00",
       "aciklama": "Cumhuriyet, T24, YouTube"
     },
     "can dündar": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:36:08+00:00",
-      "aciklama": "Politika Haber, YouTube"
+      "zaman": "2026-11-07T06:40:33+00:00",
+      "aciklama": "Medyascope, YouTube"
     }
   }
 }
