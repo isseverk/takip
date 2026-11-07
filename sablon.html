@@ -77,10 +77,10 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .yazar{font-weight:600;color:var(--metin);display:inline-flex;align-items:center;gap:6px}
 .nokta{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
 .tur{font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 6px;background:var(--vurgu-acik);color:var(--vurgu)}
-.tur.video,.tur.youtube{background:#fde4e4;color:#b42318}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#e3f4d8;color:#3c6b1d}
+.tur.video,.tur.youtube,.tur.youtube_ara{background:#fde4e4;color:#b42318}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#e3f4d8;color:#3c6b1d}
 .tur.instagram{background:#f6e0f1;color:#9c2f86}.tur.rss{background:#e3ecf8;color:#24569c}
 .tur.paylasim,.tur.bluesky,.tur.telegram{background:#dff0fb;color:#0b6aa8}.tur.podcast{background:#efe4fb;color:#6b3fa0}
-@media (prefers-color-scheme: dark){.tur.video,.tur.youtube{background:#3b2222;color:#ff9a8f}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#253322;color:#9fd27a}
+@media (prefers-color-scheme: dark){.tur.video,.tur.youtube,.tur.youtube_ara{background:#3b2222;color:#ff9a8f}.tur.eksi,.tur.eksi_yazar,.tur.eksi_baslik{background:#253322;color:#9fd27a}
   .tur.instagram{background:#38233a;color:#f0a3e0}.tur.rss{background:#1f2a3b;color:#93b8ee}
   .tur.paylasim,.tur.bluesky,.tur.telegram{background:#18303f;color:#86c8f0}.tur.podcast{background:#2c2240;color:#c9a8f2}}
 .tur.haber{background:#ece8df;color:#5c5340}
@@ -362,6 +362,8 @@ footer a{color:var(--soluk)}
         <textarea id="fIsim" rows="3" autocomplete="off" placeholder="ör. Nevşin Mengü"
           style="width:100%;border:1px solid var(--cizgi);background:var(--zemin);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;resize:vertical"></textarea>
         <small>Birden fazla kişi eklemek için her ismi ayrı satıra yaz.</small></label>
+      <label class="onay"><input type="checkbox" id="fYoutubeAra">
+        <span>YouTube'da adının geçtiği programları da takip et<br><small style="color:var(--soluk)">Kendi kanalı olmayan, başka kanallarda program yapan ya da konuk olan kişiler için (ör. futbol yorumcuları). Başlığında adı geçen yeni videolar, hangi kanalda olursa olsun gelir.</small></span></label>
       <p style="font-size:13.5px;color:var(--soluk);margin:6px 0 0">Program bu kişinin nerede yazdığını araştırır: haber sitelerindeki köşe sayfası, kişisel blogu ve YouTube kanalı. Bulduklarını birkaç dakika içinde ekler; yanlış bulduğu olursa ⋯ ile kaldırabilirsin.</p>
     </div>
     <div id="adresBlok">
@@ -451,7 +453,7 @@ footer a{color:var(--soluk)}
     sil(k){ try{ localStorage.removeItem(k); }catch(e){} }
   };
   const TUR = {yazi:"Yazı", video:"Video", paylasim:"Paylaşım", podcast:"Podcast", eksi:"Ekşi", instagram:"Instagram", haber:"Haber"};
-  const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", rss:"Blog/RSS", bluesky:"Bluesky", telegram:"Telegram", podcast:"Podcast", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
+  const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", youtube_ara:"YouTube'da adı geçen", rss:"Blog/RSS", bluesky:"Bluesky", telegram:"Telegram", podcast:"Podcast", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
   const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const GUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
   const HTTP = location.protocol.startsWith("http");
@@ -1072,7 +1074,7 @@ footer a{color:var(--soluk)}
     throw new Error("Kaydedilemedi, birkaç saniye sonra tekrar dene.");
   }
   async function kaynakAnahtari(ad, k){
-    const adres = String(k.url || k.kanal || k.kullanici || k.yazar_dizini || k.rss_url || k.site || "None");
+    const adres = String(k.url || k.kanal || k.kullanici || k.yazar_dizini || k.rss_url || k.site || k.arama || "None");
     const b = await crypto.subtle.digest("SHA-1", new TextEncoder().encode([ad, k.tur || "sayfa", adres].join("|")));
     return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("").slice(0,12);
   }
@@ -1163,6 +1165,17 @@ footer a{color:var(--soluk)}
     if (y.kapali) s.push({yazi:"Takibi yeniden aç", fn: () => islem(i => { i.kapali_yazarlar = i.kapali_yazarlar.filter(a => a !== y.ad); }, `${y.ad} yeniden açıldı`, `${y.ad}: takip yeniden açıldı`)});
     else {
       s.push({yazi:"Bu kişiye kaynak ekle", fn: () => ekleAc({ad: y.ad})});
+      if (!y.kaynaklar.some(k => k.tur === "youtube_ara")) s.push({yazi:"▶ YouTube'da adının geçtiği programları ekle", fn: async () => {
+        const k = {tur: "youtube_ara", arama: y.ad, etiket: "YouTube'da adı geçen"};
+        const anahtar = await kaynakAnahtari(y.ad, k);
+        islem(i => {
+          let x = i.yazarlar.find(a => a.ad === y.ad);
+          if (!x){ x = {ad: y.ad, kaynaklar: []}; i.yazarlar.push(x); }
+          x.kaynaklar = x.kaynaklar || [];
+          if (!x.kaynaklar.some(a => a.tur === "youtube_ara")) x.kaynaklar.push(k);
+          i.kapali = i.kapali.filter(a => a !== anahtar);
+        }, "YouTube araması eklendi", `${y.ad}: YouTube'da adı geçen programlar eklendi`);
+      }});
       s.push({yazi:"Akışta yalnızca bu kişiyi göster", fn: () => { durum.yazar = y.ad; depo.yaz("f_yazar", y.ad); sekmeAc("akis"); }});
       const sessiz = (bildirimAyari().sessiz_yazarlar || []).includes(y.ad);
       s.push({yazi: sessiz ? "🔔 Bildirimlerini yeniden aç" : "🔕 Bildirimlerini kapat (akışta görünmeye devam eder)", fn: () =>
@@ -1333,7 +1346,7 @@ footer a{color:var(--soluk)}
     on = on || {};
     form = {eski: on.eski || null};
     $("modSec").hidden = !!on.eski;
-    $("fIsim").value = "";
+    $("fIsim").value = ""; $("fYoutubeAra").checked = false;
     $("ekleBaslik").textContent = on.baslik || "Kaynak ekle";
     $("fKaydet").textContent = on.eski ? "Değiştir" : "Ekle";
     $("fAd").value = on.ad || ""; $("fAd").readOnly = !!on.eski;
@@ -1374,7 +1387,7 @@ footer a{color:var(--soluk)}
         await uygDosyaDegistir(i => {
           i.aranacaklar = (Array.isArray(i.aranacaklar) ? i.aranacaklar : []).filter(x => !isimler.includes(x.ad));
           for (const ad of isimler){
-            i.aranacaklar.push({ad, zaman: new Date().toISOString()});
+            i.aranacaklar.push(Object.assign({ad, zaman: new Date().toISOString()}, $("fYoutubeAra").checked ? {youtube: true} : {}));
             if (i.kesif) delete i.kesif[ad];
           }
           i.kapali_yazarlar = i.kapali_yazarlar.filter(x => !isimler.includes(x));

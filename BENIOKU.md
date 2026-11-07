@@ -69,6 +69,8 @@ Bu yol yalnızca bilgisayarda bakmak içindir; telefondaki uygulama GitHub'daki 
 | `instagram.com/hesap` ya da `@hesap` | Instagram |
 
 Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
+
+**Başka kanallarda program yapan ya da konuk olan kişiler** (ör. futbol yorumcuları): **İsimle bul** ekranında **YouTube'da adının geçtiği programları da takip et** kutusunu işaretle. Program son bir haftanın YouTube videolarında kişinin adını arar; başlığında adı geçen yeni videolar, hangi kanalda olursa olsun akışa gelir ve kartta kanalın adı görünür. Zaten takip ettiğin biri için Kaynaklar'da adının yanındaki **⋯ → YouTube'da adının geçtiği programları ekle** de olur. İsimle bul köşe yazısı bulamazsa bu yolu kendiliğinden de dener. Kısa videolar (Shorts) alınmaz.
 - **Kısayol:** YouTube uygulamasında bir kanalı, ya da Chrome'da bir yazarın sayfasını açıp **Paylaş → Takip** de. Form adres dolu olarak açılır.
 - **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. O kaynaktan gelmiş içerikler de akıştan hemen kalkar. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
 - **Adresi değişen yazar:** **⋯ → Adresini değiştir** seç.

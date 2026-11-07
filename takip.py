@@ -738,6 +738,96 @@ def _yazar_sayfasi_mi(ist: Istemci, url: str, ad: str) -> tuple[bool, str | None
     return len(linkler) >= 2, None
 
 
+# ───────────────────────── YouTube'da adı geçen videolar ─────────────────────────
+# Kendi kanalı olmayan, başka kanallarda program yapan ya da konuk olan kişiler için (ör. futbol yorumcuları):
+# YouTube'da son bir haftanın videolarını kişinin adıyla arar, başlığında adı geçenleri alır.
+
+_GORELI_SURE = {"saniye": 1, "second": 1, "dakika": 60, "minute": 60, "saat": 3600, "hour": 3600,
+                "gün": 86400, "gun": 86400, "day": 86400, "hafta": 604800, "week": 604800,
+                "ay": 2592000, "month": 2592000, "yıl": 31536000, "yil": 31536000, "year": 31536000}
+
+
+def _goreli_tarih(metin: str) -> datetime | None:
+    m = re.search(r"(\d+)\s*(saniye|dakika|saat|gün|gun|hafta|ay|yıl|yil|second|minute|hour|day|week|month|year)",
+                  metin or "", re.I)
+    return simdi() - timedelta(seconds=int(m.group(1)) * _GORELI_SURE[m.group(2).lower()]) if m else None
+
+
+def _yt_metin(t) -> str:
+    if not isinstance(t, dict):
+        return ""
+    return t.get("simpleText") or t.get("content") or "".join(r.get("text", "") for r in t.get("runs") or [])
+
+
+def _yt_baslangic_verisi(metin: str):
+    m = re.search(r"(?:var ytInitialData|window\[\"ytInitialData\"\])\s*=\s*", metin)
+    if not m:
+        return None
+    try:
+        return json.JSONDecoder().raw_decode(metin[m.end():])[0]
+    except ValueError:
+        return None
+
+
+def _yt_arama_videolari(veri) -> list[dict]:
+    """YouTube arama sayfasının verisinden videoları çıkarır: {id, baslik, kanal, zaman, kisa}."""
+    bulunan, yigin = [], [veri]
+    while yigin:
+        x = yigin.pop()
+        if isinstance(x, list):
+            yigin.extend(reversed(x))
+            continue
+        if not isinstance(x, dict):
+            continue
+        v = x.get("videoRenderer")
+        if isinstance(v, dict) and v.get("videoId"):
+            yol = (((v.get("navigationEndpoint") or {}).get("commandMetadata") or {}).get("webCommandMetadata") or {}).get("url", "")
+            bulunan.append({"id": v["videoId"], "baslik": _yt_metin(v.get("title")),
+                            "kanal": _yt_metin(v.get("ownerText") or v.get("longBylineText")),
+                            "zaman": _yt_metin(v.get("publishedTimeText")), "kisa": yol.startswith("/shorts/")})
+            continue
+        l = x.get("lockupViewModel")
+        if isinstance(l, dict) and l.get("contentId") and "VIDEO" in str(l.get("contentType", "")):
+            md = ((l.get("metadata") or {}).get("lockupMetadataViewModel") or {})
+            satirlar = json.dumps(md.get("metadata") or {}, ensure_ascii=False)
+            parcalar = re.findall(r'"content":\s*"([^"]+)"', satirlar)
+            bulunan.append({"id": l["contentId"], "baslik": _yt_metin(md.get("title")),
+                            "kanal": parcalar[0] if parcalar else "",
+                            "zaman": next((p for p in parcalar if _goreli_tarih(p)), ""), "kisa": False})
+            continue
+        yigin.extend(reversed(list(x.values())))
+    return bulunan
+
+
+def youtube_ara(ist: Istemci, arama: str) -> list[dict]:
+    # sp=EgQIAxAB → yalnızca videolar, son bir hafta
+    url = ("https://www.youtube.com/results?search_query=" + quote(f'"{arama}"') + "&sp=EgQIAxAB&hl=tr&gl=TR")
+    metin = ist.al(url, basliklar={"Cookie": "CONSENT=YES+1; SOCS=CAI", "Accept-Language": "tr-TR,tr;q=0.9"})
+    veri = _yt_baslangic_verisi(metin)
+    if veri is None:
+        raise KaynakHatasi("YouTube arama sayfası okunamadı (yapı değişmiş olabilir)")
+    return _yt_arama_videolari(veri)
+
+
+def youtube_ara_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
+    """Başlığında kişinin adı geçen son bir haftanın YouTube videoları (hangi kanalda olursa olsun)."""
+    arama = bosluk(k.get("arama") or yazar)
+    hedef = sade(arama)
+    haric = {sade(x) for x in _liste(k.get("haric_kanallar"))}
+    sonuc, gorulen = [], set()
+    for v in youtube_ara(ist, arama):
+        if v["kisa"] or v["id"] in gorulen or sade(v["kanal"]) in haric:
+            continue
+        if hedef not in sade(v["baslik"]) and hedef != sade(v["kanal"]):
+            continue
+        gorulen.add(v["id"])
+        zaman = _goreli_tarih(v["zaman"])
+        sonuc.append({"url": f"https://www.youtube.com/watch?v={v['id']}", "baslik": kisalt(v["baslik"], 200),
+                      "tarih": iso(zaman) if zaman else None, "tur": "video", "_kaynak": v["kanal"] or None})
+    sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
+    return sonuc[: int(k.get("en_fazla", 20))]
+
+
 def _youtube_kanali_bul(ist: Istemci, ad: str) -> dict | None:
     try:
         metin = ist.al("https://www.youtube.com/results?search_query=" + quote(ad) + "&sp=EgIQAg%253D%253D",
@@ -753,7 +843,7 @@ def _youtube_kanali_bul(ist: Istemci, ad: str) -> dict | None:
     return None
 
 
-def yazar_kesfet(ist: Istemci, ad: str) -> tuple[list[dict], str]:
+def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple[list[dict], str]:
     """Kişinin yazdığı yerleri bulur. (kaynaklar, açıklama) döner."""
     sorgu = quote(f'"{ad}" when:60d')
     alanlar: dict[str, dict] = {}
@@ -821,6 +911,16 @@ def yazar_kesfet(ist: Istemci, ad: str) -> tuple[list[dict], str]:
     yt = _youtube_kanali_bul(ist, ad)
     if yt:
         bulunan.append(yt)
+    # 4) başka kanallardaki programlar: istendiyse ya da köşe yazısı bulunamadıysa, adı başlıkta geçen videolar
+    yazili = any(b["tur"] in ("sayfa", "rss", "google_haber") for b in bulunan)
+    if youtube_ara_iste or not yazili:
+        try:
+            deneme = youtube_ara_oku(ist, {"arama": ad}, {}, ad)
+        except Exception as e:
+            deneme = []
+            print(f"   (YouTube araması yapılamadı: {e})")
+        if youtube_ara_iste or len(deneme) >= 2:
+            bulunan.append({"tur": "youtube_ara", "arama": ad, "etiket": "YouTube'da adı geçen", "otomatik": True})
 
     if bulunan:
         aciklama = ", ".join(b["etiket"] for b in bulunan)
@@ -850,7 +950,7 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
     for a in aranacaklar[:8]:  # bir çalışmada en fazla 8 kişi; kalanlar sonraki kontrolde
         ad = bosluk(a["ad"])
         print(f"🔍 {ad} için kaynak aranıyor…")
-        kaynaklar, aciklama = yazar_kesfet(ist, ad)
+        kaynaklar, aciklama = yazar_kesfet(ist, ad, bool(a.get("youtube")))
         if kaynaklar:
             y = next((x for x in uyg["yazarlar"] if x.get("ad") == ad), None)
             if not y:
@@ -871,11 +971,12 @@ def kesif_calistir(ist: Istemci, ayar_yolu: Path) -> list[str]:
 
 
 # Kaynak türü → ürettiği içerik türü (akış temizliğinde kullanılır)
-KAYNAK_ICERIK_TURU = {"sayfa": "yazi", "rss": "yazi", "google_haber": "yazi", "youtube": "video",
+KAYNAK_ICERIK_TURU = {"sayfa": "yazi", "rss": "yazi", "google_haber": "yazi", "youtube": "video", "youtube_ara": "video",
                       "bluesky": "paylasim", "telegram": "paylasim", "podcast": "podcast",
                       "eksi_yazar": "eksi", "eksi_baslik": "eksi", "instagram": "instagram"}
 
 OKUYUCULAR = {
+    "youtube_ara": youtube_ara_oku,
     "google_haber": google_haber_kaynak_oku,
     "bluesky": bluesky_oku,
     "telegram": telegram_oku,
@@ -981,7 +1082,7 @@ UYGULAMA_DOSYASI = "kaynaklar_uygulama.json"
 def kaynak_anahtari(ad: str, k: dict) -> str:
     tur = k.get("tur", "sayfa")
     return kimlik(ad, tur, str(k.get("url") or k.get("kanal") or k.get("kullanici")
-                               or k.get("yazar_dizini") or k.get("rss_url") or k.get("site")))
+                               or k.get("yazar_dizini") or k.get("rss_url") or k.get("site") or k.get("arama")))
 
 
 def ayar_oku(yol: Path) -> dict:
@@ -1097,7 +1198,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         okuyucu = OKUYUCULAR.get(tur)
         kd = durum["kaynaklar"].setdefault(anahtar, {"gorulen": []})
         kd.update({"yazar": y["ad"], "tur": tur, "etiket": k.get("etiket") or _etiket_tahmin(k, tur),
-                   "adres": k.get("url") or k.get("kanal") or k.get("kullanici") or k.get("yazar_dizini")})
+                   "adres": k.get("url") or k.get("kanal") or k.get("kullanici") or k.get("yazar_dizini")
+                   or (f"YouTube araması: {k.get('arama') or y['ad']}" if tur == "youtube_ara" else None)})
         etiket = f"{y['ad']} · {kd['etiket']}"
         if not okuyucu:
             kd.update(son_hata=f"bilinmeyen kaynak türü: {tur}", durum="hata")
@@ -1150,7 +1252,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             if _ayni_baslik_var(durum["ogeler"] + yeni_ogeler, y["ad"], o["baslik"]):
                 gorulen.add(o["url"])
                 continue
-            o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=kd["etiket"], kaynak_id=anahtar,
+            o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=o.pop("_kaynak", None) or kd["etiket"], kaynak_id=anahtar,
                      bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)))
             yeni_ogeler.append(o)
             mevcut_url.add(o["url"])
@@ -1405,6 +1507,8 @@ def adres_denetimi(ist: Istemci, ayar: dict, durum: dict, zorla: bool = False) -
 def _etiket_tahmin(k: dict, tur: str) -> str:
     if tur == "youtube":
         return "YouTube"
+    if tur == "youtube_ara":
+        return "YouTube'da adı geçen"
     if tur.startswith("eksi"):
         return "Ekşi Sözlük"
     if tur == "instagram":
@@ -1940,6 +2044,7 @@ def _yazar_listesi(ayar: dict, durum: dict) -> list[dict]:
                 "anahtar": anahtar, "tur": tur,
                 "etiket": k.get("etiket") or _etiket_tahmin(k, tur),
                 "adres": k.get("url") or k.get("kanal") or k.get("kullanici") or k.get("rss_url")
+                or (f"YouTube araması: {k.get('arama') or y['ad']}" if k.get("tur") == "youtube_ara" else None)
                 or k.get("yazar_dizini") or k.get("site"),
                 "otomatik": bool(k.get("otomatik")),
                 "kok": k.get("_kok", "yaml"),
