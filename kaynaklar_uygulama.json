@@ -35,7 +35,12 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [],
+  "aranacaklar": [
+    {
+      "ad": "sedef kabaş",
+      "zaman": "2026-11-07T06:21:21.690Z"
+    }
+  ],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
