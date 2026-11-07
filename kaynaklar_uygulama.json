@@ -11,6 +11,25 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "emre özcan",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ulketv.com/emre-ozcan",
+          "etiket": "Ülke TV",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCvNHJbVCR1VZSKyur5FiWJA",
+          "kanal_id": "UCvNHJbVCR1VZSKyur5FiWJA",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -52,8 +71,13 @@
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
-      "zaman": "2026-11-07T06:11:01+00:00",
+      "zaman": "2026-11-07T06:12:25+00:00",
       "aciklama": "YouTube"
+    },
+    "emre özcan": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:12:47+00:00",
+      "aciklama": "Ülke TV, YouTube"
     }
   }
 }
