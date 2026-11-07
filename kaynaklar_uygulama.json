@@ -34,5 +34,11 @@
     "anlik": false,
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
-  }
+  },
+  "aranacaklar": [
+    {
+      "ad": "mustafa demirtaş",
+      "zaman": "2026-11-07T06:09:48.579Z"
+    }
+  ]
 }
