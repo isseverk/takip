@@ -275,6 +275,10 @@
     {
       "ad": "refet gürkaynak",
       "zaman": "2026-11-07T15:13:02.232Z"
+    },
+    {
+      "ad": "aslı aydıntaşbaş",
+      "zaman": "2026-11-07T15:13:04.952Z"
     }
   ],
   "kesif": {
@@ -342,11 +346,6 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:38:35+00:00",
       "aciklama": "TR724, YouTube"
-    },
-    "aslı aydıntaşbaş": {
-      "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:39:23+00:00",
-      "aciklama": "Adı haberlerde geçiyor (bbc.com, sabah.com.tr, paraanaliz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "enver aysever": {
       "durum": "bulundu",
