@@ -86,25 +86,6 @@
       ]
     },
     {
-      "ad": "amberin zaman",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.tr724.com/yazarlar/amberin-zaman",
-          "etiket": "TR724",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCCly0a8SjzZtX2EZFZIn87w",
-          "kanal_id": "UCCly0a8SjzZtX2EZFZIn87w",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "enver aysever",
       "kaynaklar": [
         {
