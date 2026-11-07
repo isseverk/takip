@@ -11,6 +11,146 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "şirin payzın",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/sirin-payzin",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "nevşin mengü",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gazeteoku.com",
+          "etiket": "Gazete Oku",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCrG27KDq7eW4YoEOYsalU9g",
+          "kanal_id": "UCrG27KDq7eW4YoEOYsalU9g",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "yılmaz özdil",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "haberhurriyeti.com",
+          "etiket": "Haber Hürriyeti",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCQmDWRUf_X8BSrrDOSZA-NA",
+          "kanal_id": "UCQmDWRUf_X8BSrrDOSZA-NA",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "deniz zeyrek",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gazeteoku.com",
+          "etiket": "Gazete Oku",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCR8vMahbDD-23OjGXDQPu2Q",
+          "kanal_id": "UCR8vMahbDD-23OjGXDQPu2Q",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "ayşenur arslan",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gunebakis.com.tr",
+          "etiket": "Günebakış Gazetesi Trabzon",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCa4--q3dtMoAKEuRgNOX-mQ",
+          "kanal_id": "UCa4--q3dtMoAKEuRgNOX-mQ",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "ismail arı",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.evrensel.net/haber/6008284/gazeteci-ismail-ari-cezaevinden-sorularimizi-yanitladi-bu-vurgun-oncekiler-gibi-degil",
+          "etiket": "Evrensel.net",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCKqgTjvkw9IV77jvmtzHwVQ",
+          "kanal_id": "UCKqgTjvkw9IV77jvmtzHwVQ",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "bahadır özgür",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://ilketv.com.tr/yazarlar/bahadir-ozgur",
+          "etiket": "İlke TV",
+          "dogrula": true,
+          "otomatik": true
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.diken.com.tr/yazarlar/bahadir-ozgur",
+          "etiket": "Diken",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
+    },
+    {
+      "ad": "şaban sevinç",
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "odatv.com",
+          "etiket": "Odatv",
+          "otomatik": true
+        },
+        {
+          "tur": "youtube",
+          "kanal": "https://www.youtube.com/channel/UCVNDmBXj6C1KiY-u9rGRQ_A",
+          "kanal_id": "UCVNDmBXj6C1KiY-u9rGRQ_A",
+          "etiket": "YouTube",
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -49,38 +189,6 @@
     "sessiz_bit": "07:30"
   },
   "aranacaklar": [
-    {
-      "ad": "şirin payzın",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "nevşin mengü",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "yılmaz özdil",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "deniz zeyrek",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "ayşenur arslan",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "ismail arı",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "bahadır özgür",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
-    {
-      "ad": "şaban sevinç",
-      "zaman": "2026-11-07T06:24:42.545Z"
-    },
     {
       "ad": "refet gürkaynak",
       "zaman": "2026-11-07T06:24:42.545Z"
@@ -137,6 +245,46 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:22:53+00:00",
       "aciklama": "YouTube"
+    },
+    "şirin payzın": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:25:23+00:00",
+      "aciklama": "T24"
+    },
+    "nevşin mengü": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:25:39+00:00",
+      "aciklama": "Gazete Oku, YouTube"
+    },
+    "yılmaz özdil": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:25:55+00:00",
+      "aciklama": "Haber Hürriyeti, YouTube"
+    },
+    "deniz zeyrek": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:26:41+00:00",
+      "aciklama": "Gazete Oku, YouTube"
+    },
+    "ayşenur arslan": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:26:42+00:00",
+      "aciklama": "Günebakış Gazetesi Trabzon, YouTube"
+    },
+    "ismail arı": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:27:08+00:00",
+      "aciklama": "Evrensel.net, YouTube"
+    },
+    "bahadır özgür": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:27:32+00:00",
+      "aciklama": "İlke TV, Diken"
+    },
+    "şaban sevinç": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:27:58+00:00",
+      "aciklama": "Odatv, YouTube"
     }
   }
 }
