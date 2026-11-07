@@ -98,13 +98,6 @@
           "site": "medyascope.tv",
           "etiket": "Medyascope",
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCd1zyr90qdI6WqGbI40Ef4g",
-          "kanal_id": "UCd1zyr90qdI6WqGbI40Ef4g",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
