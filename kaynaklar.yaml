@@ -53,8 +53,6 @@ yazarlar:
         etiket: fatihaltayli.com.tr
         url: https://fatihaltayli.com.tr/yazilar/fatih-altayli/kose-yazilari
         link_deseni: '/yazarlar/fatih-altayli/\d{4}-\d{2}-\d{2}/'
-      - tur: youtube
-        kanal: https://www.youtube.com/fatihaltayli
 
   - ad: Murat Yetkin
     kaynaklar:
@@ -148,9 +146,6 @@ yazarlar:
         etiket: Evrensel
         url: https://www.evrensel.net/yazar/137/fehim-tastekin
         link_deseni: 'evrensel\.net/yazi/\d+/'
-      - tur: youtube
-        kanal: https://www.youtube.com/@fehim.tastekin
-        kanal_id: UCOWQEzp21AMWY1J-6Gf33CQ
 
   - ad: Zafer Arapkirli
     kaynaklar:
