@@ -721,8 +721,11 @@ def google_haber_kaynak_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> l
 
 
 def _yazar_yolu_deseni(ad: str) -> str:
-    """Adresin son bölümü dışındaki bir bölümde kişinin adı geçsin (yazar klasörü)."""
-    return r"https?://[^/]+/(?:[^?#]*/)?[^/?#]*" + re.escape(_slug(ad)) + r"[^/?#]*/[^?#]+"
+    """Kişinin kendi yazısı mı? Adreste yazar klasörü olsun (…/yazar/deniz-zeyrek/…) ya da adres
+    "<ad>-yazdi" / "<ad>-yorumladi" biçiminde olsun (ör. medyascope.tv/…/rusen-cakir-yorumladi-…)."""
+    s = re.escape(_slug(ad))
+    return (r"https?://[^/]+/(?:(?:[^?#]*/)?[^/?#]*" + s + r"[^/?#]*/[^?#]+"
+            r"|[^?#]*(?:^|/|-)" + s + r"-(?:yazdi|yorumladi)(?:-|/|$)[^?#]*)")
 
 
 # ───────────────────────── isimden kaynak bulma ─────────────────────────
@@ -1047,13 +1050,14 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
     if not any(b["tur"] in ("sayfa", "rss") for b in bulunan):
         bulunan.extend(engelli[:1])
     # 3) YouTube kanalı
-    yt = _youtube_kanali_bul(ist, ad)
+    # (köşe yazarı ya da kendi blogu olan kişilerin YouTube kanalı eklenmez; yalnızca yazıları takip edilir)
+    yazili = any(b["tur"] in ("sayfa", "rss", "google_haber") for b in bulunan)
+    yt = None if yazili else _youtube_kanali_bul(ist, ad)
     if yt and yt.get("_elendi"):
         elenen.append(yt["_elendi"])
     elif yt:
         bulunan.append(yt)
-    # 4) başka kanallardaki programlar: istendiyse ya da köşe yazısı bulunamadıysa, adı başlıkta geçen videolar
-    yazili = any(b["tur"] in ("sayfa", "rss", "google_haber") for b in bulunan)
+    # 4) başka kanallardaki programlar: açıkça istendiyse ya da köşe yazısı bulunamadıysa, adı başlıkta geçen videolar
     if youtube_ara_iste or not yazili:
         try:
             deneme = youtube_ara_oku(ist, {"arama": ad}, {}, ad)
@@ -1314,6 +1318,42 @@ def kaynaklari_listele(ayar: dict):
             yield y, k, k.get("tur", "sayfa"), kaynak_anahtari(y["ad"], k)
 
 
+def kose_yazarlarinin_youtubeunu_cikar(ayar_yolu: Path, durum: dict) -> list[str]:
+    """Köşe yazısı ya da blogu düzgün takip edilen kişilerden, otomatik bulunmuş YouTube kanallarını çıkarır.
+    Köşe kaynağı henüz denenmemişse ya da yanlış eşleşme çıkmışsa (ör. haber derleyen site) dokunmaz."""
+    yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
+    try:
+        uyg = json.loads(yol.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    def saglikli(ad: str, k: dict) -> bool:
+        # köşe kaynağından gerçekten kişinin kendi yazıları geliyor mu?
+        kd = durum["kaynaklar"].get(kaynak_anahtari(ad, k)) or {}
+        c = kd.get("yedek_cozum")
+        if c is not None:                      # Google Haberler üzerinden: en az bir yazısı doğrulanmış olmalı
+            return c.get("yazara_ait", 0) > 0
+        return kd.get("durum") == "tamam"
+
+    cikarilan = []
+    kapali = set(_liste(uyg.get("kapali")))
+    for y in _liste(uyg.get("yazarlar")):
+        kaynaklar = _liste(y.get("kaynaklar"))
+        kose = [k for k in kaynaklar if k.get("tur") in ("sayfa", "rss", "google_haber")
+                and kaynak_anahtari(y["ad"], k) not in kapali and saglikli(y["ad"], k)]
+        if not kose:
+            continue
+        kalan = [k for k in kaynaklar if not (k.get("tur") == "youtube" and k.get("otomatik"))]
+        if len(kalan) < len(kaynaklar):
+            y["kaynaklar"] = kalan
+            cikarilan.append(y["ad"])
+    if cikarilan:
+        yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"– köşe yazısı takip edilen {len(cikarilan)} kişiden otomatik eklenmiş YouTube kanalı çıkarıldı: "
+              + ", ".join(cikarilan))
+    return cikarilan
+
+
 def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool = False) -> int:
     ayar = ayar_oku(ayar_yolu)
     a = ayar["ayarlar"]
@@ -1327,6 +1367,10 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     cikti_dir = KOK / a.get("cikti_klasoru", "docs")
     durum_yolu = veri_dir / "durum.json"
     durum = durum_oku(durum_yolu)
+    if not sadece_kontrol and kose_yazarlarinin_youtubeunu_cikar(ayar_yolu, durum):
+        ayar = ayar_oku(ayar_yolu)  # çıkarılan kanallar olmadan yeniden oku
+        a = ayar["ayarlar"]
+        a["_push"] = push_durumu(ayar)
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
     ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 40))
     baslangic = simdi()

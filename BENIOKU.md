@@ -53,7 +53,7 @@ Bu yol yalnızca bilgisayarda bakmak içindir; telefondaki uygulama GitHub'daki 
 
 ## Yazar / kaynak eklemek ve çıkarmak
 
-**Sadece adıyla (en kolayı):** Uygulamada **Kaynaklar → + Ekle → İsimle bul**'a bas, kişinin adını yaz. Program haber sitelerindeki köşe sayfasını, kişisel blogunu ve YouTube kanalını kendisi arar, birkaç dakika içinde bulduklarını ekler. Birden fazla kişiyi aynı anda eklemek için her ismi ayrı satıra yaz (virgülle ayırmak da olur). Bir çalışmada en çok 8 kişi aranır, fazlası sonraki yarım saate kalır.
+**Sadece adıyla (en kolayı):** Uygulamada **Kaynaklar → + Ekle → İsimle bul**'a bas, kişinin adını yaz. Program haber sitelerindeki köşe sayfasını ve kişisel blogunu kendisi arar, birkaç dakika içinde bulduklarını ekler. Köşesi ya da blogu olan kişilerin YouTube kanalı eklenmez; yalnızca köşesi ya da blogu bulunamayanlar için YouTube kanalı aranır. Program, kişinin o sitede gerçekten kendi yazılarının çıktığını ve sayfanın son 4 ayda güncellendiğini doğrulamadan öneri yapmaz; önermediklerini gerekçesiyle yazar. Birden fazla kişiyi aynı anda eklemek için her ismi ayrı satıra yaz (virgülle ayırmak da olur). Bir çalışmada en çok 8 kişi aranır, fazlası sonraki yarım saate kalır.
 
 **Adresi biliyorsan:** **+ Ekle → Adresi biliyorum**'a bas ve adresi yapıştır. Türü uygulama kendisi tanır:
 
