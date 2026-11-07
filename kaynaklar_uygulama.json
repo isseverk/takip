@@ -1,18 +1,6 @@
 {
   "yazarlar": [
     {
-      "ad": "şirin payzın",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://t24.com.tr/yazarlar/sirin-payzin",
-          "etiket": "T24",
-          "dogrula": true,
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "nevşin mengü",
       "kaynaklar": [
         {
