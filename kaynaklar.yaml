@@ -40,6 +40,9 @@ ayarlar:
 #   eksi_baslik : url: başlık adresi       → başlığa yazılan yeni entry'ler
 #   instagram   : kullanici: hesap adı. Instagram çoğu zaman engeller; kalıcı çözüm
 #                 için rss_url: (RSS.app vb. servisin verdiği adres) ekle.
+#   bluesky     : kullanici: hesap.bsky.social → kendi paylaşımları (yanıtlar atlanır)
+#   telegram    : kullanici: kanaladi          → herkese açık kanalın mesajları
+#   podcast     : url: Apple Podcasts / Spotify show adresi ya da podcastin RSS'i
 # ─────────────────────────────────────────────────────────────
 
 yazarlar:
@@ -88,7 +91,11 @@ yazarlar:
       - tur: sayfa
         etiket: Oksijen
         url: https://gazeteoksijen.com/yazarlar/ugur-gurses
+        link_deseni: 'gazeteoksijen\.com/yazarlar/ugur-gurses/.+-\d+$'
         dogrula: true
+        # Oksijen bulut sunucularını engelliyor; Google Haberler yedeğinde adı her sayfada geçtiği için
+        # adresi çözülemeyen sonuçları alma (yalnızca köşe yazısı olduğu kesin olanlar gelsin)
+        yedek_dogrula: true
 
   - ad: Soner Yalçın
     kaynaklar:

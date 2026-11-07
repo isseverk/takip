@@ -167,6 +167,15 @@ class Istemci:
     def gonder(self, url: str, veri: bytes, basliklar: dict):
         return http_std.post(url, data=veri, headers=basliklar, timeout=15)
 
+    def postala(self, url: str, veri: str, basliklar: dict) -> str:
+        """Tarayıcı oturumuyla (aynı çerezlerle) POST isteği; yanıt metnini döndürür."""
+        self._nazik_ol(url)
+        oturum = self.oturum_cffi if self.oturum_cffi is not None else self.oturum_std
+        r = oturum.post(url, data=veri, headers=basliklar, timeout=self.zaman_asimi)
+        if r.status_code != 200:
+            raise KaynakHatasi(f"{url} yanıt vermedi (HTTP {r.status_code})")
+        return r.text
+
 
 # ───────────────────────── okuyucular ─────────────────────────
 # Her okuyucu şu sözlüklerin listesini döndürür:
@@ -188,6 +197,7 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
             raise
         ogeler = google_haber_oku(ist, k.get("bul") or yazar, _alan_adi(url))
         durum["yedek"] = "google_haber"
+        ogeler = yedek_sonuclarini_suz(ist, ogeler, k, url, durum)
         return ogeler[: int(k.get("en_fazla", 25))]
     corba = BeautifulSoup(html_metin, "html.parser")
 
@@ -234,6 +244,146 @@ def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
         tarih = datetime(*e["published_parsed"][:6], tzinfo=timezone.utc) if e.get("published_parsed") else None
         sonuc.append({"url": e["link"], "baslik": kisalt(baslik, 200), "tarih": iso(tarih), "tur": "yazi",
                       "_yedek": True})
+    sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
+    return sonuc
+
+
+# Google Haberler bağlantıları (news.google.com/rss/articles/…) asıl adresi gizler. Bazı sitelerde
+# yazarın adı her sayfanın kenarında geçtiği için "<ad>" araması sitenin bütün haberlerini getirir
+# (ör. Oksijen). Bu yüzden her bağlantının asıl adresini çözüp yalnızca yazarın kendi yazılarını alırız.
+GN_COZUM_SINIRI = 40          # bir kaynak için bir çalışmada en çok kaç bağlantı çözülsün
+_GN_DURDUR = {"evet": False}  # Google sınır koyarsa o çalışmada çözmeyi bırak
+
+
+def _gn_kimlik(u: str) -> str | None:
+    m = re.search(r"news\.google\.com/(?:rss/)?(?:articles|read)/([A-Za-z0-9_-]+)", u or "")
+    return m.group(1) if m else None
+
+
+def google_haber_adresi_coz(ist: Istemci, gn_url: str, onbellek: dict) -> str | None:
+    """news.google.com bağlantısının gittiği asıl adresi bulur; bulamazsa None."""
+    m = re.search(r"news\.google\.com/(?:rss/)?(?:articles|read)/([A-Za-z0-9_-]+)", gn_url)
+    if not m:
+        return gn_url
+    kimlik_ = m.group(1)
+    if onbellek.get(kimlik_):
+        return onbellek[kimlik_]
+    if _GN_DURDUR["evet"]:
+        return None
+    try:
+        imza = zaman = None
+        for adres in (f"https://news.google.com/articles/{kimlik_}?hl=tr&gl=TR&ceid=TR:tr",
+                      f"https://news.google.com/rss/articles/{kimlik_}?hl=tr&gl=TR&ceid=TR:tr"):
+            try:
+                c = BeautifulSoup(ist.al(adres, deneme=0), "html.parser")
+            except KaynakHatasi as e:
+                if "HTTP 429" in str(e):
+                    _GN_DURDUR["evet"] = True
+                    return None
+                continue
+            d = c.select_one("c-wiz > div[jscontroller]") or c.select_one("[data-n-a-sg]")
+            if d is not None and d.get("data-n-a-sg") and d.get("data-n-a-ts"):
+                imza, zaman = d["data-n-a-sg"], d["data-n-a-ts"]
+                break
+        if not imza:
+            return None
+        istek = ["Fbv4je", '["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],'
+                           f'"X","X",1,[1,1,1],1,1,null,0,0,null,0],"{kimlik_}",{zaman},"{imza}"]']
+        yanit = ist.postala("https://news.google.com/_/DotsSplashUi/data/batchexecute",
+                            "f.req=" + quote(json.dumps([[istek]])),
+                            {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"})
+        gercek = _batchexecute_adresi(yanit)
+        if isinstance(gercek, str) and gercek.startswith("http"):
+            onbellek[kimlik_] = gercek
+            return gercek
+    except KaynakHatasi as e:
+        if "HTTP 429" in str(e):
+            _GN_DURDUR["evet"] = True
+    except Exception:
+        pass
+    return None
+
+
+def _yedek_notu(kd: dict) -> str:
+    n = "Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
+    c = kd.get("yedek_cozum") or {}
+    if c.get("cozulen"):
+        diger = c["cozulen"] - c["yazara_ait"]
+        n += f". Son taramada {c['yazara_ait']} yazı yazara ait" + (f", {diger} başka haber elendi" if diger else "")
+    if c.get("atlanan"):
+        n += f"; adresi çözülemeyen {c['atlanan']} sonuç güvenli olmadığı için alınmadı"
+    return n
+
+
+def _batchexecute_adresi(yanit: str) -> str | None:
+    """Google'ın batchexecute yanıtından garturlres içindeki adresi çıkarır."""
+    govde = yanit.split("\n\n", 1)[1] if "\n\n" in yanit else yanit
+    i = govde.find("[")
+    while i != -1:
+        try:
+            veri, _ = json.JSONDecoder().raw_decode(govde[i:])
+        except ValueError:
+            i = govde.find("[", i + 1)
+            continue
+        for satir in veri if isinstance(veri, list) else []:
+            if isinstance(satir, list) and len(satir) > 2 and satir[0] == "wrb.fr" and isinstance(satir[2], str):
+                ic = json.loads(satir[2])
+                if isinstance(ic, list) and len(ic) > 1 and ic[0] == "garturlres":
+                    return ic[1]
+        i = govde.find("[", i + len(json.dumps(veri)))
+    m = re.search(r'garturlres\\",\\"(https?://[^"\\]+)', yanit)
+    return m.group(1) if m else None
+
+
+def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: str, kd: dict) -> list[dict]:
+    """Google Haberler yedeğinden gelenleri asıl adreslerine göre süzer: yalnızca yazarın kendi yazıları."""
+    desen = re.compile(k["link_deseni"]) if k.get("link_deseni") else None
+    on_ek = urlparse(sayfa_url).path.rstrip("/") + "/"
+
+    def yazara_ait(u: str) -> bool:
+        return bool(desen.search(u)) if desen else (urlparse(u).path.startswith(on_ek) and len(urlparse(u).path) > len(on_ek) + 3)
+
+    onbellek = kd.setdefault("gn_cozum", {})
+    red = list(kd.get("yedek_red") or [])
+    sonuc, cozulemeyen = [], []
+    cozulen = reddedilen = 0
+    butce = GN_COZUM_SINIRI
+    for o in ogeler:
+        m = re.search(r"/articles/([A-Za-z0-9_-]+)", o["url"])
+        onceden = bool(m and onbellek.get(m.group(1)))
+        gercek = None
+        if onceden or butce > 0:
+            gercek = google_haber_adresi_coz(ist, o["url"], onbellek)
+            if not onceden:
+                butce -= 1
+        if gercek:
+            cozulen += 1
+            if yazara_ait(gercek):
+                o["gn_url"], o["url"] = o["url"], url_temizle(gercek)
+                sonuc.append(o)
+            else:
+                reddedilen += 1
+                gk = _gn_kimlik(o["url"])
+                if gk and gk not in red:
+                    red.append(gk)
+        else:
+            cozulemeyen.append(o)
+    # Çözülebilenlerin çoğu yazara ait değilse bu site "ad her sayfada" türündendir:
+    # çözülemeyenleri de güvenilmez sayıp almayız (yaml'da yedek_dogrula: true ile de zorlanabilir).
+    if cozulen >= 3:
+        kd["ad_her_sayfada"] = reddedilen > cozulen / 2
+    if "yedek_cozum" not in kd:   # süzme bu kaynakta ilk kez çalışıyor: birkaç günlük olanlar bildirim yaratmasın
+        esik = iso(simdi() - timedelta(days=2))
+        for o in sonuc:
+            if (o.get("tarih") or "") < esik:
+                o["_eski"] = True
+    guvenme = k.get("yedek_dogrula") or kd.get("ad_her_sayfada")
+    if cozulemeyen and not guvenme:
+        sonuc += cozulemeyen
+    kd["yedek_red"] = red[-400:]
+    kd["gn_cozum"] = dict(list(onbellek.items())[-600:])
+    kd["yedek_cozum"] = {"cozulen": cozulen, "yazara_ait": cozulen - reddedilen, "cozulemeyen": len(cozulemeyen),
+                         "atlanan": len(cozulemeyen) if guvenme else 0}
     sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
     return sonuc
 
@@ -963,8 +1113,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
 
         kd.update(son_deneme=iso(simdi()), son_basari=iso(simdi()), hata_sayisi=0, son_hata=None,
                   son_bulunan=len(ogeler), durum="uyari" if not ogeler else "tamam",
-                  not_=("Site doğrudan okunmaya izin vermiyor; Google Haberler üzerinden takip ediliyor"
-                        if kd.get("yedek") else None))
+                  not_=_yedek_notu(kd) if kd.get("yedek") else None)
         if sadece_kontrol:
             print(f"✓ {etiket}: {len(ogeler)} öğe" + (" (tahmini desen)" if kd.get("tahmini") else ""))
             for o in ogeler[:3]:
@@ -973,13 +1122,15 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
 
         ilk_kez = not kd["gorulen"]
         gorulen = set(kd["gorulen"])
-        if ogeler and len(ogeler) == len([o for o in ogeler if o["url"] not in gorulen]) and not ilk_kez \
+        if ogeler and len(ogeler) == len([o for o in ogeler if o["url"] not in gorulen and o.get("gn_url") not in gorulen]) \
+                and not ilk_kez \
                 and len(ogeler) > 8:
             # Sitenin adres yapısı değişmiş olabilir: hepsini yeni sayıp akışı doldurmayalım
             print(f"! {etiket}: sayfadaki her şey yeni görünüyor, adres yapısı değişmiş olabilir; "
                   f"ilk {ilk_gosterim} tanesi gösterilecek")
             ilk_kez = True
-        taze = [o for o in ogeler if o["url"] not in gorulen and o["url"] not in mevcut_url]
+        # yedekten gelen yazının asıl adresi çözülmüşse eski Google bağlantısıyla da karşılaştır (tekrar "yeni" sayılmasın)
+        taze = [o for o in ogeler if not ({o["url"], o.get("gn_url") or o["url"]} & (gorulen | mevcut_url))]
         if ilk_kez:
             taze = taze[:ilk_gosterim]
         dogrula = k.get("dogrula", bool(k.get("yazar_dizini")) or kd.get("tahmini", False))
@@ -998,7 +1149,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 gorulen.add(o["url"])
                 continue
             o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=kd["etiket"], kaynak_id=anahtar,
-                     bulunma=iso(simdi()), ilk=ilk_kez)
+                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)))
             yeni_ogeler.append(o)
             mevcut_url.add(o["url"])
             eklenen += 1
@@ -1047,17 +1198,21 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     aktif_turler = {(y["ad"], k.get("icerik_turu") or KAYNAK_ICERIK_TURU.get(tur, "yazi"))
                     for y, k, tur, _ in kaynaklari_listele(ayar)}
     haberli_konular = {k["ad"] for k in konular if k["haberler"]}
+    red_kumeleri = {a: set(kd.get("yedek_red") or []) for a, kd in durum["kaynaklar"].items() if kd.get("yedek_red")}
+    red_tumu = set().union(*red_kumeleri.values()) if red_kumeleri else set()
 
     def akista_kalsin(o: dict) -> bool:
         if o.get("konu_haberi"):
             return o["konu_haberi"] in haberli_konular
         kid = o.get("kaynak_id")
+        if red_tumu and _gn_kimlik(o["url"]) in red_kumeleri.get(kid, red_tumu):
+            return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
         return not kid or kid in aktif_anahtarlar or (o["yazar"], o.get("tur", "yazi")) in aktif_turler
 
     once = len(durum["ogeler"])
     durum["ogeler"] = [o for o in durum["ogeler"] if akista_kalsin(o)]
     if len(durum["ogeler"]) < once:
-        print(f"– kaldırılan kaynaklara ait {once - len(durum['ogeler'])} içerik akıştan çıkarıldı")
+        print(f"– kaldırılan kaynaklara ya da yanlış eşleşmelere ait {once - len(durum['ogeler'])} içerik akıştan çıkarıldı")
 
     # yazarlar hâlâ aynı yerde mi yazıyor?
     denetim_mesajlari = adres_denetimi(ist, ayar, durum, zorla=zorla_denetim)
