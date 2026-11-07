@@ -283,6 +283,10 @@
     {
       "ad": "selva demiralp",
       "zaman": "2026-11-07T15:13:07.081Z"
+    },
+    {
+      "ad": "tolga şardan",
+      "zaman": "2026-11-07T15:13:09.118Z"
     }
   ],
   "kesif": {
@@ -390,11 +394,6 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:52:22+00:00",
       "aciklama": "T24, YouTube"
-    },
-    "tolga şardan": {
-      "durum": "bulunamadi",
-      "zaman": "2026-11-07T06:52:44+00:00",
-      "aciklama": "Adı haberlerde geçiyor (t24.com.tr, evrensel.net, birgun.net) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
     "gökçer tahincioğlu": {
       "durum": "bulunamadi",
