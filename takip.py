@@ -884,6 +884,28 @@ def _tek_yazi_adresi(u: str) -> bool:
                 and not re.search(r"/(yazar|yazarlar|author)/", yol)) or son.count("-") >= 4
 
 
+def _haberden_yazar_sayfasi(ist: Istemci, linkler: list[str], slug: str, alan: str) -> str | None:
+    onbellek: dict = {}
+    for gn in linkler[:3]:
+        gercek = google_haber_adresi_coz(ist, gn, onbellek)
+        if not gercek or _alan_adi(gercek) != alan:
+            continue
+        p = urlparse(gercek)
+        parcalar = [x for x in p.path.split("/") if x]
+        for i, parca in enumerate(parcalar[:-1]):          # son parça yazının kendisi, ona bakma
+            if slug in parca.lower():
+                return f"{p.scheme}://{p.netloc}/" + "/".join(parcalar[: i + 1])
+        try:
+            corba = BeautifulSoup(ist.al(gercek, deneme=0), "html.parser")
+        except Exception:
+            continue
+        for a in corba.find_all("a", href=True):
+            h = urljoin(gercek, a["href"]).split("#")[0].split("?")[0].rstrip("/")
+            if _alan_adi(h) == alan and slug in urlparse(h).path.lower() and not _tek_yazi_adresi(h):
+                return h
+    return None
+
+
 def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple[list[dict], str]:
     """Kişinin yazdığı yerleri bulur. (kaynaklar, açıklama) döner."""
     sorgu = quote(f'"{ad}" when:60d')
@@ -898,8 +920,10 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
             if not alan or any(alan == g or alan.endswith("." + g) for g in GENEL_SITELER):
                 continue
             s = alanlar.setdefault(alan, {"alan": alan, "kok": href.rstrip("/"), "ad": kaynak.get("title") or alan,
-                                         "say": 0})
+                                         "say": 0, "linkler": []})
             s["say"] += 1
+            if e.get("link") and len(s["linkler"]) < 4:
+                s["linkler"].append(e["link"])
     except Exception as e:
         print(f"   (Google Haberler araması yapılamadı: {e})")
 
@@ -941,6 +965,13 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
                 if aday and not _tek_yazi_adresi(aday) and _yazar_sayfasi_mi(ist, aday, ad)[0]:
                     bulundu = aday
                     break
+        # tahmin tutmadıysa: o sitedeki yazılarından birinin adresinden ya da içindeki bağlantıdan yazar sayfasını çıkar
+        # (ör. t24.com.tr/yazarlar/tolga-sardan-buyutec/… → t24.com.tr/yazarlar/tolga-sardan-buyutec;
+        #      dunya.com'daki yazının içindeki /yazar/prof-dr-selva-demiralp/1508 bağlantısı)
+        if not bulundu and not any(k in ("403", "429", "503") for k in kodlar):
+            aday = _haberden_yazar_sayfasi(ist, s.get("linkler") or [], slug, s["alan"])
+            if aday and _yazar_sayfasi_mi(ist, aday, ad)[0]:
+                bulundu = aday
         if bulundu:
             bulunan.append({"tur": "sayfa", "url": bulundu, "etiket": s["ad"], "dogrula": True, "otomatik": True})
         elif any(k in ("403", "429", "503") for k in kodlar) and s["say"] >= 3:
