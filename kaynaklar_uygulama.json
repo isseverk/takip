@@ -8,13 +8,6 @@
           "site": "gazeteoku.com",
           "etiket": "Gazete Oku",
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCR8vMahbDD-23OjGXDQPu2Q",
-          "kanal_id": "UCR8vMahbDD-23OjGXDQPu2Q",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
@@ -124,13 +117,6 @@
           "etiket": "birgun.net",
           "dogrula": true,
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCj9avQWHaoEQ-hyVAvQw9Pg",
-          "kanal_id": "UCj9avQWHaoEQ-hyVAvQw9Pg",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
@@ -180,13 +166,6 @@
           "etiket": "T24",
           "dogrula": true,
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCfLi20wH6C3t1Tw5_tn-2sQ",
-          "kanal_id": "UCfLi20wH6C3t1Tw5_tn-2sQ",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
@@ -198,13 +177,6 @@
           "url": "https://t24.com.tr/yazarlar/tolga-sirin",
           "etiket": "T24",
           "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCe-6U1uccGKLpZ2eJScryFw",
-          "kanal_id": "UCe-6U1uccGKLpZ2eJScryFw",
-          "etiket": "YouTube",
           "otomatik": true
         }
       ]
@@ -218,13 +190,6 @@
           "etiket": "T24",
           "dogrula": true,
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCQ7dVG8U36Ieby_pvea2ueg",
-          "kanal_id": "UCQ7dVG8U36Ieby_pvea2ueg",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
@@ -236,13 +201,6 @@
           "url": "https://t24.com.tr/yazarlar/erdogan-saglam",
           "etiket": "T24",
           "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCRKWwkFNUbY7sQbicRzW-RQ",
-          "kanal_id": "UCRKWwkFNUbY7sQbicRzW-RQ",
-          "etiket": "YouTube",
           "otomatik": true
         }
       ]
@@ -268,13 +226,6 @@
           "etiket": "T24",
           "dogrula": true,
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UC1QNBHelIFLF6oUjGt5tDyg",
-          "kanal_id": "UC1QNBHelIFLF6oUjGt5tDyg",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
@@ -286,13 +237,6 @@
           "url": "https://t24.com.tr/yazarlar/hakan-aksay",
           "etiket": "T24",
           "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCrEpaYIuD2rjG9RYGPPaQLw",
-          "kanal_id": "UCrEpaYIuD2rjG9RYGPPaQLw",
-          "etiket": "YouTube",
           "otomatik": true
         }
       ]
