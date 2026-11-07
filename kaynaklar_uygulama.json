@@ -261,38 +261,7 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [
-    {
-      "ad": "Mustafa demirtaş",
-      "zaman": "2026-11-07T15:12:51.886Z",
-      "youtube": true
-    },
-    {
-      "ad": "Emre özcan",
-      "zaman": "2026-11-07T15:12:51.887Z",
-      "youtube": true
-    },
-    {
-      "ad": "refet gürkaynak",
-      "zaman": "2026-11-07T15:13:02.232Z"
-    },
-    {
-      "ad": "aslı aydıntaşbaş",
-      "zaman": "2026-11-07T15:13:04.952Z"
-    },
-    {
-      "ad": "selva demiralp",
-      "zaman": "2026-11-07T15:13:07.081Z"
-    },
-    {
-      "ad": "tolga şardan",
-      "zaman": "2026-11-07T15:13:09.118Z"
-    },
-    {
-      "ad": "gökçer tahincioğlu",
-      "zaman": "2026-11-07T15:13:12.562Z"
-    }
-  ],
+  "aranacaklar": [],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
@@ -443,6 +412,295 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T08:01:00+00:00",
       "aciklama": "YouTube"
+    },
+    "Mustafa demirtaş": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-07T15:14:49+00:00",
+      "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
+    },
+    "Emre özcan": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-07T15:15:25+00:00",
+      "aciklama": "Ülke TV, YouTube'da adı geçen"
+    },
+    "refet gürkaynak": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-07T15:15:49+00:00",
+      "aciklama": "Sigorta Dünyası"
+    },
+    "aslı aydıntaşbaş": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T15:16:35+00:00",
+      "aciklama": "Adı haberlerde geçiyor (bbc.com, sabah.com.tr, evrensel.net) ama köşe sayfası bulunamadı; adresi elle ekle"
+    },
+    "selva demiralp": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T15:17:09+00:00",
+      "aciklama": "Adı haberlerde geçiyor (dunya.com, cnbce.com, haber.doviz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
+    },
+    "tolga şardan": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-07T15:17:39+00:00",
+      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
+    },
+    "gökçer tahincioğlu": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-07T15:17:58+00:00",
+      "aciklama": "T24, Aposto"
+    }
+  },
+  "oneriler": {
+    "Mustafa demirtaş": {
+      "zaman": "2026-11-07T15:14:49+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.sondakika.com/mustafa-demirtas",
+          "etiket": "Son Dakika",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "sondakika.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Hisarcık Kaymakamı Atam, Halk Eğitimi Merkezi kurslarını ziyaret ederek kursiyerlerin çalışmalarını inceledi. Ziyarete…",
+                "url": "https://www.sondakika.com/egitim/haber-hisarcik-kaymakami-atam-halk-egitimi-kurslarinda-20372740/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Kütahya Dumlupınar Üniversitesi Hisarcık MYO, çevre bilinci oluşturmak için Millet Bahçesi'nde temizlik etkinliği…",
+                "url": "https://www.sondakika.com/cevre/haber-hisarcik-myo-ogrencileri-millet-bahcesi-nde-cevre-20369125/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Kütahya Hisarcık'ta Kaymakam Erkan Atam ve Belediye Başkanı Mustafa Demirtaş, 19 Ekim Muhtarlar Günü'nde muhtarlarla…",
+                "url": "https://www.sondakika.com/yerel/haber-hisarcik-ta-kaymakam-atam-ve-belediye-baskani-20344960/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          }
+        },
+        {
+          "tur": "youtube_ara",
+          "arama": "Mustafa demirtaş",
+          "etiket": "YouTube'da adı geçen",
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "başlığında adı geçen son bir haftanın videoları (farklı kanallardan); 1 video",
+            "ornekler": [
+              {
+                "baslik": "Totem Avrupa S2 #13 | Batrakov, PSG, Jesus de Miguel | Sinem Ökten & Mustafa Demirtaş",
+                "url": "https://www.youtube.com/watch?v=tOix_-9nDKM",
+                "tarih": "2026-11-04T15:14:49+00:00",
+                "kanal": "Totem "
+              }
+            ],
+            "sayi": 1
+          }
+        }
+      ],
+      "aciklama": "Son Dakika, YouTube'da adı geçen · Önerilmeyenler: kutahyaninsesi.com (adı geçiyor ama orada yazmıyor)"
+    },
+    "Emre özcan": {
+      "zaman": "2026-11-07T15:15:25+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ulketv.com/emre-ozcan",
+          "etiket": "Ülke TV",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "ulketv.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Canlı Yayın",
+                "url": "https://www.ulketv.com/ulke-tv-canli-yayin",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Süper Lig Puan Durumu ve Fikstür",
+                "url": "https://www.ulketv.com/futbol/super-lig-puan-durumu-ve-fikstur",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Kritik tarih geldi! Milyonlarca hesap kapanabilir",
+                "url": "https://www.ulketv.com/milyonlarca-hesap-kapanabilir-kritik-tarih-1-kasim",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          }
+        },
+        {
+          "tur": "youtube_ara",
+          "arama": "Emre özcan",
+          "etiket": "YouTube'da adı geçen",
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "başlığında adı geçen son bir haftanın videoları (farklı kanallardan); 1 video",
+            "ornekler": [
+              {
+                "baslik": "Galatasaray 2-0 Stuttgart | Batrakov Büyülüyor | Fenerbahçe - Liverpool | Ersin Düzen, Emre Özcan",
+                "url": "https://www.youtube.com/watch?v=v2hsxgd-9mk",
+                "tarih": "2026-11-04T15:15:25+00:00",
+                "kanal": "NOW Spor"
+              }
+            ],
+            "sayi": 1
+          }
+        }
+      ],
+      "aciklama": "Ülke TV, YouTube'da adı geçen"
+    },
+    "refet gürkaynak": {
+      "zaman": "2026-11-07T15:15:49+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.sigortadunyasi.com.tr/tag/refet-gurkaynak",
+          "etiket": "Sigorta Dünyası",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "sigortadunyasi.com.tr sitesindeki yazar sayfası; 13 yazı",
+            "ornekler": [
+              {
+                "baslik": "14 Eki 2026 Çarşamba 14 Eki 2026 Çarşamba",
+                "url": "https://www.sigortadunyasi.com.tr/2026/10/14/dr-zeynep-stefan-nobelden-sigortaya/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Çocuklarda kış enfeksiyonu alarmı…",
+                "url": "https://www.sigortadunyasi.com.tr/2026/11/06/cocuklarda-kis-enfeksiyonu-alarmi/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ani kişilik değişikliği beyin tümörü habercisi mi?",
+                "url": "https://www.sigortadunyasi.com.tr/2026/10/27/ani-kisilik-degisikligi-beyin-tumoru-habercisi-mi/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 13
+          }
+        }
+      ],
+      "aciklama": "Sigorta Dünyası"
+    },
+    "tolga şardan": {
+      "zaman": "2026-11-07T15:17:39+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "ornekler": [
+              {
+                "baslik": "İstihbarat birimleri, fon vurgunundan haberdar mıydı?",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/istihbarat-birimleri-fon-vurgunundan-haberdar-miydi,59785",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ölümün nereden geleceği bilinmeyen ülke: Yurttaşının yaşam güvenliğini sağlayamayan devlet, cenazelerde en önde saf…",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/olumun-nereden-gelecegi-bilinmeyen-ulke-yurttasinin-yasam-guvenligini-saglayamayan-devlet-cenazelerde-en-onde-saf-tutuyor,59749",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Türkiye Yüzyılı’nda Cumhuriyet Bayramı ve Sisli Vadi dosyasında ailelere “bizi eleştirdiniz” davası!",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/turkiye-yuzyilinda-cumhuriyet-bayrami-ve-sisli-vadi-dosyasinda-ailelere-bizi-elestirdiniz-davasi,59686",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 10
+          }
+        }
+      ],
+      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
+    },
+    "gökçer tahincioğlu": {
+      "zaman": "2026-11-07T15:17:58+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "ornekler": [
+              {
+                "baslik": "“Hançer timi” gölgesinde “barışmak”",
+                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/hancer-timi-golgesinde-barismak,59809",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "35 insanı ölüme götüren 20 cm’lik kolon, zamanaşımı ve zaman tüneli",
+                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/35-insani-olume-goturen-20-cmlik-kolon-zamanasimi-ve-zaman-tuneli,59774",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Fon skandalının AKP’deki “yansımaları” ve seçim olasılıklarının gölgesinde kalan “süreç”",
+                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/fon-skandalinin-akpdeki-yansimalari-ve-secim-olasiliklarinin-golgesinde-kalan-surec,59672",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 10
+          }
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://aposto.com/a/gokcer-tahincioglu",
+          "etiket": "Aposto",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "aposto.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Kılıçdaroğlu’ndan erken seçim çıkışı: Siyasi rest mi, Erdoğan’a adaylık yolu mu?",
+                "url": "https://aposto.com/s/kilicdaroglu-nun-sozleri-ve-yenileme-secimi-ihtimalleri",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Kuraklık: Türkiye 'medyasız dönem'e mi giriyor? Spektrum · 15 Eki 2026 →",
+                "url": "https://aposto.com/s/kuraklik-turkiye-medyasiz-doneme-mi-giriyor",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Operasyonlar ülkesinde seçime doğru: Yargı hakikatle buluşabilir mi? Spektrum · 29 Eyl 2026 →",
+                "url": "https://aposto.com/s/operasyonlar-ulkesinde-secime-dogru-yargi-hakikatle-bulusabilir",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          }
+        }
+      ],
+      "aciklama": "T24, Aposto"
     }
   }
 }
