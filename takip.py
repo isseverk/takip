@@ -1202,6 +1202,10 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     haberli_konular = {k["ad"] for k in konular if k["haberler"]}
     red_kumeleri = {a: set(kd.get("yedek_red") or []) for a, kd in durum["kaynaklar"].items() if kd.get("yedek_red")}
     red_tumu = set().union(*red_kumeleri.values()) if red_kumeleri else set()
+    # adı her sayfada geçen sitelerde (ör. Oksijen) asıl adresi doğrulanmamış Google bağlantıları güvenilmez
+    guvensiz = {a for y, k, tur, _ in kaynaklari_listele(ayar)
+                for a in [kaynak_anahtari(y["ad"], k)]
+                if k.get("yedek_dogrula") or (durum["kaynaklar"].get(a) or {}).get("ad_her_sayfada")}
 
     def akista_kalsin(o: dict) -> bool:
         if o.get("konu_haberi"):
@@ -1209,6 +1213,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         kid = o.get("kaynak_id")
         if red_tumu and _gn_kimlik(o["url"]) in red_kumeleri.get(kid, red_tumu):
             return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
+        if kid in guvensiz and _gn_kimlik(o["url"]):
+            return False   # yazara ait olduğu doğrulanamamış
         return not kid or kid in aktif_anahtarlar or (o["yazar"], o.get("tur", "yazi")) in aktif_turler
 
     once = len(durum["ogeler"])
