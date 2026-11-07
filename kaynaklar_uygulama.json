@@ -310,25 +310,6 @@
       ]
     },
     {
-      "ad": "evrim kepenek",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://bianet.org/yazar/evrim-kepenek-116",
-          "etiket": "Bianet",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCfEs5vgW_VBtiy8oAf8sTxQ",
-          "kanal_id": "UCfEs5vgW_VBtiy8oAf8sTxQ",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "bülent şık",
       "kaynaklar": [
         {
