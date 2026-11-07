@@ -372,7 +372,7 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
     # çözülemeyenleri de güvenilmez sayıp almayız (yaml'da yedek_dogrula: true ile de zorlanabilir).
     if cozulen >= 3:
         kd["ad_her_sayfada"] = reddedilen > cozulen / 2
-    if "yedek_cozum" not in kd:   # süzme bu kaynakta ilk kez çalışıyor: birkaç günlük olanlar bildirim yaratmasın
+    if "yedek_cozum" not in kd or kd.get("ad_her_sayfada"):   # geriye dönük bulunanlar bildirim yaratmasın
         esik = iso(simdi() - timedelta(days=2))
         for o in sonuc:
             if (o.get("tarih") or "") < esik:
@@ -1130,7 +1130,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                   f"ilk {ilk_gosterim} tanesi gösterilecek")
             ilk_kez = True
         # yedekten gelen yazının asıl adresi çözülmüşse eski Google bağlantısıyla da karşılaştır (tekrar "yeni" sayılmasın)
-        taze = [o for o in ogeler if not ({o["url"], o.get("gn_url") or o["url"]} & (gorulen | mevcut_url))]
+        # (adı her sayfada geçen sitelerde eski "görüldü" kaydı yanlış eşleşmelerle dolu olduğundan yalnızca akışa bakılır)
+        bakilan = mevcut_url if kd.get("ad_her_sayfada") else (gorulen | mevcut_url)
+        taze = [o for o in ogeler if o["url"] not in bakilan and (o.get("gn_url") or o["url"]) not in bakilan]
         if ilk_kez:
             taze = taze[:ilk_gosterim]
         dogrula = k.get("dogrula", bool(k.get("yazar_dizini")) or kd.get("tahmini", False))
