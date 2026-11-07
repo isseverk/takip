@@ -19,13 +19,6 @@
           "site": "gunebakis.com.tr",
           "etiket": "Günebakış Gazetesi Trabzon",
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCa4--q3dtMoAKEuRgNOX-mQ",
-          "kanal_id": "UCa4--q3dtMoAKEuRgNOX-mQ",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
