@@ -591,7 +591,15 @@ def youtube_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
         kanal = m.group(1)
         ekstra["kanal_id"] = kanal
     k2 = {"url": f"https://www.youtube.com/feeds/videos.xml?channel_id={kanal}", "icerik_turu": "video"}
-    ogeler = rss_oku(ist, k2, durum, yazar)
+    durum.pop("yedek", None)
+    try:
+        ogeler = rss_oku(ist, k2, durum, yazar)
+    except KaynakHatasi as e:
+        # YouTube RSS akışlarını zaman zaman topluca kapatıyor (404). O zaman kanalın kendi sayfalarını oku.
+        ogeler = youtube_kanal_sayfasi_oku(ist, kanal)
+        if not ogeler:
+            raise KaynakHatasi(f"{e}; kanal sayfası da okunamadı")
+        durum["yedek"] = "youtube_sayfa"
     if k.get("kisa_videolari_atla", True):
         ogeler = [o for o in ogeler if "/shorts/" not in o["url"]]
     return ogeler
@@ -799,6 +807,31 @@ def _yt_arama_videolari(veri) -> list[dict]:
     return bulunan
 
 
+def youtube_kanal_sayfasi_oku(ist: Istemci, kanal_id: str) -> list[dict]:
+    """Kanalın 'Videolar' ve 'Canlı yayınlar' sekmelerinden son videolar (RSS çalışmadığında)."""
+    sonuc, gorulen, hata = [], set(), None
+    for sekme in ("videos", "streams"):
+        try:
+            metin = ist.al(f"https://www.youtube.com/channel/{kanal_id}/{sekme}?hl=tr&gl=TR", deneme=1,
+                           basliklar={"Cookie": "CONSENT=YES+1; SOCS=CAI", "Accept-Language": "tr-TR,tr;q=0.9"})
+        except KaynakHatasi as e:
+            hata = e
+            continue
+        veri = _yt_baslangic_verisi(metin)
+        for v in _yt_arama_videolari(veri) if veri is not None else []:
+            if v["kisa"] or v["id"] in gorulen or not v["baslik"]:
+                continue
+            gorulen.add(v["id"])
+            zaman = _goreli_tarih(v["zaman"])
+            sonuc.append({"url": f"https://www.youtube.com/watch?v={v['id']}", "baslik": kisalt(v["baslik"], 200),
+                          "tarih": iso(zaman) if zaman else None, "tur": "video"})
+    if not sonuc and hata:
+        raise hata
+    # yayın tarihi bilinmeyenler (ör. şu an canlı) en üste; sonra yeniden eskiye
+    sonuc.sort(key=lambda o: o.get("tarih") or "9999", reverse=True)
+    return sonuc[:20]
+
+
 def youtube_ara(ist: Istemci, arama: str) -> list[dict]:
     # sp=EgQIAxAB → yalnızca videolar, son bir hafta
     url = ("https://www.youtube.com/results?search_query=" + quote(f'"{arama}"') + "&sp=EgQIAxAB&hl=tr&gl=TR")
@@ -841,6 +874,14 @@ def _youtube_kanali_bul(ist: Istemci, ad: str) -> dict | None:
             return {"tur": "youtube", "kanal": f"https://www.youtube.com/channel/{m.group(1)}",
                     "kanal_id": m.group(1), "etiket": "YouTube", "otomatik": True}
     return None
+
+
+def _tek_yazi_adresi(u: str) -> bool:
+    """Adres bir yazarın sayfası değil de tek bir haber/yazı gibi mi görünüyor? (ör. /haber/6008284/gazeteci-…)"""
+    yol = urlparse(u).path.lower().rstrip("/")
+    son = yol.rsplit("/", 1)[-1]
+    return bool(re.search(r"/(haber|haberler|news|video|galeri|foto|gundem|makale|yazi)/", yol + "/")
+                and not re.search(r"/(yazar|yazarlar|author)/", yol)) or son.count("-") >= 4
 
 
 def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple[list[dict], str]:
@@ -897,7 +938,7 @@ def yazar_kesfet(ist: Istemci, ad: str, youtube_ara_iste: bool = False) -> tuple
                     aday = yazar_sayfasini_bul(ist, kok + dizin, ad, {})
                 except Exception:
                     continue
-                if _yazar_sayfasi_mi(ist, aday, ad)[0]:
+                if aday and not _tek_yazi_adresi(aday) and _yazar_sayfasi_mi(ist, aday, ad)[0]:
                     bulundu = aday
                     break
         if bulundu:
@@ -1215,7 +1256,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
 
         kd.update(son_deneme=iso(simdi()), son_basari=iso(simdi()), hata_sayisi=0, son_hata=None,
                   son_bulunan=len(ogeler), durum="uyari" if not ogeler else "tamam",
-                  not_=_yedek_notu(kd) if kd.get("yedek") else None)
+                  not_=(_yedek_notu(kd) if kd.get("yedek") == "google_haber"
+                        else "YouTube RSS akışı şu an kapalı; kanal sayfasından okunuyor" if kd.get("yedek") == "youtube_sayfa"
+                        else None))
         if sadece_kontrol:
             print(f"✓ {etiket}: {len(ogeler)} öğe" + (" (tahmini desen)" if kd.get("tahmini") else ""))
             for o in ogeler[:3]:

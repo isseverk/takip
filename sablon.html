@@ -1136,20 +1136,35 @@ footer a{color:var(--soluk)}
       ust.append(el("button",{class:"menu-dugme", type:"button", "aria-label": y.ad + " seçenekleri", text:"⋯", onclick: () => yazarMenu(y)}));
       kart.append(ust);
       if (d && d.durum && d.durum !== "tamam") kart.append(el("div",{style:"padding:0 14px 8px;font-size:13px;color:var(--uyari)", text:d.aciklama}));
-      for (const k of y.kaynaklar){
+      for (const k of (y.kapali ? y.kaynaklar : y.kaynaklar.filter(k => !k.kapali))){
         const ikon = k.kapali ? "–" : k.durum === "hata" ? "✗" : k.durum === "uyari" ? "!" : k.durum === "bekliyor" ? "…" : "✓";
         const sinif = k.kapali ? "" : k.durum === "hata" ? "ikon-hata" : (k.durum === "uyari" || k.durum === "bekliyor") ? "ikon-uyari" : "ikon-tamam";
         const satir = el("div",{class:"kaynak-satir" + (k.kapali ? " kapali" : "")},
           el("span",{class:sinif, text:ikon}),
           el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || "", k.otomatik ? el("span",{class:"oto", text:"otomatik bulundu"}) : null),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ && /Google/.test(k.not_) ? "Google Haberler üzerinden · " : k.not_ ? "kanal sayfasından · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
       }
+      if (!y.kapali && y.kaynaklar.length && y.kaynaklar.every(k => k.kapali))
+        kart.append(el("div",{style:"padding:4px 14px 10px;font-size:13px;color:var(--soluk)", text:"Bütün kaynakları kapalı — aşağıdaki Kapatılanlar bölümünden yeniden açabilirsin."}));
       return kart;
     };
     aktif.forEach(y => liste.append(ciz(y)));
-    if (kapali.length){ liste.append(el("h2",{class:"bolum-baslik", text:"Kapatılanlar"})); kapali.forEach(y => liste.append(ciz(y))); }
+    // takip edilen kişilerin kapatılmış kaynakları: kartları kalabalıklaştırmasın, burada dursun
+    const kapaliKaynak = aktif.flatMap(y => y.kaynaklar.filter(k => k.kapali).map(k => [y, k]));
+    if (kapali.length || kapaliKaynak.length) liste.append(el("h2",{class:"bolum-baslik", text:"Kapatılanlar"}));
+    if (kapaliKaynak.length){
+      const kart = el("div",{class:"kart kapali"}, el("div",{class:"kart-ust"}, el("b",{text:"Kapatılan kaynaklar"}),
+        el("span",{style:"font-size:12.5px;color:var(--soluk);margin-left:auto", text:"kontrol edilmiyor"})));
+      for (const [y, k] of kapaliKaynak) kart.append(el("div",{class:"kaynak-satir kapali"},
+        el("span",{text:"–"}),
+        el("span", null, el("b",{text: y.ad + " · "}), el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || ""),
+        el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
+        el("span",{class:"adres", text: kisaAdres(k.adres)})));
+      liste.append(kart);
+    }
+    kapali.forEach(y => liste.append(ciz(y)));
     if (!yazarlar.length) liste.append(el("div",{class:"bos", text: q ? "Bu isimde kaynak yok." : "Henüz kaynak yok."}));
   }
 
