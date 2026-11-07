@@ -45,13 +45,6 @@
           "etiket": "Evrensel.net",
           "dogrula": true,
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCKqgTjvkw9IV77jvmtzHwVQ",
-          "kanal_id": "UCKqgTjvkw9IV77jvmtzHwVQ",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
