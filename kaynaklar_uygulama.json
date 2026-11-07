@@ -238,18 +238,6 @@
           "otomatik": true
         }
       ]
-    },
-    {
-      "ad": "bülent şık",
-      "kaynaklar": [
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UC45zSK992ldIOF7zI2d-yDw",
-          "kanal_id": "UC45zSK992ldIOF7zI2d-yDw",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
     }
   ],
   "kapali": [
