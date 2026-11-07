@@ -68,13 +68,6 @@
           "site": "odatv.com",
           "etiket": "Odatv",
           "otomatik": true
-        },
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCVNDmBXj6C1KiY-u9rGRQ_A",
-          "kanal_id": "UCVNDmBXj6C1KiY-u9rGRQ_A",
-          "etiket": "YouTube",
-          "otomatik": true
         }
       ]
     },
