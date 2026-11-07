@@ -1,18 +1,5 @@
 {
-  "yazarlar": [
-    {
-      "ad": "mustafa demirtaş",
-      "kaynaklar": [
-        {
-          "tur": "youtube",
-          "kanal": "https://www.youtube.com/channel/UCnkmkjurhROT8cptmWScvsA",
-          "kanal_id": "UCnkmkjurhROT8cptmWScvsA",
-          "etiket": "YouTube",
-          "otomatik": true
-        }
-      ]
-    }
-  ],
+  "yazarlar": [],
   "kapali": [
     "bd18cc8f160c",
     "4d43e995a22b"
