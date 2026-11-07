@@ -1,17 +1,6 @@
 {
   "yazarlar": [
     {
-      "ad": "nevşin mengü",
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gazeteoku.com",
-          "etiket": "Gazete Oku",
-          "otomatik": true
-        }
-      ]
-    },
-    {
       "ad": "yılmaz özdil",
       "kaynaklar": [
         {
