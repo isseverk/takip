@@ -586,5 +586,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "cansu çamlıbel",
+      "yeni": "CANSU ÇAMLIBEL",
+      "zaman": "2026-11-08T09:28:56.772Z"
+    }
+  ]
 }
