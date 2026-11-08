@@ -550,5 +550,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "deniz zeyrek",
+      "yeni": "DENİZ ZEYREK",
+      "zaman": "2026-11-08T09:39:55.242Z"
+    }
+  ]
 }
