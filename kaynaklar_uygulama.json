@@ -479,5 +479,12 @@
     "FEHİM TAŞTEKİN",
     "DENİZ ZEYREK",
     "BEKİR AĞIRDIR"
+  ],
+  "ad_degisiklikleri": [
+    {
+      "eski": "MURAT YEKİN",
+      "yeni": "MURAT YETKİN",
+      "zaman": "2026-11-08T10:42:54.370Z"
+    }
   ]
 }
