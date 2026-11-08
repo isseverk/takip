@@ -249,7 +249,12 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [],
+  "aranacaklar": [
+    {
+      "ad": "nevşin mengü",
+      "zaman": "2026-11-08T08:30:06.171Z"
+    }
+  ],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
@@ -270,11 +275,6 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:30:08+00:00",
       "aciklama": "T24"
-    },
-    "nevşin mengü": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:30:25+00:00",
-      "aciklama": "Gazete Oku, YouTube"
     },
     "yılmaz özdil": {
       "durum": "bulundu",
