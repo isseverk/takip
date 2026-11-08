@@ -200,7 +200,7 @@
       ]
     },
     {
-      "ad": "gökçer tahincioğlu",
+      "ad": "GÖKÇER TAHİNCİOĞLU",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -366,11 +366,6 @@
       "zaman": "2026-11-08T09:18:28.655Z",
       "aciklama": "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"
     },
-    "gökçer tahincioğlu": {
-      "durum": "bulundu",
-      "zaman": "2026-11-08T09:18:10.515Z",
-      "aciklama": "T24 (onaylandı)"
-    },
     "ismail arı": {
       "durum": "onay_bekliyor",
       "zaman": "2026-11-08T07:49:36+00:00",
@@ -430,6 +425,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T07:56:58+00:00",
       "aciklama": "T24, YouTube"
+    },
+    "GÖKÇER TAHİNCİOĞLU": {
+      "durum": "bulundu",
+      "zaman": "2026-11-08T09:18:10.515Z",
+      "aciklama": "T24 (onaylandı)"
     }
   },
   "oneriler": {
@@ -507,7 +507,7 @@
       ],
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
     },
-    "gökçer tahincioğlu": {
+    "GÖKÇER TAHİNCİOĞLU": {
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -597,17 +597,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "gökçer tahincioğlu",
-      "yeni": "GÖKÇER TAHİNCİOĞLU",
-      "zaman": "2026-11-08T09:26:15.720Z"
-    },
-    {
-      "eski": "deniz zeyrek",
-      "yeni": "DENİZ ZEYREK",
-      "zaman": "2026-11-08T09:26:30.881Z"
-    }
-  ]
+  }
 }
