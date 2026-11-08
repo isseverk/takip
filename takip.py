@@ -201,6 +201,12 @@ class Istemci:
 # Her okuyucu şu sözlüklerin listesini döndürür:
 #   {"url", "baslik", "ozet"?, "tarih"?, "tur"}
 
+# Yazar sayfası engellendiğinde denenecek RSS adresi (siteye özgü)
+SITE_RSS = {
+    "ft.com": "{url}?format=rss",
+}
+
+
 def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
     url = k.get("url")
     if k.get("yazar_dizini"):
@@ -215,6 +221,17 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
         # O zaman yazarın o sitedeki yazılarını Google Haberler üzerinden buluruz.
         if k.get("yedek", True) is False or not re.search(r"HTTP (403|429|503)", str(e)):
             raise
+        # Bazı siteler yazar sayfasını engelleyip aynı sayfanın RSS akışını açık bırakır (ör. ft.com/…?format=rss)
+        sablon = SITE_RSS.get(_alan_adi(url))
+        if sablon:
+            try:
+                ogeler = rss_oku(ist, {"url": sablon.format(url=url.rstrip("/"))}, durum, yazar)
+                durum["yedek"] = "site_rss"
+                for o in ogeler:
+                    o["_yedek"] = True       # yazı sayfaları da engelli; tek tek açmaya çalışma
+                return ogeler[: int(k.get("en_fazla", 25))]
+            except KaynakHatasi as e2:
+                print(f"   (sitenin RSS akışı da açılmadı: {e2})")
         ogeler = google_haber_oku(ist, k.get("bul") or yazar, _alan_adi(url))
         durum["yedek"] = "google_haber"
         ogeler = yedek_sonuclarini_suz(ist, ogeler, k, url, durum, ad=k.get("bul") or yazar)
@@ -1600,7 +1617,8 @@ def ayar_oku(yol: Path) -> dict:
                 k["_uygulamada_kapali"] = True
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
-                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}}
+                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {},
+                         "favoriler": [x for x in _liste(uyg.get("favoriler")) if isinstance(x, str)]}
     return ayar
 
 
@@ -1767,6 +1785,8 @@ def ad_degisikliklerini_uygula(ayar_yolu: Path, durum: dict) -> bool:
                 esleme.pop(asil)
         uyg["kapali"] = [anahtar.get(x, x) for x in _liste(uyg.get("kapali"))]
         uyg["kapali_yazarlar"] = [yeni if x == eski else x for x in _liste(uyg.get("kapali_yazarlar"))]
+        if isinstance(uyg.get("favoriler"), list):
+            uyg["favoriler"] = [yeni if x == eski else x for x in uyg["favoriler"]]
         for alan in ("kesif", "oneriler", "reddedilen"):
             if isinstance(uyg.get(alan), dict) and eski in uyg[alan]:
                 uyg[alan][yeni] = uyg[alan].pop(eski)
@@ -1878,6 +1898,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                   son_bulunan=len(ogeler), durum="uyari" if not ogeler else "tamam",
                   not_=(_yedek_notu(kd) if kd.get("yedek") == "google_haber"
                         else "YouTube RSS akışı şu an kapalı; kanal sayfasından okunuyor" if kd.get("yedek") == "youtube_sayfa"
+                        else "Sayfa engelli; sitenin RSS akışından okunuyor" if kd.get("yedek") == "site_rss"
                         else None))
         if sadece_kontrol:
             print(f"✓ {etiket}: {len(ogeler)} öğe" + (" (tahmini desen)" if kd.get("tahmini") else ""))
@@ -2322,6 +2343,7 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
         "gunluk_tarama": durum.get("gunluk_tarama", {}),
+        "favoriler": (ayar.get("_uygulama") or {}).get("favoriler", []),
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",

@@ -215,6 +215,10 @@ dialog.levha h2{font:600 20px var(--serif);margin:2px 0 4px}
 .tost{position:fixed;left:50%;bottom:calc(var(--alt-bar) + 14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;
   background:var(--metin);color:var(--zemin);padding:10px 16px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);
   box-shadow:0 6px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:12px}
+.favori-isaret{color:#e0a100;font-size:.95em;margin-left:3px}
+.favori-dugme{border:0;background:none;font-size:20px;line-height:1;padding:4px 6px;cursor:pointer;color:var(--soluk)}
+.favori-dugme.dolu{color:#e0a100}
+.cip.favori-cip[aria-pressed=true]{background:#e0a100;border-color:#e0a100;color:#1a1a1a}
 .kaynak-not{padding:0 14px 10px 38px;font-size:12.5px;color:var(--uyari);line-height:1.4}
 .tost-eylem{border:0;background:none;color:var(--zemin);font:700 14px var(--sans);text-decoration:underline;cursor:pointer;padding:2px 0;white-space:nowrap}
 .kaydir-kap{position:relative}
@@ -756,6 +760,33 @@ footer a{color:var(--soluk)}
     const y = depo.al(anahtar, null);
     return (y && y.zaman > new Date(V.olusturma).getTime() && Date.now() - y.zaman < 6*3600e3) ? y.deger : sunucu;
   }
+  // ───────── SEVDİĞİM YAZARLAR (★): kaynaklar_uygulama.json → favoriler; cihazlar arasında ortak
+  const favoriler = () => new Set(yerelVeyaSunucu("favori_yerel", V.favoriler || []));
+  const favoriMi = ad => favoriler().has(ad);
+  const yildiz = ad => favoriMi(ad) ? el("span",{class:"favori-isaret", title:"Sevdiğim yazar", "aria-label":"sevdiğim yazar", text:"★"}) : null;
+  async function favoriDegistir(ad){
+    if (!GH.bagli()){ tost("Önce Ayarlar'dan GitHub bağlantısını kur"); return; }
+    const ekle = !favoriMi(ad);
+    const liste = [...favoriler()].filter(x => x !== ad).concat(ekle ? [ad] : []);
+    depo.yaz("favori_yerel", {deger: liste, zaman: Date.now()});      // hemen görünsün
+    yenidenCiz();
+    try {
+      await uygDosyaDegistir(i => {
+        const l = (Array.isArray(i.favoriler) ? i.favoriler : []).filter(x => x !== ad);
+        i.favoriler = ekle ? l.concat([ad]) : l;
+      }, ekle ? `★ Sevdiklerime eklendi: ${ad}` : `Sevdiklerimden çıkarıldı: ${ad}`);
+      tost(ekle ? `★ ${ad} sevdiğin yazarlara eklendi` : `${ad} sevdiğin yazarlardan çıkarıldı`);
+    } catch(e){
+      depo.yaz("favori_yerel", {deger: [...favoriler()].filter(x => x !== ad).concat(ekle ? [] : [ad]), zaman: Date.now()});
+      yenidenCiz(); tost(e.message, 6000);
+    }
+  }
+  function yenidenCiz(){
+    akisCiz();
+    if (durum.sekme === "kaynaklar") kaynaklarCiz();
+    if (durum.sekme === "bulten") bultenCiz();
+    if ($("yazarLevha").open && $("yazarLevha").dataset.ad) yazarAc($("yazarLevha").dataset.ad);
+  }
   // kaldırılan kaynağın/kişinin içerikleri, sıradaki kontrol akışı temizleyene kadar burada gizlenir
   function gizlenenler(){
     const yansiyan = new Date(V.olusturma).getTime();
@@ -819,11 +850,14 @@ footer a{color:var(--soluk)}
       const q = sade($("yazarSecAra").value.trim()), kap = $("yazarSecListe"); kap.replaceChildren();
       const sec = deger => { durum.yazar = deger; depo.yaz("f_yazar", deger); durum.limit = 80; $("yazarSecLevha").close(); akisCiz(); window.scrollTo({top:0}); };
       if (!q) kap.append(el("button",{type:"button", "aria-pressed": String(durum.yazar === "hepsi"), onclick: () => sec("hepsi")}, "Tüm yazarlar"));
-      const sirali = [...liste].sort((a, b) => a[1].localeCompare(b[1], "tr"));
+      const fav = favoriler();
+      if (!q && fav.size) kap.append(el("button",{type:"button", "aria-pressed": String(durum.yazar === "__favori"), onclick: () => sec("__favori")}, "★ Sevdiğim yazarların hepsi"));
+      // sevdiğin yazarlar listenin başında
+      const sirali = [...liste].sort((a, b) => (fav.has(b[0]) - fav.has(a[0])) || a[1].localeCompare(b[1], "tr"));
       for (const [deger, yazi, say] of sirali){
         if (q && !sade(yazi).includes(q)) continue;
         kap.append(el("button",{type:"button", "aria-pressed": String(durum.yazar === deger), onclick: () => sec(deger)},
-          el("span",{class:"nokta", style:`background:${renk(deger)}`}), yazi, el("span",{class:"say", text: say ? String(say) : ""})));
+          el("span",{class:"nokta", style:`background:${renk(deger)}`}), yazi, yildiz(deger), el("span",{class:"say", text: say ? String(say) : ""})));
       }
       if (!kap.children.length) kap.append(el("div",{class:"bos", text:"Bu isimde yazar yok."}));
     };
@@ -834,16 +868,21 @@ footer a{color:var(--soluk)}
   function filtrele(){
     const q = sade(durum.ara.trim());
     return ogeler.filter(o =>
-      (durum.yazar === "hepsi" || o.yazar === durum.yazar) &&
+      (durum.yazar === "hepsi" || o.yazar === durum.yazar || (durum.yazar === "__favori" && favoriMi(o.yazar))) &&
       (!q || sade(o.baslik + " " + o.yazar + " " + (o.ozet||"")).includes(q)));
   }
   function akisCiz(){
     const turSay = {}; for (const o of ogeler){ const t = o.tur||"yazi"; turSay[t] = (turSay[t]||0)+1; }
     const yazarSay = {}; for (const o of ogeler) yazarSay[o.yazar] = (yazarSay[o.yazar]||0)+1;
     const yazarlar = [["hepsi", "Tüm yazarlar"]].concat(V.yazarlar.map(y => [y, y, yazarSay[y]||0]));
-    if (!yazarlar.some(x => x[0] === durum.yazar)) durum.yazar = "hepsi";
-    // satırda yalnızca "Yazar seç", "Tüm yazarlar" ve (seçildiyse) seçili kişi durur
-    cipler($("yazarFiltre"), yazarlar.filter(x => x[0] === "hepsi" || x[0] === durum.yazar), durum.yazar, "yazar");
+    const fav = favoriler(), favSay = ogeler.filter(o => fav.has(o.yazar)).length;
+    if (durum.yazar === "__favori" && !fav.size) durum.yazar = "hepsi";
+    if (durum.yazar !== "__favori" && !yazarlar.some(x => x[0] === durum.yazar)) durum.yazar = "hepsi";
+    // satırda yalnızca "Yazar seç", "Tüm yazarlar", "★ Sevdiklerim" ve (seçildiyse) seçili kişi durur
+    cipler($("yazarFiltre"), yazarlar.filter(x => x[0] === "hepsi" || x[0] === durum.yazar)
+      .concat(fav.size ? [["__favori", "★ Sevdiklerim", favSay]] : []), durum.yazar, "yazar");
+    const favCip = [...$("yazarFiltre").children].find(b => b.textContent.startsWith("★ Sevdiklerim"));
+    if (favCip) favCip.classList.add("favori-cip");
     $("yazarFiltre").prepend(el("button",{class:"cip sec-dugme", type:"button", "aria-label":"Yazar listesini aç", text:"☰ Yazar seç",
       onclick: () => yazarSecAc(yazarlar.slice(1))}));
     seciliyiGoster($("yazarFiltre"));
@@ -861,7 +900,7 @@ footer a{color:var(--soluk)}
       const tur = o.tur || "yazi";
       const li = el("li", {class: "oge" + (okunanlar.has(o.id) ? " okundu" : "") + (yeniMi(o) ? " yeni" : "")});
       const meta = el("div",{class:"meta"},
-        el("span",{class:"yazar", role:"button", tabindex:"0", title:"Yazar sayfası", onclick: () => yazarAc(o.yazar)}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar),
+        el("span",{class:"yazar", role:"button", tabindex:"0", title:"Yazar sayfası", onclick: () => yazarAc(o.yazar)}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar, yildiz(o.yazar)),
         el("span",{class:"tur " + tur, text: TUR[tur] || tur}),
         el("span",{text: o.kaynak || ""}));
       const dg = DOGRULAMA[o.dogrulama];
@@ -925,10 +964,11 @@ footer a{color:var(--soluk)}
     const kisiler = new Map();
     for (const o of liste){ if (!kisiler.has(o.yazar)) kisiler.set(o.yazar, []); kisiler.get(o.yazar).push(o); }
     ic.append(el("p",{class:"bulten-ozet", text:`${liste.length} içerik, ${kisiler.size} kişiden`}));
-    const sirali = [...kisiler.entries()].sort((a,b) => b[1].length - a[1].length || b[1][0]._t - a[1][0]._t);
+    const fav = favoriler();   // sevdiğin yazarlar özetin başında
+    const sirali = [...kisiler.entries()].sort((a,b) => (fav.has(b[0]) - fav.has(a[0])) || b[1].length - a[1].length || b[1][0]._t - a[1][0]._t);
     for (const [ad, l] of sirali){
       const kart = el("div",{class:"kart"}, el("div",{class:"kart-ust"},
-        el("span",{class:"nokta", style:`background:${renk(ad)}`}), el("b",{text:ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(ad)}),
+        el("span",{class:"nokta", style:`background:${renk(ad)}`}), el("b",{text:ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(ad)}), yildiz(ad),
         el("span",{class:"say-rozet", text: l.length > 1 ? `${l.length} içerik` : ""})));
       l.forEach(o => kart.append(bultenOge(o)));
       ic.append(kart);
@@ -941,8 +981,8 @@ footer a{color:var(--soluk)}
     const d = (V.denetim||[]).find(x => x.ad === ad);
     const kendi = ogeler.filter(o => o.yazar === ad);
     const ay = kendi.filter(o => Date.now() - o._t < 30*864e5);
-    const ic = $("yazarIcerik"); ic.replaceChildren();
-    ic.append(el("h2", null, el("span",{class:"nokta", style:`background:${renk(ad)};display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle`}), ad));
+    const ic = $("yazarIcerik"); ic.replaceChildren(); $("yazarLevha").dataset.ad = ad;
+    ic.append(el("h2", null, el("span",{class:"nokta", style:`background:${renk(ad)};display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle`}), ad, yildiz(ad)));
     const haftalik = ay.length / (30/7);
     const turSay = {}; for (const o of ay){ const t = TUR[o.tur||"yazi"] || o.tur; turSay[t] = (turSay[t]||0) + 1; }
     ic.append(el("div",{class:"yazar-istatistik", text:[
@@ -953,7 +993,8 @@ footer a{color:var(--soluk)}
     if (d && d.durum && d.durum !== "tamam") ic.append(el("div",{class:"uyari-kutu", style:"display:block;margin:0 0 10px"}, el("b",{text:"⚠ "}), d.aciklama || ""));
     const dugmeler = el("div",{class:"satir", style:"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"});
     if (y){
-      dugmeler.append(el("button",{class:"dugme", type:"button", text:"Kaynakları düzenle", onclick: () => { $("yazarLevha").close(); durum.kaynakAra = ad; $("kaynakAra").value = ad; sekmeAc("kaynaklar"); }}),
+      dugmeler.append(el("button",{class:"dugme", type:"button", text: favoriMi(ad) ? "★ Sevdiklerimden çıkar" : "☆ Sevdiklerime ekle", onclick: () => favoriDegistir(ad)}),
+      el("button",{class:"dugme", type:"button", text:"Kaynakları düzenle", onclick: () => { $("yazarLevha").close(); durum.kaynakAra = ad; $("kaynakAra").value = ad; sekmeAc("kaynaklar"); }}),
       el("button",{class:"dugme", type:"button", text:"✏️ Adını düzelt", onclick: () => { $("yazarLevha").close(); adAc(ad); }}));
     }
     ic.append(dugmeler);
@@ -1180,6 +1221,9 @@ footer a{color:var(--soluk)}
       const d = denetim[y.ad];
       const kart = el("div",{class:"kart" + (y.kapali ? " kapali" : "")});
       const ust = el("div",{class:"kart-ust"}, el("span",{class:"nokta", style:`background:${renk(y.ad)}`}), el("b",{text:y.ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(y.ad)}));
+      if (!y.kapali) ust.append(el("button",{class:"favori-dugme" + (favoriMi(y.ad) ? " dolu" : ""), type:"button",
+        title: favoriMi(y.ad) ? "Sevdiklerimden çıkar" : "Sevdiklerime ekle", "aria-label": (favoriMi(y.ad) ? "Sevdiklerimden çıkar: " : "Sevdiklerime ekle: ") + y.ad,
+        text: favoriMi(y.ad) ? "★" : "☆", onclick: () => favoriDegistir(y.ad)}));
       if (d && d.durum && d.durum !== "tamam") ust.append(el("span",{class:"ikon-uyari", title:d.aciklama, text:"⚠"}));
       if (y.kapali) ust.append(el("span",{style:"font-size:12.5px;color:var(--soluk)", text:"kapalı"}));
       ust.append(el("button",{class:"menu-dugme", type:"button", "aria-label": y.ad + " seçenekleri", text:"⋯", onclick: () => yazarMenu(y)}));
@@ -1192,7 +1236,7 @@ footer a{color:var(--soluk)}
           el("span",{class:sinif, text:ikon}),
           el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || "", k.otomatik ? el("span",{class:"oto", text:"otomatik bulundu"}) : null),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.yedek === "youtube_sayfa" ? "kanal sayfasından · " : k.yedek === "google_haber" ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.yedek === "youtube_sayfa" ? "kanal sayfasından · " : k.yedek === "site_rss" ? "sitenin RSS akışından · " : k.yedek === "google_haber" ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
         // sorunlu kaynakta nedeni de yazsın (ör. "en yeni yazı 2018 tarihli")
         if (!k.kapali && k.durum === "uyari" && k.not_) kart.append(el("div",{class:"kaynak-not", text: k.not_}));
@@ -1377,6 +1421,7 @@ footer a{color:var(--soluk)}
       }, `Ad düzeltildi: ${adEski} → ${yeni}`);
       // bu cihazdaki seçimler yeni ada geçsin
       if (durum.yazar === adEski){ durum.yazar = yeni; depo.yaz("f_yazar", yeni); }
+      if (favoriMi(adEski)) depo.yaz("favori_yerel", {deger: [...favoriler()].map(x => x === adEski ? yeni : x), zaman: Date.now()});
       bekleyenEkle(`${adEski} → ${yeni} (ad düzeltmesi)`);
       $("adLevha").close(); tost(`Ad düzeltildi: ${yeni} — birkaç dakika içinde her yerde görünür`, 5000);
       if (durum.sekme === "kaynaklar") kaynaklarCiz();
