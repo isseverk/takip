@@ -221,6 +221,17 @@
           "etiket": "dunya.com"
         }
       ]
+    },
+    {
+      "ad": "bahadır özgür",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://halktv.com.tr/yazar/bahadir-ozgur-33740",
+          "dogrula": true,
+          "etiket": "halktv.com.tr"
+        }
+      ]
     }
   ],
   "kapali": [
