@@ -1177,7 +1177,9 @@ footer a{color:var(--soluk)}
       for (const [ad, o] of oneriler) liste.append(oneriKarti(ad, o));
     }
     const yazarlar = (V.yazar_listesi || []).filter(y => !q || sade(y.ad).includes(q));
-    const aktif = yazarlar.filter(y => !y.kapali), kapali = yazarlar.filter(y => y.kapali);
+    // isme göre (Türkçe alfabe, büyük/küçük harf farkı gözetmeden)
+    const adSirasi = (x, y) => x.ad.localeCompare(y.ad, "tr", {sensitivity: "base"});
+    const aktif = yazarlar.filter(y => !y.kapali).sort(adSirasi), kapali = yazarlar.filter(y => y.kapali).sort(adSirasi);
     const denetim = Object.fromEntries((V.denetim||[]).map(d => [d.ad, d]));
     const ciz = (y) => {
       const d = denetim[y.ad];
