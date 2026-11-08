@@ -1,7 +1,7 @@
 {
   "yazarlar": [
     {
-      "ad": "deniz zeyrek",
+      "ad": "DENİZ ZEYREK",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -266,11 +266,6 @@
       "zaman": "2026-11-07T06:30:42+00:00",
       "aciklama": "Haber Hürriyeti, YouTube"
     },
-    "deniz zeyrek": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:31:15+00:00",
-      "aciklama": "Gazete Oku, YouTube"
-    },
     "ayşenur arslan": {
       "durum": "bulundu",
       "zaman": "2026-11-07T06:31:17+00:00",
@@ -430,6 +425,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:52:22+00:00",
       "aciklama": "T24, YouTube"
+    },
+    "DENİZ ZEYREK": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:31:15+00:00",
+      "aciklama": "Gazete Oku, YouTube"
     }
   },
   "oneriler": {},
@@ -486,12 +486,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "deniz zeyrek",
-      "yeni": "DENİZ ZEYREK",
-      "zaman": "2026-11-08T09:39:55.242Z"
-    }
-  ]
+  }
 }
