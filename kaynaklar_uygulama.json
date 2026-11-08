@@ -357,9 +357,9 @@
       "aciklama": "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"
     },
     "ismail arı": {
-      "durum": "onay_bekliyor",
-      "zaman": "2026-11-08T07:49:36+00:00",
-      "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
+      "durum": "bulunamadi",
+      "zaman": "2026-11-08T09:41:19.119Z",
+      "aciklama": "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"
     },
     "TOLGA ŞARDAN": {
       "durum": "bulundu",
@@ -432,45 +432,7 @@
       "aciklama": "T24, YouTube"
     }
   },
-  "oneriler": {
-    "ismail arı": {
-      "zaman": "2026-11-08T07:49:36+00:00",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/ismail-ari",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "YENİ Parti Genel Başkanı Özgür Özel, 16 gündür Sincan Cezaevi'nde tutuklu bulunan BirGün gazetesi muhabiri İsmail…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/ozgur-ozel-gazeteci-ismail-ari-yi-cezaevinde-ziyaret-etti-2554011",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "BirGün Muhabiri İsmail Arı'nın tutukluluğuna yapılan itiraz 16. Ankara Ağır ceza Mahkemesince reddedildi. Kararın…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteci-ismail-ari-nin-tutukluluguna-itiraz-reddedildi-mahkemeden-katalog-suc-gerekcesi-2553988",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Vaclav Havel, “Güçsüzlerin Gücü”nde dükkânının vitrinine her sabah rejimi öven pankart asan bir manavdan söz eder.…",
-                "url": "https://www.cumhuriyet.com.tr/yazarlar/eren-aysan/pankartin-ardindaki-insan-2551841",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          }
-        }
-      ],
-      "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
-    }
-  },
+  "oneriler": {},
   "reddedilen": {
     "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
