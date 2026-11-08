@@ -842,7 +842,8 @@ footer a{color:var(--soluk)}
     const yazarSay = {}; for (const o of ogeler) yazarSay[o.yazar] = (yazarSay[o.yazar]||0)+1;
     const yazarlar = [["hepsi", "Tüm yazarlar"]].concat(V.yazarlar.map(y => [y, y, yazarSay[y]||0]));
     if (!yazarlar.some(x => x[0] === durum.yazar)) durum.yazar = "hepsi";
-    cipler($("yazarFiltre"), yazarlar, durum.yazar, "yazar");
+    // satırda yalnızca "Yazar seç", "Tüm yazarlar" ve (seçildiyse) seçili kişi durur
+    cipler($("yazarFiltre"), yazarlar.filter(x => x[0] === "hepsi" || x[0] === durum.yazar), durum.yazar, "yazar");
     $("yazarFiltre").prepend(el("button",{class:"cip sec-dugme", type:"button", "aria-label":"Yazar listesini aç", text:"☰ Yazar seç",
       onclick: () => yazarSecAc(yazarlar.slice(1))}));
     seciliyiGoster($("yazarFiltre"));
