@@ -247,13 +247,24 @@ def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
     """Google Haberler'de "<ad>" site:<site> aramasıyla son 30 günün yazılarını getirir."""
     if feedparser is None:
         raise KaynakHatasi("feedparser kurulu değil")
-    sorgu = quote(f'"{ad}" site:{site} when:30d')
-    try:
-        metin = ist.al(f"https://news.google.com/rss/search?q={sorgu}&hl=tr&gl=TR&ceid=TR:tr", deneme=1)
-    except KaynakHatasi as e:
-        raise KaynakHatasi(f"site bulut sunucularını engelliyor ve Google Haberler yedeği de açılamadı ({e})")
+    # Google bir aramada en çok 100 sonuç verir. Kişinin adı sitenin her sayfasında geçiyorsa (ör. Medyascope)
+    # 30 günlük aramanın ilk 100'üne yeni yazılar girmeyebilir; bu yüzden son 3 gün ayrıca aranır.
+    girdiler, gorulen_link, hata = [], set(), None
+    for sure in ("3d", "30d"):
+        sorgu = quote(f'"{ad}" site:{site} when:{sure}')
+        try:
+            metin = ist.al(f"https://news.google.com/rss/search?q={sorgu}&hl=tr&gl=TR&ceid=TR:tr", deneme=1)
+        except KaynakHatasi as e:
+            hata = e
+            continue
+        for e in feedparser.parse(metin).entries:
+            if e.get("link") and e["link"] not in gorulen_link:
+                gorulen_link.add(e["link"])
+                girdiler.append(e)
+    if hata and not girdiler:
+        raise KaynakHatasi(f"site bulut sunucularını engelliyor ve Google Haberler yedeği de açılamadı ({hata})")
     sonuc = []
-    for e in feedparser.parse(metin).entries:
+    for e in girdiler:
         baslik = re.sub(r"\s+-\s+[^-]{1,40}$", "", e.get("title", "")).strip()
         # "Can Ataklı yazdı: ..." / "... | Can Ataklı" gibi ekleri at
         baslik = re.sub(r"^" + re.escape(ad) + r"\s*(yazdı)?\s*[:|-]\s*", "", baslik, flags=re.I)
@@ -381,10 +392,14 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
         if gercek:
             cozulen += 1
             if yazara_ait(gercek):
+                gk = _gn_kimlik(o["url"])
+                if gk in red:          # kural genişlediyse önceden elenmiş olan artık kabul edilir
+                    red.remove(gk)
+                    o["_kural_genisledi"] = True
                 o["gn_url"], o["url"] = o["url"], url_temizle(gercek)
                 son_parca = urlparse(gercek).path.rstrip("/").rsplit("/", 1)[-1]
                 # ".../ad-soyad-yazdi-..." gibi başlık kalıbıyla mı, yazarın klasöründen mi tanındı
-                o["_dogrulama"] = ("baslik_kalibi" if re.search(r"-(yazdi|yorumladi)(-|$)", son_parca) else "yazar_klasoru")
+                o["_dogrulama"] = ("baslik_kalibi" if re.search(r"-(" + IMZA_EKLERI + r")(-|$)", son_parca) else "yazar_klasoru")
                 sonuc.append(o)
             else:
                 reddedilen += 1
@@ -740,12 +755,18 @@ def google_haber_kaynak_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> l
     return yedek_sonuclarini_suz(ist, ogeler, k2, f"https://{k['site']}/", durum)
 
 
+# Adreste kişinin adından hemen sonra gelince içeriğin ona ait olduğunu gösteren ekler
+# (medyascope.tv/…/rusen-cakir-yorumladi-…, …-rusen-cakir-video/, …-rusen-cakir-izleyicilerle-yorumladi/)
+IMZA_EKLERI = "yazdi|yorumladi|video|izleyicilerle|anlatiyor|degerlendirdi|soruyor|cevapliyor"
+
+
 def _yazar_yolu_deseni(ad: str) -> str:
     """Kişinin kendi yazısı mı? Adreste yazar klasörü olsun (…/yazar/deniz-zeyrek/…) ya da adres
-    "<ad>-yazdi" / "<ad>-yorumladi" biçiminde olsun (ör. medyascope.tv/…/rusen-cakir-yorumladi-…)."""
+    "<ad>-yazdi" / "<ad>-yorumladi" / "<ad>-video" biçiminde olsun, ya da "…-<ad>a-konustu" (onun söyleşisi)."""
     s = re.escape(_slug(ad))
     return (r"https?://[^/]+/(?:(?:[^?#]*/)?[^/?#]*" + s + r"[^/?#]*/[^?#]+"
-            r"|[^?#]*(?:^|/|-)" + s + r"-(?:yazdi|yorumladi)(?:-|/|$)[^?#]*)")
+            r"|[^?#]*(?:^|/|-)" + s + r"-(?:" + IMZA_EKLERI + r")(?:-|/|$)[^?#]*"
+            r"|[^?#]*(?:^|/|-)" + s + r"(?:a|e|ya|ye)-konustu(?:-|/|$)[^?#]*)")
 
 
 # ───────────────────────── isimden kaynak bulma ─────────────────────────
@@ -1849,9 +1870,12 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 continue
             pencere_siniri = simdi() - timedelta(days=ILK_GOSTERIM_GUN)
             tamamlama = bool(o.pop("_pencere", False))
+            # önceden yanlışlıkla elenmiş, tanıma kuralı genişleyince kabul edilen yazı: akış süresi içindeyse
+            # kendi tarihiyle (yeni sayılmadan) eklenir
+            geri_kazanilan = bool(o.pop("_kural_genisledi", False))
             if tamamlama and (not yazi_tarihi or yazi_tarihi < pencere_siniri):
                 continue                   # tamamlama adayıydı ama son iki haftadan değil (ya da tarihi bilinmiyor)
-            if not ilk_kez and yazi_tarihi and yazi_tarihi < pencere_siniri:
+            if not ilk_kez and not geri_kazanilan and yazi_tarihi and yazi_tarihi < pencere_siniri:
                 gorulen.add(o["url"])      # listede geç beliren iki haftadan eski yazı ("çok okunanlar" kutusu vb.)
                 continue
             # listede geç beliren eski bir yazı (ör. "çok okunanlar" kutusu ya da arama yedeği):
@@ -1861,7 +1885,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 gorulen.add(o["url"])
                 continue
             o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=o.pop("_kaynak", None) or kd["etiket"], kaynak_id=anahtar,
-                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)) or gec_kalmis or tamamlama)
+                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)) or gec_kalmis or tamamlama or geri_kazanilan)
             yeni_ogeler.append(o)
             mevcut_url.add(o["url"])
             eklenen += 1
