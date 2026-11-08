@@ -247,6 +247,9 @@ footer a{color:var(--soluk)}
       <button class="ikon-dugme" id="okunduBtn" title="Görünenlerin hepsini okundu say" aria-label="Hepsini okundu say">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.5l4.5 4.5L15 8.5"/><path d="M9.5 15.5L11 17l8.5-8.5"/></svg>
       </button>
+      <button class="ikon-dugme" id="okunmadiBtn" title="Görünenlerin hepsini okunmadı say" aria-label="Hepsini okunmadı say">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+      </button>
     </div>
     <div id="akisUst">
       <input class="arama" id="arama" type="search" placeholder="Başlıkta veya yazarda ara…" autocomplete="off">
@@ -483,7 +486,7 @@ footer a{color:var(--soluk)}
     ad_sayfada: [false, "Yazının sayfasında adı geçiyor ama imza yerinde görünmüyor — onun hakkında bir haber ya da başkasının yazısı olabilir."],
     ad_geciyor: [false, "YouTube'da başlığında adı geçtiği için bulundu — kişinin kendisi olmayabilir (konuk, konu ya da adaşı)."],
     baslik: [false, "Takip ettiğin Ekşi başlığına yazılan bir entry; kişinin kendisine ait değil."],
-    belirsiz: [false, "Google Haberler'de adıyla çıktı ama asıl adresi doğrulanamadı — kişiye ait olmayabilir."]
+    belirsiz: [false, "Google Haberler'de adıyla çıktı ama site açılmadığı için imzası doğrulanamadı — başka birinin yazısı olabilir."]
   };
   const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", youtube_ara:"YouTube'da adı geçen", rss:"Blog/RSS", bluesky:"Bluesky", telegram:"Telegram", podcast:"Podcast", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
   const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -1187,7 +1190,7 @@ footer a{color:var(--soluk)}
           el("span",{class:sinif, text:ikon}),
           el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || "", k.otomatik ? el("span",{class:"oto", text:"otomatik bulundu"}) : null),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ && /Google/.test(k.not_) ? "Google Haberler üzerinden · " : k.not_ ? "kanal sayfasından · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ && /kanal sayfası/.test(k.not_) ? "kanal sayfasından · " : k.not_ ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
       }
       if (!y.kapali && y.kaynaklar.length && y.kaynaklar.every(k => k.kapali))
@@ -1576,6 +1579,7 @@ footer a{color:var(--soluk)}
     for (const s of ["akis","bulten","kaynaklar","ayarlar"]) $("g-" + s).hidden = s !== ad;
     $("akisUst").hidden = ad !== "akis";
     $("okunduBtn").hidden = ad !== "akis";
+    $("okunmadiBtn").hidden = ad !== "akis";
     document.querySelectorAll("nav.alt button").forEach(b => b.setAttribute("aria-current", b.dataset.sekme === ad ? "page" : "false"));
     $("baslik").textContent = ad === "akis" ? V.baslik : ad === "bulten" ? "Günün özeti" : ad === "kaynaklar" ? "Kaynaklar" : "Ayarlar";
     $("bultenBtn").setAttribute("aria-pressed", String(ad === "bulten"));
@@ -1594,6 +1598,12 @@ footer a{color:var(--soluk)}
   $("ekleBtn").addEventListener("click", () => ekleAc());
   $("yenileBtn").addEventListener("click", () => yenile(false));
   $("bultenBtn").addEventListener("click", () => sekmeAc(durum.sekme === "bulten" ? "akis" : "bulten"));
+  $("okunmadiBtn").addEventListener("click", () => {
+    const geriAlinacak = filtrele().map(o => o.id).filter(id => okunanlar.has(id));
+    if (!geriAlinacak.length){ tost("Görünenlerin hiçbiri okunmuş değil"); return; }
+    okunmadiIsaretle(geriAlinacak); akisCiz();
+    tost(`${geriAlinacak.length} içerik okunmadı olarak işaretlendi`, 7000, {yazi: "Geri al", fn: () => { okunduIsaretle(geriAlinacak); akisCiz(); tost("Geri alındı"); }});
+  });
   $("okunduBtn").addEventListener("click", () => {
     const yeniOkunan = filtrele().map(o => o.id).filter(id => !okunanlar.has(id));
     if (!yeniOkunan.length){ tost("Görünenlerin hepsi zaten okunmuş"); return; }

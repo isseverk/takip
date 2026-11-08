@@ -3,7 +3,7 @@
 Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; **Hepsini okundu say**'dan sonra çıkan **Geri al** ile toplu işareti geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; Sağ üstteki **✓✓** görünenlerin hepsini okundu, yanındaki **◉** hepsini okunmadı sayar; ikisinden sonra da çıkan **Geri al** ile işlemi geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, bir kişinin adını düzeltirsin (⋯ → **Adını düzelt**). Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, cihazlar arası eşitleme ve "şimdi kontrol et" düğmesi.
@@ -129,7 +129,7 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 
 Kartlarda kaynağın yanında küçük bir işaret durur; dokununca açıklaması çıkar.
 - **✓** — içeriğin o kişiye ait olduğu belli: yazının sayfasında imzası var, kişinin kendi yazı listesinden ya da kendi sitesi/kanalı/hesabından geldi, ya da Google Haberler üzerinden gelip adresi kişinin yazar klasöründe çıktı.
-- **?** — emin değiliz: YouTube'da başlığında adı geçen program (konuk ya da konu olabilir), adresi doğrulanamayan Google Haberler sonucu, imza yerinde değil de yalnızca sayfanın bir yerinde adı geçen yazı.
+- **?** — emin değiliz: YouTube'da başlığında adı geçen program (konuk ya da konu olabilir), adresi doğrulanamayan Google Haberler sonucu, imza yerinde değil de yalnızca sayfanın bir yerinde adı geçen yazı, adresinde yazar adı olmayan bir sitede (ör. Dünya: `/kose-yazisi/…`) site açılmadığı için imzasına bakılamayan köşe yazısı.
 
 Program, başlığında kişinin adının haber öznesi olarak geçtiği sayfaları ("X gözaltına alındı", "X adli kontrolle serbest bırakıldı") artık kişinin yazısı saymaz; "Ad Soyad | Başlık" ya da "… yorumladı" gibi imza kalıpları ise sorun değildir. Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumlar da kendiliğinden temizlenir; kişinin başka kaynağı kalmazsa yeniden aranır ve bulunanlar Onay bekleyenler'e düşer.
 

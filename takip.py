@@ -216,11 +216,11 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
             raise
         ogeler = google_haber_oku(ist, k.get("bul") or yazar, _alan_adi(url))
         durum["yedek"] = "google_haber"
-        ogeler = yedek_sonuclarini_suz(ist, ogeler, k, url, durum)
+        ogeler = yedek_sonuclarini_suz(ist, ogeler, k, url, durum, ad=k.get("bul") or yazar)
         return ogeler[: int(k.get("en_fazla", 25))]
     corba = BeautifulSoup(html_metin, "html.parser")
 
-    desen = k.get("link_deseni")
+    desen = k.get("link_deseni") or SITE_YAZI_DESENLERI.get(_alan_adi(url))
     tahmini = False
     if desen:
         rx = re.compile(desen)
@@ -368,13 +368,61 @@ def _batchexecute_adresi(yanit: str) -> str | None:
     return m.group(1) if m else None
 
 
-def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: str, kd: dict) -> list[dict]:
-    """Google Haberler yedeğinden gelenleri asıl adreslerine göre süzer: yalnızca yazarın kendi yazıları."""
+# Köşe yazısı adresinde yazarın adı geçmeyen siteler: yazı adresinin biçimi (yazar sayfası okunurken ve
+# Google Haberler yedeğinde kullanılır; yazının kime ait olduğuna sayfadaki imzayla bakılır)
+SITE_YAZI_DESENLERI = {
+    "dunya.com": r"dunya\.com/kose-yazisi/[^/?#]+/\d+",
+}
+# Diğer sitelerde de "köşe yazısı" klasöründeki adresler imza denetimine aday sayılır
+GENEL_KOSE_YOLU = re.compile(r"/(kose-yazisi|kose-yazilari|kose-yazari|koseyazisi)/[^/?#]+")
+IMZA_DENETIM_SINIRI = 6       # bir kaynak için bir çalışmada en çok kaç yazının imzasına bakılsın
+
+
+def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: str, kd: dict,
+                          ad: str | None = None) -> list[dict]:
+    """Google Haberler yedeğinden gelenleri asıl adreslerine göre süzer: yalnızca yazarın kendi yazıları.
+    Adresinde yazarın adı olmayan köşe yazılarında (ör. dunya.com/kose-yazisi/…) yazı açılıp imzaya bakılır;
+    site açılmıyorsa yazı "?" (doğrulanamadı) işaretiyle alınır."""
     desen = re.compile(k["link_deseni"]) if k.get("link_deseni") else None
     on_ek = urlparse(sayfa_url).path.rstrip("/") + "/"
+    site_deseni = SITE_YAZI_DESENLERI.get(_alan_adi(sayfa_url))
+    kose_deseni = re.compile(site_deseni) if site_deseni else GENEL_KOSE_YOLU
+    imza_kaydi = kd.setdefault("imza_cozum", {})
+    imza_butce = [IMZA_DENETIM_SINIRI]
 
     def yazara_ait(u: str) -> bool:
         return bool(desen.search(u)) if desen else (urlparse(u).path.startswith(on_ek) and len(urlparse(u).path) > len(on_ek) + 3)
+
+    def imza_karari(o: dict, gercek: str) -> str | None:
+        """imza / ad_sayfada / belirsiz (kabul) ya da red; bakılamadıysa None."""
+        if not ad or not kose_deseni.search(gercek):
+            return "red"
+        karar = imza_kaydi.get(gercek)
+        if karar is None:
+            if imza_butce[0] <= 0:
+                return None
+            imza_butce[0] -= 1
+            gecici = {"url": gercek, "baslik": o.get("baslik", "")}
+            try:
+                tamam = ayrinti_getir(ist, gecici, ad)
+                ym = sade(gecici.get("_yazar_meta") or "")
+                # yazar etiketinde bir kişi adı var mı (site/kurum adı değil)?
+                kisi_adi = 2 <= len(ym.split()) <= 4 and not re.search(
+                    r"gazete|haber|news|medya|ajans|\btv\b|editor|redaksiyon|dunya|\.com|\.tr", ym)
+                baska_imza = kisi_adi and not gecici.get("_imza")
+                # sayfada başka birinin imzası varsa (adı yalnızca metinde geçiyorsa) onun yazısı değildir
+                karar = ("imza" if gecici.get("_imza") else "red" if baska_imza else "ad_sayfada") if tamam else "red"
+                if tamam:
+                    for alan in ("baslik", "ozet", "tarih"):
+                        if gecici.get(alan):
+                            o[alan] = gecici[alan]
+            except Exception:
+                karar = "belirsiz"          # site yazıyı da açtırmıyor: adıyla aranınca çıkan köşe yazısı
+            imza_kaydi[gercek] = karar
+            if len(imza_kaydi) > 300:
+                for eski in list(imza_kaydi)[:-300]:
+                    imza_kaydi.pop(eski, None)
+        return karar
 
     onbellek = kd.setdefault("gn_cozum", {})
     red = list(kd.get("yedek_red") or [])
@@ -402,6 +450,18 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
                 o["_dogrulama"] = ("baslik_kalibi" if re.search(r"-(" + IMZA_EKLERI + r")(-|$)", son_parca) else "yazar_klasoru")
                 sonuc.append(o)
             else:
+                karar = imza_karari(o, gercek)
+                if karar in ("imza", "ad_sayfada", "belirsiz"):
+                    gk = _gn_kimlik(o["url"])
+                    if gk in red:
+                        red.remove(gk)
+                        o["_kural_genisledi"] = True
+                    o["gn_url"], o["url"] = o["url"], url_temizle(gercek)
+                    o["_dogrulama"] = karar
+                    sonuc.append(o)
+                    continue
+                if karar is None:      # bu çalışmada imzaya bakma hakkı bitti; sonra yeniden denenir
+                    continue
                 reddedilen += 1
                 gk = _gn_kimlik(o["url"])
                 if gk and gk not in red:
@@ -752,7 +812,7 @@ def google_haber_kaynak_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> l
     # yalnızca yolunda kişinin adı bir bölüm olarak geçenleri al: …/yazarlar/deniz-zeyrek/yazi-basligi
     durum["yedek"] = "google_haber"
     k2 = dict(k, link_deseni=k.get("link_deseni") or _yazar_yolu_deseni(k.get("bul") or yazar), yedek_dogrula=True)
-    return yedek_sonuclarini_suz(ist, ogeler, k2, f"https://{k['site']}/", durum)
+    return yedek_sonuclarini_suz(ist, ogeler, k2, f"https://{k['site']}/", durum, ad=k.get("bul") or yazar)
 
 
 # Adreste kişinin adından hemen sonra gelince içeriğin ona ait olduğunu gösteren ekler
@@ -1362,7 +1422,8 @@ def ayrinti_getir(ist: Istemci, oge: dict, yazar_adi: str | None) -> bool:
 
     if yazar_adi:
         aranan = sade(yazar_adi)
-        imza = _imza_yerinde_mi(corba, aranan, meta("author", "article:author", "dc.creator"))
+        oge["_yazar_meta"] = meta("author", "article:author", "dc.creator") or ""
+        imza = _imza_yerinde_mi(corba, aranan, oge["_yazar_meta"])
         if not imza:
             if aranan not in sade(corba.get_text(" ")[:20000]):
                 return False
@@ -1955,6 +2016,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
 
     for o in durum["ogeler"]:
         o.pop("_metin", None)
+        o.pop("_yazar_meta", None)
         o.pop("yz_ozet", None)     # yapay zekâ özetleri kaldırıldı
         o.pop("yz_deneme", None)
         o.pop("konular", None)
