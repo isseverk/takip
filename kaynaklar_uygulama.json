@@ -23,10 +23,6 @@
       ]
     },
     {
-      "ad": "ismail arı",
-      "kaynaklar": []
-    },
-    {
       "ad": "bahadır özgür",
       "kaynaklar": [
         {
@@ -109,13 +105,6 @@
           "tur": "sayfa",
           "url": "https://t24.com.tr/yazarlar/bekir-agirdir",
           "etiket": "T24",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://mediacat.com/yazarlar/bekir-agirdir",
-          "etiket": "MediaCat",
           "dogrula": true,
           "otomatik": true
         }
