@@ -80,6 +80,8 @@ _URL_TARIHI = re.compile(r"(?<!\d)(20\d\d)[-/_](0[1-9]|1[0-2])[-/_](0[1-9]|[12]\
 
 
 ESKI_YAZI_GUN = 3   # bundan eski tarihli bir yazı ilk kez görülürse "yeni" sayılmaz
+ILK_GOSTERIM_GUN = 14   # kaynak eklenince bu kadar günlük yazılar akışa (bildirimsiz) konur
+PENCERE_EN_FAZLA = 12
 
 
 def url_tarihi(url: str) -> datetime | None:
@@ -1446,6 +1448,19 @@ def icerik_dogrulamasi(tur: str, k: dict, imza_dogrulandi: bool) -> str:
     return "belirsiz"
 
 
+def gec_gelen_eskileri_ayikla(durum: dict) -> None:
+    """Önceki sürümün "yeni" diye aldığı, listede iki haftadan fazla gecikmeyle beliren eski yazıları akıştan çıkarır
+    (ör. 23 Ekim yazısının 7 Kasım'da "çok okunanlar" kutusundan gelmesi). Bunlar artık hiç alınmıyor."""
+    once = len(durum.get("ogeler", []))
+    def gec_mi(o):
+        t, b = iso_oku(o.get("tarih")), iso_oku(o.get("bulunma"))
+        return bool(not o.get("ilk") and not o.get("konu_haberi") and t and b
+                    and b - t > timedelta(days=ILK_GOSTERIM_GUN))
+    durum["ogeler"] = [o for o in durum.get("ogeler", []) if not gec_mi(o)]
+    if len(durum["ogeler"]) < once:
+        print(f"– listede geç belirmiş {once - len(durum['ogeler'])} eski yazı akıştan çıkarıldı")
+
+
 def dogrulama_isaretini_tamamla(ayar: dict, durum: dict) -> None:
     """Bu özellikten önce akışa girmiş öğelere de (bilinen kadarıyla) doğrulama bilgisi ekler."""
     bilgi = {anahtar: (tur, k) for _y, k, tur, anahtar in kaynaklari_listele(ayar)}
@@ -1551,6 +1566,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         a = ayar["ayarlar"]
         a["_push"] = push_durumu(ayar)
     dogrulama_isaretini_tamamla(ayar, durum)
+    gec_gelen_eskileri_ayikla(durum)
     akis_siniri = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
     ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 40))
@@ -1605,8 +1621,24 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         # (adı her sayfada geçen sitelerde eski "görüldü" kaydı yanlış eşleşmelerle dolu olduğundan yalnızca akışa bakılır)
         bakilan = mevcut_url if kd.get("ad_her_sayfada") else (gorulen | mevcut_url)
         taze = [o for o in ogeler if o["url"] not in bakilan and (o.get("gn_url") or o["url"]) not in bakilan]
+        # Son ILK_GOSTERIM_GUN günün yazıları: kaynak ilk eklendiğinde en yeni birkaç yazıyla yetinmeyip
+        # bu süredeki hepsini (bildirimsiz) göster; eskiden atlananları da bir kez tamamla
         if ilk_kez:
+            pencere = taze[ilk_gosterim:ilk_gosterim + PENCERE_EN_FAZLA]
             taze = taze[:ilk_gosterim]
+        elif not kd.get("bosluk_tamam") and not kd.get("ad_her_sayfada"):
+            pencere = [o for o in ogeler if o not in taze and o["url"] not in mevcut_url
+                       and o.get("gn_url") not in mevcut_url][:PENCERE_EN_FAZLA]
+            gerek = sum(1 for o in pencere if tur == "sayfa" and not o.get("_yedek") and k.get("ayrinti", True))
+            if ayrinti_sayaci + gerek <= ayrinti_siniri // 2:   # yeni yazılara da sayfa açma hakkı kalsın
+                kd["bosluk_tamam"] = True
+            else:
+                pencere = []          # bu çalışmada sayfa açma hakkı yetmez; sonraki çalışmada
+        else:
+            pencere = []
+        for o in pencere:
+            o["_pencere"] = True
+        taze += pencere
         dogrula = k.get("dogrula", bool(k.get("yazar_dizini")) or kd.get("tahmini", False))
         eklenen = 0
         for o in taze:
@@ -1633,6 +1665,13 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             if yazi_tarihi and yazi_tarihi < akis_siniri:
                 gorulen.add(o["url"])      # akışta tutulandan da eski bir yazı; yeni değil
                 continue
+            pencere_siniri = simdi() - timedelta(days=ILK_GOSTERIM_GUN)
+            tamamlama = bool(o.pop("_pencere", False))
+            if tamamlama and (not yazi_tarihi or yazi_tarihi < pencere_siniri):
+                continue                   # tamamlama adayıydı ama son iki haftadan değil (ya da tarihi bilinmiyor)
+            if not ilk_kez and yazi_tarihi and yazi_tarihi < pencere_siniri:
+                gorulen.add(o["url"])      # listede geç beliren iki haftadan eski yazı ("çok okunanlar" kutusu vb.)
+                continue
             # listede geç beliren eski bir yazı (ör. "çok okunanlar" kutusu ya da arama yedeği):
             # akışa gerçek tarihiyle girer ama "yeni" sayılmaz, bildirim gitmez
             gec_kalmis = bool(yazi_tarihi and yazi_tarihi < simdi() - timedelta(days=ESKI_YAZI_GUN))
@@ -1640,7 +1679,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 gorulen.add(o["url"])
                 continue
             o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=o.pop("_kaynak", None) or kd["etiket"], kaynak_id=anahtar,
-                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)) or gec_kalmis)
+                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)) or gec_kalmis or tamamlama)
             yeni_ogeler.append(o)
             mevcut_url.add(o["url"])
             eklenen += 1

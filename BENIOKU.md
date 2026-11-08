@@ -144,6 +144,13 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 - Son içerikleri, yapay zekâ özetleriyle.
 - **Akışta yalnızca bunu göster**, **Bildirimleri kapat/aç** ve **Kaynakları düzenle** düğmeleri.
 
+## Akışa hangi yazılar girer?
+
+- Bir kaynak ilk eklendiğinde son **14 günün** yazıları (en az en yeni 3'ü) bildirimsiz olarak akışa konur.
+- Sonraki her kontrolde yalnızca yeni yazılar eklenir. Yazının sayfasında tarih yoksa adresteki gün kullanılır (ör. `…/2026-10-23/…`); saati bilinmediği için kartta saat yazmaz.
+- Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse bildirim göndermez, 14 günden eskiyse hiç alınmaz.
+- Akışta 45 günden eski içerik tutulmaz (yazının kendi tarihine bakılır).
+
 ## Alanlar (kategoriler)
 
 Her kişinin altında hangi alanlarda yazdığı görünür (Siyaset, Hukuk, Ekonomi, Dış politika, Araştırmacı gazetecilik, Spor…). Sen seçmediysen program son iki ayın başlıklarına bakıp en baskın bir-iki alanı **otomatik** önerir (kesik çizgili etiketler). Kişinin kartında ya da yazar sayfasında **düzenle**'ye dokunup kendin seçebilirsin; seçimin `kaynaklar_uygulama.json` içinde `kategoriler` altında saklanır. **Otomatiğe bırak** seçimini siler.
