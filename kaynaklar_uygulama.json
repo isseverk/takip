@@ -216,6 +216,17 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "Soner Yalçın",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.odatv.com/yazarlar/soner-yalcin",
+          "dogrula": true,
+          "etiket": "odatv.com"
+        }
+      ]
     }
   ],
   "kapali": [
