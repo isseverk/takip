@@ -1290,16 +1290,17 @@ def gunluk_tarama(ist: Istemci, ayar: dict, ayar_yolu: Path, durum: dict,
 
 
 def eski_ozellik_kayitlarini_temizle(ayar_yolu: Path) -> None:
-    """Kaldırılan özelliklerin (uygulama bildirimi abonelikleri, konular) kayıtlarını depodan siler."""
+    """Kaldırılan özelliklerin (uygulama bildirimi abonelikleri, konular, alanlar, kişi susturma) kayıtlarını siler."""
     yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
     try:
         uyg = json.loads(yol.read_text(encoding="utf-8"))
     except Exception:
         return
-    silinen = [x for x in ("push", "konular") if x in uyg]
-    if isinstance(uyg.get("bildirim"), dict) and "kapsam" in uyg["bildirim"]:
-        uyg["bildirim"].pop("kapsam")
-        silinen.append("bildirim.kapsam")
+    silinen = [x for x in ("push", "konular", "kategoriler") if x in uyg]
+    for alt in ("kapsam", "sessiz_yazarlar"):
+        if isinstance(uyg.get("bildirim"), dict) and alt in uyg["bildirim"]:
+            uyg["bildirim"].pop(alt)
+            silinen.append("bildirim." + alt)
     if silinen:
         for x in silinen:
             uyg.pop(x, None)
@@ -1508,8 +1509,7 @@ def ayar_oku(yol: Path) -> dict:
                 k["_uygulamada_kapali"] = True
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
-                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {},
-                         "kategoriler": uyg.get("kategoriler") if isinstance(uyg.get("kategoriler"), dict) else {}}
+                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}}
     # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
     uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
     if uyg_bildirim:
@@ -1683,7 +1683,7 @@ def ad_degisikliklerini_uygula(ayar_yolu: Path, durum: dict) -> bool:
                 esleme.pop(asil)
         uyg["kapali"] = [anahtar.get(x, x) for x in _liste(uyg.get("kapali"))]
         uyg["kapali_yazarlar"] = [yeni if x == eski else x for x in _liste(uyg.get("kapali_yazarlar"))]
-        for alan in ("kategoriler", "kesif", "oneriler", "reddedilen"):
+        for alan in ("kesif", "oneriler", "reddedilen"):
             if isinstance(uyg.get(alan), dict) and eski in uyg[alan]:
                 uyg[alan][yeni] = uyg[alan].pop(eski)
         b = uyg.get("bildirim")
@@ -2138,71 +2138,6 @@ def _siralama_anahtari(o: dict):
     return tarih
 
 
-# ───────────────────────── yazar kategorileri ─────────────────────────
-# Kullanıcı bir kişinin kategorilerini seçmediyse, son yazılarının başlık ve özetlerine bakıp öneri yapılır.
-
-KATEGORILER = ["Siyaset", "Araştırmacı gazetecilik", "Hukuk", "Ekonomi", "Dış politika", "Tarih", "Teknoloji",
-               "Bilim", "Sağlık", "Çevre", "Eğitim", "Toplumsal haklar", "Spor"]
-_KATEGORI_KELIMELERI = {
-    "Siyaset": ["chp", "akp", "ak parti", "mhp", "dem parti", "iyi parti", "secim", "erdogan", "ozgur ozel", "bahceli",
-                "imamoglu", "meclis", "muhalefet", "iktidar", "kurultay", "cumhurbaskan", "bakan", "milletvekil", "parti"],
-    "Araştırmacı gazetecilik": ["belge", "ortaya cikti", "ihale", "rusvet", "yolsuzluk", "mafya", "istihbarat", "organize",
-                                "kara para", "vurgun", "sorusturma dosya", "ifadesi", "kulis", "operasyon", "itirafci"],
-    "Hukuk": ["mahkeme", "dava", "savci", "yargi", "anayasa", "tutuklan", "iddianame", "hakim", "durusma", "yargitay",
-              "aym", "avukat", "ceza", "beraat", "tahliye", "kanun", "davas"],
-    "Ekonomi": ["enflasyon", "faiz", "merkez bankasi", "dolar", "doviz", "ekonomi", "butce", "vergi", "borsa", "asgari ucret",
-                "piyasa", "buyume", "ihracat", "cari acik", "kredi", "maas", "emekli", "tcmb", "fed"],
-    "Dış politika": ["nato", "abd", "rusya", "israil", "iran", "suriye", "ukrayna", "avrupa birligi", "trump", "putin",
-                     "diplomasi", "gazze", "azerbaycan", "yunanistan", "dis politika", "washington", "brüksel", "bruksel"],
-    "Tarih": ["ataturk", "osmanli", "tarih", "lozan", "padisah", "cumhuriyet'in", "kurtulus savasi", "sultan", "1923", "1919"],
-    "Teknoloji": ["yapay zeka", "teknoloji", "internet", "sosyal medya", "yazilim", "siber", "dijital", "algoritma"],
-    "Bilim": ["bilim", "arastirma", "uzay", "nasa", "fizik", "deney", "akademi", "bilimsel", "evrim"],
-    "Sağlık": ["saglik", "hastane", "doktor", "hekim", "salgin", "asi", "ilac", "kanser", "hasta"],
-    "Çevre": ["iklim", "cevre", "maden", "orman", "yangin", "kuraklik", "kirlilik", "deprem", "sel", "enerji"],
-    "Eğitim": ["egitim", "okul", "ogrenci", "ogretmen", "universite", "yks", "mufredat", "meb", "sinav"],
-    "Toplumsal haklar": ["kadin", "cocuk", "isci", "sendika", "lgbt", "multeci", "insan haklari", "ifade ozgurlugu",
-                         "basin ozgurlugu", "siddet", "ayrimcilik", "gazeteci"],
-    "Spor": ["futbol", "mac", "maci", "macta", "macin", "galatasaray", "fenerbahce", "besiktas", "trabzonspor", "transfer", "teknik direktor", "lig",
-             "gol", "hakem", "derbi", "milli takim", "basketbol", "uefa", "tff", "sampiyon"],
-}
-
-
-def kategori_oner(ogeler: list[dict]) -> list[str]:
-    """Bir kişinin içeriklerinden en baskın 1-2 kategoriyi çıkarır (en az 3 içerik gerekir)."""
-    if len(ogeler) < 3:
-        return []
-    # kısa kelimeler ("mac", "sel", "abd") yalnızca tam kelime olarak sayılır; uzunlar ekleriyle de eşleşir
-    desenler = {kat: [re.compile(r"(?<![a-z0-9])" + re.escape(sade(k)) + (r"(?![a-z0-9])" if len(k) <= 4 else ""))
-                      for k in kelimeler]
-                for kat, kelimeler in _KATEGORI_KELIMELERI.items()}
-    say = {kat: 0 for kat in desenler}
-    for o in ogeler:
-        metin = sade(" ".join(str(o.get(x) or "") for x in ("baslik", "ozet")))
-        for kat, d in desenler.items():
-            if any(x.search(metin) for x in d):
-                say[kat] += 1
-    sirali = sorted(((n / len(ogeler), kat) for kat, n in say.items() if n), reverse=True)
-    return [kat for oran, kat in sirali[:2] if oran >= 0.25]
-
-
-def yazar_kategorileri(ayar: dict, durum: dict) -> dict:
-    """{ad: {"liste": [...], "otomatik": bool}} — kullanıcının seçimi yoksa öneri."""
-    secilen = (ayar.get("_uygulama") or {}).get("kategoriler") or {}
-    sinir = simdi() - timedelta(days=60)
-    kisi_ogeleri: dict[str, list[dict]] = {}
-    for o in durum.get("ogeler", []):
-        if not o.get("konu_haberi") and (iso_oku(o.get("tarih") or o.get("bulunma")) or simdi()) >= sinir:
-            kisi_ogeleri.setdefault(o["yazar"], []).append(o)
-    sonuc = {}
-    for y in ayar.get("yazarlar", []):
-        ad = y["ad"]
-        if ad in secilen and isinstance(secilen[ad], list):
-            sonuc[ad] = {"liste": [k for k in secilen[ad] if k in KATEGORILER], "otomatik": False}
-        else:
-            sonuc[ad] = {"liste": kategori_oner(kisi_ogeleri.get(ad, [])), "otomatik": True}
-    return sonuc
-
-
 # ───────────────────────── bildirimler ─────────────────────────
 
 def _dakika(s) -> int | None:
@@ -2424,10 +2359,8 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
         "gunluk_tarama": durum.get("gunluk_tarama", {}),
-        "kategori_listesi": KATEGORILER,
-        "kategoriler": yazar_kategorileri(ayar, durum),
         "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
-            "sessiz_bas", "sessiz_bit", "sessiz_turler", "sessiz_yazarlar", "bulten_saat", "anlik")},
+            "sessiz_bas", "sessiz_bit", "sessiz_turler", "bulten_saat", "anlik")},
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",

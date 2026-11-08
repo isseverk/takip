@@ -3,7 +3,7 @@
 Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar, alan ve tür filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; **Hepsini okundu say**'dan sonra çıkan **Geri al** ile toplu işareti geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; **Hepsini okundu say**'dan sonra çıkan **Geri al** ile toplu işareti geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, bir kişinin adını düzeltirsin (⋯ → **Adını düzelt**). Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
@@ -104,7 +104,6 @@ Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarl
 - **Türler:** Örneğin Ekşi entry'leri ya da YouTube videoları için bildirim gelmesin.
 - **Sabah bülteni:** Her gün seçtiğin saatte (ör. 08:00) son bültenden beri gelenleri kişiye göre toplayan tek bir bildirim gelir. Dokununca Günün özeti ekranı açılır. İstersen **Anlık bildirimleri kapat** kutusunu da işaretle; o zaman gün içinde tek tek bildirim gelmez, hepsi bültende toplanır. Bülten, GitHub'ın zamanlaması nedeniyle seçtiğin saatten sonraki yarım saat içinde gelir.
 - **Sessiz saatler:** Örneğin 23:00–07:30 arası bildirim gelmez. Arada gelenler, sessiz saat bitince tek bildirimde toplanır.
-- **Kişi bazında:** Kaynaklar'da bir kişinin ⋯ menüsünden **Bildirimlerini kapat**'ı seç. Yazıları akışta görünmeye devam eder; adının yanında 🔕 görünür.
 
 Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
 
@@ -121,7 +120,7 @@ Bundan sonra uygulama her açılışta ve bir yazıyı okuduğunda ya da okunmad
 
 ## Yazar adını düzeltmek
 
-Kaynaklar'da kişinin ⋯ menüsünden ya da yazar sayfasından **✏️ Adını düzelt**'e bas ve doğru yazılışı gir (ör. *ismail arı* → *İsmail Arı*). Sıradaki kontrolde ad her yerde değişir; geçmiş içerikler, okundu işaretleri, kapattığın kaynaklar ve alanlar korunur. `kaynaklar.yaml`'daki kişilerde dosyanın kendisi değişmez; düzeltme `kaynaklar_uygulama.json` içinde `ad_esleme` altında saklanır. Başka birinin adını vermek engellenir.
+Kaynaklar'da kişinin ⋯ menüsünden ya da yazar sayfasından **✏️ Adını düzelt**'e bas ve doğru yazılışı gir (ör. *ismail arı* → *İsmail Arı*). Sıradaki kontrolde ad her yerde değişir; geçmiş içerikler, okundu işaretleri ve kapattığın kaynaklar korunur. `kaynaklar.yaml`'daki kişilerde dosyanın kendisi değişmez; düzeltme `kaynaklar_uygulama.json` içinde `ad_esleme` altında saklanır. Başka birinin adını vermek engellenir.
 
 ## Yazar sayfası
 
@@ -129,7 +128,7 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 - Son 30 günde kaç içerik geldiği ve haftada ortalama kaç yazdığı.
 - Kaynaklarının durumu ve varsa adres denetimi uyarısı.
 - Son içerikleri, yapay zekâ özetleriyle.
-- **Akışta yalnızca bunu göster**, **Bildirimleri kapat/aç** ve **Kaynakları düzenle** düğmeleri.
+- **Kaynakları düzenle** ve **Adını düzelt** düğmeleri.
 
 ## Akışa hangi yazılar girer?
 
@@ -137,12 +136,6 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 - Sonraki her kontrolde yalnızca yeni yazılar eklenir. Yazının sayfasında tarih yoksa adresteki gün kullanılır (ör. `…/2026-10-23/…`); saati bilinmediği için kartta saat yazmaz.
 - Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse bildirim göndermez, 14 günden eskiyse hiç alınmaz.
 - Akışta 45 günden eski içerik tutulmaz (yazının kendi tarihine bakılır).
-
-## Alanlar (kategoriler)
-
-Her kişinin altında hangi alanlarda yazdığı görünür (Siyaset, Hukuk, Ekonomi, Dış politika, Araştırmacı gazetecilik, Spor…). Sen seçmediysen program son iki ayın başlıklarına bakıp en baskın bir-iki alanı **otomatik** önerir (kesik çizgili etiketler). Kişinin kartında ya da yazar sayfasında **düzenle**'ye dokunup kendin seçebilirsin; seçimin `kaynaklar_uygulama.json` içinde `kategoriler` altında saklanır. **Otomatiğe bırak** seçimini siler.
-
-Akışın üstündeki 🏷 satırından bir alan seçince yalnızca o alandaki kişilerin içerikleri görünür ve yazar satırı da o alandakilere daralır.
 
 ## Doğrulama işareti (✓ / ?)
 
