@@ -65,7 +65,7 @@
       ]
     },
     {
-      "ad": "yalçın karatepe",
+      "ad": "YALÇIN KARATEPE",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -300,11 +300,6 @@
       "zaman": "2026-11-07T06:40:33+00:00",
       "aciklama": "Medyascope, YouTube"
     },
-    "yalçın karatepe": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:51:35+00:00",
-      "aciklama": "birgun.net, YouTube"
-    },
     "ruşen çakır": {
       "durum": "bulundu",
       "zaman": "2026-11-07T06:51:59+00:00",
@@ -414,6 +409,11 @@
       "durum": "bulunamadi",
       "zaman": "2026-11-08T08:48:29.329Z",
       "aciklama": "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"
+    },
+    "YALÇIN KARATEPE": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:51:35+00:00",
+      "aciklama": "birgun.net, YouTube"
     }
   },
   "oneriler": {
@@ -883,12 +883,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "yalçın karatepe",
-      "yeni": "YALÇIN KARATEPE",
-      "zaman": "2026-11-08T09:09:22.446Z"
-    }
-  ]
+  }
 }
