@@ -883,5 +883,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "erdoğan sağlam",
+      "yeni": "ERDOĞAN SAĞLAM",
+      "zaman": "2026-11-08T09:15:09.419Z"
+    }
+  ]
 }
