@@ -756,115 +756,44 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Son Dakika"
     },
-    "Faruk Bildirici": {
+    "bahadır özgür": {
       "kaynaklar": [
         {
           "tur": "sayfa",
-          "url": "https://t24.com.tr/yazarlar/faruk-bildirici",
-          "etiket": "T24",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/bahadir-ozgur",
+          "etiket": "Cumhuriyet",
           "dogrula": true,
           "otomatik": true,
           "kanit": {
-            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 12 yazı",
             "ornekler": [
               {
-                "baslik": "Gazetecilerin paylaşımlarla tanıttığı parti",
-                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/gazetecilerin-paylasimlarla-tanittigi-parti,56688",
+                "baslik": "Fon vurgununa ilişkin haberleriyle gündeme gelen gazeteci Bahadır Özgür, “soruşturmanın gizliliğini ihlal”…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteci-bahadir-ozgur-yurt-disi-yasagi-ve-adli-kontrolle-serbest-birakildi-2547261",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Güvenlik kaynakları ne çok haber yazıyor!",
-                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/guvenlik-kaynaklari-ne-cok-haber-yaziyor,53617",
+                "baslik": "Son dakika haberi... Gazeteci Bahadır Özgür gözaltına alındı. Gelişmeyi Halk TV İnternet Sitesi Genel Yayın Yönetmeni…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/son-dakika-gazeteci-bahadir-ozgur-gozaltina-alindi-2547124",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Öcalan yerine İmralı görüntüsü",
-                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/ocalan-yerine-imrali-goruntusu,50718",
+                "baslik": "İstanbul Cumhuriyet Başsavcılığı, gazeteci Bahadır Özgür hakkında, MASAK’ın suç duyurusu üzerine soruşturma başlattı.…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteci-bahadir-ozgur-hakkinda-sorusturma-baslatildi-gerekce-4-yil-onceki-isid-haberi-2494001",
                 "tarih": null,
                 "kanal": null
               }
             ],
-            "sayi": 10
+            "sayi": 12
           },
-          "kimlik": "site|t24.com.tr"
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://ankahaber.net/etiket/medya-ombudsmani-faruk-bildirici",
-          "etiket": "Anka Haber",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "ankahaber.net sitesindeki yazar sayfası; 15 yazı",
-            "ornekler": [
-              {
-                "baslik": "Gazetecilik kuşatmada, gazeteciler sokaklarda",
-                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-gazetecilik-kusatmada-gazeteciler-sokaklarda",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İzleyici kayyuma tepki verdi",
-                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-izleyici-kayyuma-tepki-verdi",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Ne Ömer Çelik’e sorulabildi ne de Ümit Özlale’ye",
-                "url": "https://ankahaber.net/haber/ne-omer-celike-sorulabildi-ne-de-umit-ozlaleye",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 15
-          },
-          "kimlik": "site|ankahaber.net"
+          "kimlik": "site|cumhuriyet.com.tr"
         }
       ],
-      "zaman": "2026-11-08T08:52:29+00:00",
+      "zaman": "2026-11-08T08:54:54+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: T24, Anka Haber"
-    },
-    "deniz zeyrek": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.nationalturk.com/yazarlar/deniz-zeyrek",
-          "etiket": "NationalTurk",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "nationalturk.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "ABD’de iki paraşütçü havada çarpıştı! İkisi de hayatını kaybetti",
-                "url": "https://www.nationalturk.com/dunya/abd-parasut-kazasi-olenlen-kac-kisi/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Fon soruşturmasında Neslihan Mumcu hakkında mali tedbir talebi",
-                "url": "https://www.nationalturk.com/haberler/fon-sorusturmasi-neslihan-mumcu/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Trump’tan UFC patronu Dana White’a sürpriz teklif!",
-                "url": "https://www.nationalturk.com/dunya/trump-dana-whitea-surpriz-teklif/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|nationalturk.com"
-        }
-      ],
-      "zaman": "2026-11-08T08:53:02+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: NationalTurk"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
@@ -883,6 +812,7 @@
     "Fatih Altaylı": "FATİH ALTAYLI",
     "Barış Pehlivan": "BARIŞ PEHLİVAN",
     "İsmail Saymaz": "İSMAİL SAYMAZ",
-    "Mahfi Eğilmez": "MAHFİ EĞİLMEZ"
+    "Mahfi Eğilmez": "MAHFİ EĞİLMEZ",
+    "Uğur Gürses": "UĞUR GÜRSES"
   }
 }
