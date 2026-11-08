@@ -729,6 +729,32 @@
         }
       ],
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
+    },
+    "Timur Soykan": {
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gazetepencere.com",
+          "etiket": "Gazete Pencere",
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "gazetepencere.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 1), en yenisi 12 gün önce",
+            "ornekler": [
+              {
+                "baslik": "Muğla Valisi de fondaymış!",
+                "url": "https://www.gazetepencere.com/gundem/timur-soykan-yazdi-muga-valisi-de-fondaymis-720997h",
+                "tarih": "2026-10-27T07:00:00+00:00",
+                "kanal": null
+              }
+            ],
+            "sayi": 1
+          },
+          "kimlik": "site|gazetepencere.com"
+        }
+      ],
+      "zaman": "2026-11-08T08:48:55+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
     }
   },
   "reddedilen": {
