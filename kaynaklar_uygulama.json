@@ -216,6 +216,17 @@
           "etiket": "odatv.com"
         }
       ]
+    },
+    {
+      "ad": "nevşin mengü",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.nefes.com.tr/yazarlar/nevsin-mengu",
+          "dogrula": true,
+          "etiket": "nefes.com.tr"
+        }
+      ]
     }
   ],
   "kapali": [
