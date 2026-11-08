@@ -1290,16 +1290,21 @@ def gunluk_tarama(ist: Istemci, ayar: dict, ayar_yolu: Path, durum: dict,
 
 
 def eski_ozellik_kayitlarini_temizle(ayar_yolu: Path) -> None:
-    """Kaldırılan uygulama bildirimlerinin abonelik kayıtlarını herkese açık depodan siler."""
+    """Kaldırılan özelliklerin (uygulama bildirimi abonelikleri, konular) kayıtlarını depodan siler."""
     yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
     try:
         uyg = json.loads(yol.read_text(encoding="utf-8"))
     except Exception:
         return
-    if "push" in uyg:
-        uyg.pop("push")
+    silinen = [x for x in ("push", "konular") if x in uyg]
+    if isinstance(uyg.get("bildirim"), dict) and "kapsam" in uyg["bildirim"]:
+        uyg["bildirim"].pop("kapsam")
+        silinen.append("bildirim.kapsam")
+    if silinen:
+        for x in silinen:
+            uyg.pop(x, None)
         yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print("– uygulama bildirimi kayıtları silindi")
+        print("– kaldırılan özelliklerin kayıtları silindi: " + ", ".join(silinen))
 
 
 # Kaynak türü → ürettiği içerik türü (akış temizliğinde kullanılır)
@@ -1462,11 +1467,6 @@ def ayar_oku(yol: Path) -> dict:
         ayar = yaml.safe_load(f) or {}
     ayar.setdefault("ayarlar", {})
     ayar.setdefault("yazarlar", [])
-    for y in ayar["yazarlar"]:
-        y["kaynaklar"] = _liste(y.get("kaynaklar"))
-        for k in y["kaynaklar"]:
-            k.setdefault("_kok", "yaml")
-
     uyg_yol = Path(yol).with_name(UYGULAMA_DOSYASI)
     uyg = {}
     if uyg_yol.exists():
@@ -1474,6 +1474,12 @@ def ayar_oku(yol: Path) -> dict:
             uyg = json.loads(uyg_yol.read_text(encoding="utf-8")) or {}
         except Exception as e:
             print(f"! {UYGULAMA_DOSYASI} okunamadı, yok sayılıyor: {e}")
+    esleme = uyg.get("ad_esleme") if isinstance(uyg.get("ad_esleme"), dict) else {}
+    for y in ayar["yazarlar"]:
+        y["ad"] = _ad_esle(esleme, bosluk(y.get("ad")))      # telefondan düzeltilen adlar
+        y["kaynaklar"] = _liste(y.get("kaynaklar"))
+        for k in y["kaynaklar"]:
+            k.setdefault("_kok", "yaml")
     ad_ile = {y["ad"]: y for y in ayar["yazarlar"]}
     for uy in _liste(uyg.get("yazarlar")):
         ad = bosluk(uy.get("ad"))
@@ -1502,7 +1508,6 @@ def ayar_oku(yol: Path) -> dict:
                 k["_uygulamada_kapali"] = True
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
-                         "konular": _liste(uyg.get("konular")),
                          "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {},
                          "kategoriler": uyg.get("kategoriler") if isinstance(uyg.get("kategoriler"), dict) else {}}
     # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
@@ -1631,6 +1636,80 @@ def kose_yazarlarinin_youtubeunu_cikar(ayar_yolu: Path, durum: dict) -> list[str
     return cikarilan
 
 
+def _ad_esle(esleme: dict, ad: str) -> str:
+    """kaynaklar.yaml'daki bir adın telefondan düzeltilmiş hâli (zincirleme düzeltmeler dahil)."""
+    gorulen = set()
+    while ad in esleme and ad not in gorulen:
+        gorulen.add(ad)
+        ad = esleme[ad]
+    return ad
+
+
+def ad_degisikliklerini_uygula(ayar_yolu: Path, durum: dict) -> bool:
+    """Telefondan istenen ad düzeltmelerini (kaynaklar_uygulama.json → ad_degisiklikleri) uygular.
+    Kaynak kimlikleri addan türetildiği için kayıtlar yeni ada taşınır; geçmiş, okundu işaretleri ve kapalı
+    kaynaklar korunur. kaynaklar.yaml'daki kişiler için düzeltme 'ad_esleme' altında saklanır."""
+    yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
+    try:
+        uyg = json.loads(yol.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    istekler = [d for d in _liste(uyg.get("ad_degisiklikleri")) if isinstance(d, dict)]
+    if not istekler:
+        return False
+    uygulanan = False
+    for d in istekler:
+        eski, yeni = bosluk(d.get("eski")), bosluk(d.get("yeni"))
+        if not eski or not yeni or eski == yeni:
+            continue
+        yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        ayar = ayar_oku(ayar_yolu)
+        y = next((x for x in ayar["yazarlar"] if x["ad"] == eski), None)
+        if not y:
+            print(f"! ad düzeltme: '{eski}' bulunamadı")
+            continue
+        if any(x is not y and x["ad"].casefold() == yeni.casefold() for x in ayar["yazarlar"]):
+            print(f"! ad düzeltme: '{yeni}' adında başka biri zaten var; '{eski}' değiştirilmedi")
+            continue
+        anahtar = {kaynak_anahtari(eski, k): kaynak_anahtari(yeni, k) for k in y["kaynaklar"]}
+        for uy in _liste(uyg.get("yazarlar")):
+            if isinstance(uy, dict) and bosluk(uy.get("ad")) == eski:
+                uy["ad"] = yeni
+        if y.get("_kok") != "uygulama":          # kaynaklar.yaml'daki kişi: dosyaya dokunmadan eşleme tut
+            esleme = uyg.setdefault("ad_esleme", {})
+            asil = next((o for o in esleme if _ad_esle(esleme, o) == eski), eski)
+            esleme[asil] = yeni
+            if asil == yeni:
+                esleme.pop(asil)
+        uyg["kapali"] = [anahtar.get(x, x) for x in _liste(uyg.get("kapali"))]
+        uyg["kapali_yazarlar"] = [yeni if x == eski else x for x in _liste(uyg.get("kapali_yazarlar"))]
+        for alan in ("kategoriler", "kesif", "oneriler", "reddedilen"):
+            if isinstance(uyg.get(alan), dict) and eski in uyg[alan]:
+                uyg[alan][yeni] = uyg[alan].pop(eski)
+        b = uyg.get("bildirim")
+        if isinstance(b, dict) and isinstance(b.get("sessiz_yazarlar"), list):
+            b["sessiz_yazarlar"] = [yeni if x == eski else x for x in b["sessiz_yazarlar"]]
+        for a in _liste(uyg.get("aranacaklar")):
+            if isinstance(a, dict) and a.get("ad") == eski:
+                a["ad"] = yeni
+        kayitlar = durum.setdefault("kaynaklar", {})
+        for e, n in anahtar.items():
+            if e in kayitlar:
+                kayitlar[n] = dict(kayitlar.pop(e), yazar=yeni)
+        for o in durum.get("ogeler", []):
+            if o.get("yazar") == eski and not o.get("konu_haberi"):
+                o["yazar"] = yeni
+                o["kaynak_id"] = anahtar.get(o.get("kaynak_id"), o.get("kaynak_id"))
+        for alan in ("yazarlar", "gunluk_tarama"):
+            if isinstance(durum.get(alan), dict) and eski in durum[alan]:
+                durum[alan][yeni] = durum[alan].pop(eski)
+        print(f"✏ ad düzeltildi: {eski} → {yeni}")
+        uygulanan = True
+    uyg.pop("ad_degisiklikleri", None)
+    yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return uygulanan
+
+
 def tek_yazi_kaynaklarini_cikar(ayar_yolu: Path) -> list[str]:
     """Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumları temizler.
     Kişinin başka kaynağı kalmazsa yeniden aranır (bulunanlar onayına sunulur)."""
@@ -1674,6 +1753,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     cikti_dir = KOK / a.get("cikti_klasoru", "docs")
     durum_yolu = veri_dir / "durum.json"
     durum = durum_oku(durum_yolu)
+    if not sadece_kontrol and ad_degisikliklerini_uygula(ayar_yolu, durum):
+        ayar = ayar_oku(ayar_yolu)  # yeni adlarla yeniden oku
+        a = ayar["ayarlar"]
     if not sadece_kontrol and kose_yazarlarinin_youtubeunu_cikar(ayar_yolu, durum):
         ayar = ayar_oku(ayar_yolu)  # çıkarılan kanallar olmadan yeniden oku
         a = ayar["ayarlar"]
@@ -1807,30 +1889,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     if sadece_kontrol:
         return 0
 
-    # takip edilen konular: haberlerde de aranması istenenler için Google Haberler taraması
-    konular = konu_listesi(ayar)
-    konu_kaydi = durum.setdefault("konular", {})
-    for konu in konular:
-        if not konu["haberler"]:
-            continue
-        kd = konu_kaydi.setdefault(konu["ad"], {})
-        try:
-            eklenen = 0
-            for o in konu_haberleri(ist, konu, kd, ilk_gosterim):
-                if o["url"] in mevcut_url or _ayni_baslik_var(durum["ogeler"] + yeni_ogeler, o["yazar"], o["baslik"]):
-                    continue
-                o.update(id=kimlik(o["url"]), kaynak_id="konu:" + konu["ad"], bulunma=iso(simdi()))
-                yeni_ogeler.append(o)
-                mevcut_url.add(o["url"])
-                eklenen += 1
-            kd.update(durum="tamam", son_hata=None)
-            print(f"✓ Konu · {konu['ad']}: {eklenen} haber")
-        except Exception as e:
-            kd.update(durum="hata", son_hata=str(e)[:200])
-            print(f"✗ Konu · {konu['ad']}: {e}")
-    for ad in list(konu_kaydi):
-        if ad not in {k["ad"] for k in konular if k["haberler"]}:
-            del konu_kaydi[ad]
+    durum.pop("konular", None)   # konu takibi kaldırıldı
 
     # artık ayar dosyasında olmayan kaynakların kayıtlarını temizle
     for anahtar in list(durum["kaynaklar"]):
@@ -1841,7 +1900,6 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     # (adres değişikliğinde aynı kişinin aynı türdeki geçmişi korunur)
     aktif_turler = {(y["ad"], k.get("icerik_turu") or KAYNAK_ICERIK_TURU.get(tur, "yazi"))
                     for y, k, tur, _ in kaynaklari_listele(ayar)}
-    haberli_konular = {k["ad"] for k in konular if k["haberler"]}
     red_kumeleri = {a: set(kd.get("yedek_red") or []) for a, kd in durum["kaynaklar"].items() if kd.get("yedek_red")}
     red_tumu = set().union(*red_kumeleri.values()) if red_kumeleri else set()
     # adı her sayfada geçen sitelerde (ör. Oksijen) asıl adresi doğrulanmamış Google bağlantıları güvenilmez
@@ -1851,7 +1909,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
 
     def akista_kalsin(o: dict) -> bool:
         if o.get("konu_haberi"):
-            return o["konu_haberi"] in haberli_konular
+            return False   # konu takibi kaldırıldı
         kid = o.get("kaynak_id")
         if red_tumu and _gn_kimlik(o["url"]) in red_kumeleri.get(kid, red_tumu):
             return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
@@ -1876,11 +1934,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     durum["ogeler"] = tum[: int(a.get("akista_en_fazla", 1500))]
     durum.pop("yz", None)
 
-    # bildirimler: konu eşleşmeleri öne, susturulanlar hariç, sessiz saatlerde biriktir
+    # bildirimler: susturulanlar hariç, sessiz saatlerde biriktir
     gercek_yeni = [o for o in yeni_ogeler if not o.get("ilk")]
-    for o in gercek_yeni:
-        o["konular"] = konulari_bul(o, konular)
-    konulu, diger = bildirimleri_hazirla(a, gercek_yeni, konular)
+    diger = bildirimleri_hazirla(a, gercek_yeni)
     mesajlar = []
     if kesif_mesajlari:
         mesajlar.append(("Kaynak önerisi: onayını bekliyor", kesif_mesajlari))
@@ -1889,13 +1945,14 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         for m in denetim_mesajlari:
             print("  • " + m)
         mesajlar.append(("Takip listesi: kontrol et", denetim_mesajlari))
-    bildirimleri_gonder(ist, a, durum, konulu, diger, mesajlar)
-    bulten_gonder(ist, a, durum, konular)
+    bildirimleri_gonder(ist, a, durum, diger, mesajlar)
+    bulten_gonder(ist, a, durum)
 
     for o in durum["ogeler"]:
         o.pop("_metin", None)
         o.pop("yz_ozet", None)     # yapay zekâ özetleri kaldırıldı
         o.pop("yz_deneme", None)
+        o.pop("konular", None)
     durum["son_calisma"] = iso(baslangic)
     durum["son_calisma_suresi_sn"] = round((simdi() - baslangic).total_seconds(), 1)
 
@@ -2146,70 +2203,6 @@ def yazar_kategorileri(ayar: dict, durum: dict) -> dict:
     return sonuc
 
 
-# ───────────────────────── konular ─────────────────────────
-
-def konu_listesi(ayar: dict) -> list[dict]:
-    """kaynaklar.yaml'daki 'konular:' ile telefondan eklenen konuları birleştirir."""
-    sonuc, gorulen = [], set()
-    for x in _liste(ayar.get("konular")) + _liste((ayar.get("_uygulama") or {}).get("konular")):
-        if isinstance(x, str):
-            x = {"ad": x}
-        if not isinstance(x, dict):
-            continue
-        ad = bosluk(x.get("ad"))
-        if not ad or sade(ad) in gorulen:
-            continue
-        gorulen.add(sade(ad))
-        kelimeler = [bosluk(k) for k in _liste(x.get("kelimeler")) if bosluk(k)] or [ad]
-        sonuc.append({"ad": ad, "kelimeler": kelimeler, "haberler": bool(x.get("haberler")),
-                      "bildirim": x.get("bildirim", True) is not False})
-    return sonuc
-
-
-def _konu_deseni(kelime: str) -> re.Pattern:
-    # kelimenin başından eşleşir: "asgari ücret" → "asgari ücrete", "asgari ücretin" de tutar
-    return re.compile(r"(?<![a-z0-9])" + re.escape(sade(kelime)))
-
-
-def konulari_bul(o: dict, konular: list[dict]) -> list[str]:
-    metin = sade(" ".join(str(o.get(k) or "") for k in ("baslik", "ozet")))
-    bulunan = [k["ad"] for k in konular if any(_konu_deseni(w).search(metin) for w in k["kelimeler"])]
-    if o.get("konu_haberi") and o["konu_haberi"] not in bulunan:
-        bulunan.append(o["konu_haberi"])
-    return bulunan
-
-
-def konu_haberleri(ist: Istemci, konu: dict, kd: dict, ilk_gosterim: int) -> list[dict]:
-    """Konunun kelimeleriyle Google Haberler'de son 2 günün haberlerini arar."""
-    if feedparser is None:
-        return []
-    sorgu = " OR ".join(f'"{w}"' for w in konu["kelimeler"][:5]) + " when:2d"
-    metin = ist.al(f"https://news.google.com/rss/search?q={quote(sorgu)}&hl=tr&gl=TR&ceid=TR:tr", deneme=1)
-    ilk_kez = not kd.get("gorulen")
-    gorulen = set(kd.get("gorulen") or [])
-    sonuc, hepsi = [], []
-    for e in feedparser.parse(metin).entries:
-        link = e.get("link")
-        if not link:
-            continue
-        hepsi.append(link)
-        if link in gorulen:
-            continue
-        kaynak = bosluk((e.get("source") or {}).get("title")) if isinstance(e.get("source"), dict) else ""
-        baslik = bosluk(e.get("title", ""))
-        m = re.match(r"^(.*\S)\s+-\s+([^-]{1,60})$", baslik)
-        if m:
-            baslik, kaynak = m.group(1), kaynak or m.group(2).strip()
-        tarih = datetime(*e["published_parsed"][:6], tzinfo=timezone.utc) if e.get("published_parsed") else None
-        sonuc.append({"url": link, "baslik": kisalt(baslik, 300), "tarih": iso(tarih), "tur": "haber",
-                      "yazar": kaynak or "Haber", "kaynak": "Google Haberler", "konu_haberi": konu["ad"],
-                      "ilk": ilk_kez})
-    sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
-    kd["gorulen"] = (hepsi + [u for u in kd.get("gorulen") or [] if u not in set(hepsi)])[:500]
-    kd["son"] = iso(simdi())
-    return sonuc[:ilk_gosterim if ilk_kez else int(konu.get("en_fazla", 8))]
-
-
 # ───────────────────────── bildirimler ─────────────────────────
 
 def _dakika(s) -> int | None:
@@ -2226,23 +2219,13 @@ def sessiz_saatte_mi(b: dict, an: datetime | None = None) -> bool:
     return bas <= t < bit if bas < bit else (t >= bas or t < bit)
 
 
-def bildirimleri_hazirla(a: dict, yeniler: list[dict], konular: list[dict]) -> tuple[dict, list[dict]]:
-    """Yeni öğeleri bildirim ayarlarına göre süzer → ({konu: [öğeler]}, [diğer öğeler])"""
+def bildirimleri_hazirla(a: dict, yeniler: list[dict]) -> list[dict]:
+    """Yeni öğeleri bildirim ayarlarına göre süzer (susturulan kişi/türler, yalnızca bülten seçeneği)."""
     b = a.get("bildirim") or {}
     sessiz_yazar = set(_liste(b.get("sessiz_yazarlar")))
     sessiz_tur = set(_liste(b.get("sessiz_turler")))
-    sadece_konular = b.get("kapsam") == "konular"
-    bildirimli_konu = {k["ad"] for k in konular if k["bildirim"]}
-    konulu: dict[str, list[dict]] = {}
-    diger = []
-    for o in yeniler:
-        eslesen = [k for k in o.get("konular") or [] if k in bildirimli_konu]
-        if eslesen:
-            konulu.setdefault(eslesen[0], []).append(o)
-        elif not (sadece_konular or b.get("anlik") is False or o.get("konu_haberi")
-                  or o["yazar"] in sessiz_yazar or o.get("tur", "yazi") in sessiz_tur):
-            diger.append(o)
-    return konulu, diger
+    return [o for o in yeniler
+            if not (b.get("anlik") is False or o["yazar"] in sessiz_yazar or o.get("tur", "yazi") in sessiz_tur)]
 
 
 def site_adresi(a: dict) -> str:
@@ -2259,7 +2242,7 @@ def bildirim_kanali_var(a: dict) -> bool:
     return bool((a.get("bildirim") or {}).get("ntfy_konu"))
 
 
-def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger: list[dict],
+def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, diger: list[dict],
                         mesajlar: list[tuple[str, list[str]]]):
     """Sessiz saatlerde biriktirir; sessiz saat bitince birikenleri tek bildirimde yollar."""
     b = a.get("bildirim") or {}
@@ -2267,22 +2250,18 @@ def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, konulu: dict, diger:
         return
     bekleyen = durum.setdefault("bekleyen_bildirim", [])
     if sessiz_saatte_mi(b):
-        for konu, ogeler in konulu.items():
-            bekleyen.extend(f"🔖 {o['yazar']}: {o['baslik']}" for o in ogeler)
         if _dakika(b.get("bulten_saat")) is None:
             bekleyen.extend(f"{o['yazar']}: {o['baslik']}" for o in diger)
         for baslik, satirlar in mesajlar:
             bekleyen.extend(f"{baslik} — {x}" for x in satirlar)
         durum["bekleyen_bildirim"] = bekleyen[-60:]
-        if konulu or diger or mesajlar:
+        if diger or mesajlar:
             print("→ sessiz saatler: bildirim sabaha bırakıldı")
         return
     if bekleyen:
         satirlar = bekleyen[:10] + ([f"…ve {len(bekleyen) - 10} tane daha"] if len(bekleyen) > 10 else [])
         bildirim_gonder(ist, a, [], baslik=f"Sessiz saatlerde gelenler ({len(bekleyen)})", satirlar=satirlar)
         durum["bekleyen_bildirim"] = []
-    for konu, ogeler in konulu.items():
-        bildirim_gonder(ist, a, ogeler, baslik=f"{konu}: {len(ogeler)} yeni", oncelik="high", etiket="bookmark")
     if diger:
         bildirim_gonder(ist, a, diger)
     for baslik, satirlar in mesajlar:
@@ -2325,19 +2304,13 @@ def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | No
 
 # ───────────────────────── sabah bülteni ─────────────────────────
 
-def bulten_icerigi(durum: dict, konular: list[dict], baslangic: datetime) -> tuple[int, list[str]]:
+def bulten_icerigi(durum: dict, baslangic: datetime) -> tuple[int, list[str]]:
     """baslangic'tan beri gelen öğeleri kişiye göre gruplayıp bülten satırlarını üretir."""
     ogeler = [o for o in durum["ogeler"]
-              if not o.get("ilk") and (iso_oku(o.get("bulunma")) or baslangic) > baslangic]
+              if not o.get("ilk") and not o.get("konu_haberi") and (iso_oku(o.get("bulunma")) or baslangic) > baslangic]
     if not ogeler:
         return 0, []
     satirlar = []
-    konu_say: dict[str, int] = {}
-    for o in ogeler:
-        for k in konulari_bul(o, konular):
-            konu_say[k] = konu_say.get(k, 0) + 1
-    for k, n in sorted(konu_say.items(), key=lambda x: -x[1]):
-        satirlar.append(f"🔖 {k}: {n} içerik")
     kisiler: dict[str, list[dict]] = {}
     for o in ogeler:
         if not o.get("konu_haberi"):
@@ -2351,7 +2324,7 @@ def bulten_icerigi(durum: dict, konular: list[dict], baslangic: datetime) -> tup
     return len(ogeler), satirlar
 
 
-def bulten_gonder(ist: Istemci, a: dict, durum: dict, konular: list[dict], an: datetime | None = None) -> bool:
+def bulten_gonder(ist: Istemci, a: dict, durum: dict, an: datetime | None = None) -> bool:
     """Bülten saati geldiyse (günde bir kez) son bültenden beri gelenleri tek bildirimde yollar."""
     b = a.get("bildirim") or {}
     saat = _dakika(b.get("bulten_saat"))
@@ -2364,7 +2337,7 @@ def bulten_gonder(ist: Istemci, a: dict, durum: dict, konular: list[dict], an: d
         return False
     son = iso_oku(durum.get("bulten_son"))
     baslangic = max(son, an - timedelta(days=2)) if son else an - timedelta(hours=24)
-    sayi, satirlar = bulten_icerigi(durum, konular, baslangic)
+    sayi, satirlar = bulten_icerigi(durum, baslangic)
     durum.update(bulten_gun=bugun, bulten_son=iso(an))
     if not sayi:
         print("☀ bülten: son bültenden beri yeni içerik yok, gönderilmedi")
@@ -2453,11 +2426,8 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "gunluk_tarama": durum.get("gunluk_tarama", {}),
         "kategori_listesi": KATEGORILER,
         "kategoriler": yazar_kategorileri(ayar, durum),
-        "konular": konu_listesi(ayar),
-        "konu_durumu": {ad: {k: v for k, v in kd.items() if k != "gorulen"}
-                        for ad, kd in (durum.get("konular") or {}).items()},
         "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
-            "sessiz_bas", "sessiz_bit", "kapsam", "sessiz_turler", "sessiz_yazarlar", "bulten_saat", "anlik")},
+            "sessiz_bas", "sessiz_bit", "sessiz_turler", "sessiz_yazarlar", "bulten_saat", "anlik")},
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",

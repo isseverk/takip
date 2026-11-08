@@ -3,9 +3,9 @@
 Takip ettiğin yazarların yeni köşe yazılarını, YouTube videolarını, podcast bölümlerini, Bluesky ve Telegram paylaşımlarını, Ekşi Sözlük entry'lerini ve Instagram paylaşımlarını tek bir yerde toplar. Telefonuna uygulama olarak kurulur.
 
 Uygulamanın üç ekranı var:
-- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazıyı sonra okumak için kartındaki ☆ işaretine dokun; **★ Sonra oku** çipinde toplanır. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar ve tür filtresi, arama ve okundu işareti var. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
+- **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar, alan ve tür filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; **Hepsini okundu say**'dan sonra çıkan **Geri al** ile toplu işareti geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
-- **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, takip ettiğin konuları yönetirsin. Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
+- **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, bir kişinin adını düzeltirsin (⋯ → **Adını düzelt**). Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
 - **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
 
 ---
@@ -96,38 +96,32 @@ Yeni türlerle ilgili bilmen gerekenler:
 
 **Instagram**, giriş yapmadan otomatik okumayı çoğu zaman engeller. Kalıcı çözüm için **rss.app** gibi bir servisten hesabın RSS adresini alıp telefondan **Blog / RSS** türüyle ekle.
 
-## Konular — bir konudaki her şeyi yakala
-
-Uygulamada **Kaynaklar → Konular → + Konu**'ya bas ve bir konu yaz (ör. *asgari ücret*, *Kanal İstanbul*). Aynı konu için birden fazla kelimeyi virgülle ayırarak yazabilirsin. Kelimenin ekli halleri de bulunur: "asgari ücret" yazarsan "asgari ücrete" de eşleşir.
-
-- Takip ettiğin kişilerin bu konudaki yazıları akışta 🔖 etiketiyle işaretlenir. Akışın üstündeki 🔖 çiplerine dokunarak yalnızca o konuyu görebilirsin.
-- **Haberlerde de ara** kutusunu işaretlersen, takip ettiğin kişilerin dışında Google Haberler'de bu konuda çıkan yeni haberler de akışa **Haber** etiketiyle gelir.
-- Konuna uyan yeni bir şey çıkınca ayrıca, öncelikli bir bildirim gelir. Bunu konu bazında kapatabilirsin.
-- Bir konuyu kaldırınca, onun için gelen haberler de akıştan düşer.
-
 ## Bildirimler
 
 Bildirim isteğe bağlıdır; kurmazsan akış yine güncellenir. İstersen ücretsiz **ntfy** uygulamasıyla alabilirsin: **Ayarlar → Bildirimler → ntfy bildirimlerini aç**'a bas, ntfy uygulamasını kur ve **ntfy'de abone ol** düğmesine dokun.
 
 Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
-- **Ne zaman:** Her yeni içerikte ya da yalnızca konularına uyanlarda.
 - **Türler:** Örneğin Ekşi entry'leri ya da YouTube videoları için bildirim gelmesin.
-- **Sabah bülteni:** Her gün seçtiğin saatte (ör. 08:00) son bültenden beri gelenleri kişiye göre toplayan tek bir bildirim gelir. Dokununca Günün özeti ekranı açılır. İstersen **Anlık bildirimleri kapat** kutusunu da işaretle; o zaman gün içinde yalnızca konularına uyan içerikler anında bildirilir, gerisi bültende toplanır. Bülten, GitHub'ın zamanlaması nedeniyle seçtiğin saatten sonraki yarım saat içinde gelir.
+- **Sabah bülteni:** Her gün seçtiğin saatte (ör. 08:00) son bültenden beri gelenleri kişiye göre toplayan tek bir bildirim gelir. Dokununca Günün özeti ekranı açılır. İstersen **Anlık bildirimleri kapat** kutusunu da işaretle; o zaman gün içinde tek tek bildirim gelmez, hepsi bültende toplanır. Bülten, GitHub'ın zamanlaması nedeniyle seçtiğin saatten sonraki yarım saat içinde gelir.
 - **Sessiz saatler:** Örneğin 23:00–07:30 arası bildirim gelmez. Arada gelenler, sessiz saat bitince tek bildirimde toplanır.
-- **Kişi bazında:** Kaynaklar'da bir kişinin ⋯ menüsünden **Bildirimlerini kapat**'ı seç. Yazıları akışta görünmeye devam eder; adının yanında 🔕 görünür. Bu kişinin bir yazısı konularından birine uyarsa yine bildirim gelir.
+- **Kişi bazında:** Kaynaklar'da bir kişinin ⋯ menüsünden **Bildirimlerini kapat**'ı seç. Yazıları akışta görünmeye devam eder; adının yanında 🔕 görünür.
 
 Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
 
-## Sonra oku ve cihazlar arası eşitleme
+## Okundu işaretleri ve cihazlar arası eşitleme
 
-Bir yazıyı sonra okumak için kartının sağ üstündeki ☆ işaretine dokun. Akışın üstündeki **★ Sonra oku** çipinde toplanırlar. Kaydettiğin yazılar 45 gün sonra akıştan düşse de bu listede kalır; okuduktan sonra ★'e dokunup çıkarabilirsin.
+Açtığın yazılar soluk görünür. Yanlışlıkla okundu sayılanı kartındaki **↺ Okunmadı yap** ile geri alabilirsin.
 
-Okundu işaretlerini ve Sonra oku listeni telefonunla bilgisayarın arasında eşitleyebilirsin:
+Okundu işaretlerini telefonunla bilgisayarın arasında eşitleyebilirsin:
 1. Her iki cihazda da Takip'i aç ve **Ayarlar → GitHub bağlantısı** bölümüne anahtarı gir (telefonda kullandığın anahtarı bilgisayarda da kullanabilirsin).
 2. Birinci cihazda **Ayarlar → Cihazlar arası eşitleme** bölümünde bir parola belirle ve **Eşitlemeyi aç**'a bas.
 3. Diğer cihazda aynı parolayı gir.
 
-Bundan sonra uygulama her açılışta ve bir yazıyı okuduğunda ya da kaydettiğinde birkaç saniye içinde eşitlenir. Bu bilgiler depodaki ayrı bir **okundu** dalında, senin parolanla şifrelenmiş olarak durur; depo herkese açık olsa da kimse okuyamaz. Parolayı unutursan aynı bölümden yeni parola belirleyip baştan başlayabilirsin; bu cihazdaki işaretlerin kaybolmaz.
+Bundan sonra uygulama her açılışta ve bir yazıyı okuduğunda ya da okunmadı yaptığında birkaç saniye içinde eşitlenir. Bu bilgiler depodaki ayrı bir **okundu** dalında, senin parolanla şifrelenmiş olarak durur; depo herkese açık olsa da kimse okuyamaz. Parolayı unutursan aynı bölümden yeni parola belirleyip baştan başlayabilirsin; bu cihazdaki işaretlerin kaybolmaz.
+
+## Yazar adını düzeltmek
+
+Kaynaklar'da kişinin ⋯ menüsünden ya da yazar sayfasından **✏️ Adını düzelt**'e bas ve doğru yazılışı gir (ör. *ismail arı* → *İsmail Arı*). Sıradaki kontrolde ad her yerde değişir; geçmiş içerikler, okundu işaretleri, kapattığın kaynaklar ve alanlar korunur. `kaynaklar.yaml`'daki kişilerde dosyanın kendisi değişmez; düzeltme `kaynaklar_uygulama.json` içinde `ad_esleme` altında saklanır. Başka birinin adını vermek engellenir.
 
 ## Yazar sayfası
 
@@ -200,7 +194,7 @@ Bilgisayarında `python takip.py --kontrol` komutunu çalıştırırsan her kayn
 | `uygulama/` | Telefon uygulamasının simgeleri ve çevrimdışı çalışma dosyaları |
 | `sablon.html` | Uygulamanın ekranları |
 | `veri/durum.json` | Daha önce görülen yazıların kaydı. Bulutta depodaki **veri** dalında tutulur; o dalı silersen her şey "ilk çalıştırma" sayılır. |
-| `okundu` dalı | Eşitleme açıksa okundu işaretleri ve Sonra oku listesi (şifreli). Silersen eşitleme baştan başlar, cihazlardaki kayıtlar kaybolmaz. |
+| `okundu` dalı | Eşitleme açıksa okundu işaretleri (şifreli). Silersen eşitleme baştan başlar, cihazlardaki kayıtlar kaybolmaz. |
 | `docs/` | Üretilen akış sayfası ve RSS |
 | `.github/workflows/takip.yml` | Bulutta yarım saatlik otomatik çalışma |
 | `calistir.bat`, `zamanlayici_kur.bat` | Windows'ta çalıştırma ve otomatik zamanlama |
