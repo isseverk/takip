@@ -221,6 +221,17 @@
           "etiket": "milliyet.com.tr"
         }
       ]
+    },
+    {
+      "ad": "Martin Wolf",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ft.com/martin-wolf",
+          "dogrula": true,
+          "etiket": "ft.com"
+        }
+      ]
     }
   ],
   "kapali": [
