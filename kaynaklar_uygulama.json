@@ -431,9 +431,9 @@
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
     },
     "nevşin mengü": {
-      "durum": "onay_bekliyor",
-      "zaman": "2026-11-08T08:35:46+00:00",
-      "aciklama": "Gazete Oku"
+      "durum": "bulunamadi",
+      "zaman": "2026-11-08T08:48:29.329Z",
+      "aciklama": "Önerilen kaynaklar yanlış bulundu; adresi biliyorsan elle ekle"
     },
     "TOLGA ŞARDAN": {
       "durum": "onay_bekliyor",
@@ -621,43 +621,6 @@
       ],
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
     },
-    "nevşin mengü": {
-      "zaman": "2026-11-08T08:35:46+00:00",
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gazeteoku.com",
-          "etiket": "Gazete Oku",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "gazeteoku.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 7), en yenisi bugün",
-            "ornekler": [
-              {
-                "baslik": "Washington’da sandık Kudüs ve Tahran’da deprem",
-                "url": "https://www.gazeteoku.com/yazar/nevsin-mengu/washingtonda-sandik-kudus-ve-tahranda-deprem/1303915",
-                "tarih": "2026-11-08T04:00:43+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "Nasıl yaptılar? - Nevşin Mengü - Nefes Gazetesi",
-                "url": "https://www.gazeteoku.com/yazar/nevsin-mengu/nasil-yaptilar/1301726",
-                "tarih": "2026-11-03T02:00:00+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "Bir teşekkür, bir kalp kırıklığı",
-                "url": "https://www.gazeteoku.com/yazar/nevsin-mengu/bir-tesekkur-bir-kalp-kirikligi/1300975",
-                "tarih": "2026-11-01T02:00:00+00:00",
-                "kanal": null
-              }
-            ],
-            "sayi": 7
-          },
-          "kimlik": "site|gazeteoku.com"
-        }
-      ],
-      "aciklama": "Gazete Oku"
-    },
     "Mahfi Eğilmez": {
       "kaynaklar": [
         {
@@ -805,5 +768,10 @@
       ],
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
     }
+  },
+  "reddedilen": {
+    "nevşin mengü": [
+      "site|gazeteoku.com"
+    ]
   }
 }
