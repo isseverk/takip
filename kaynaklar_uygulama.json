@@ -451,7 +451,7 @@
     ]
   },
   "ad_esleme": {
-    "Murat Yetkin": "MURAT YEKİN",
+    "Murat Yetkin": "MURAT YETKİN",
     "Fatih Altaylı": "FATİH ALTAYLI",
     "Barış Pehlivan": "BARIŞ PEHLİVAN",
     "İsmail Saymaz": "İSMAİL SAYMAZ",
@@ -479,13 +479,6 @@
     "FEHİM TAŞTEKİN",
     "DENİZ ZEYREK",
     "BEKİR AĞIRDIR",
-    "MURAT YEKİN"
-  ],
-  "ad_degisiklikleri": [
-    {
-      "eski": "MURAT YEKİN",
-      "yeni": "MURAT YETKİN",
-      "zaman": "2026-11-08T10:42:54.370Z"
-    }
+    "MURAT YETKİN"
   ]
 }
