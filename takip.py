@@ -1290,17 +1290,13 @@ def gunluk_tarama(ist: Istemci, ayar: dict, ayar_yolu: Path, durum: dict,
 
 
 def eski_ozellik_kayitlarini_temizle(ayar_yolu: Path) -> None:
-    """Kaldırılan özelliklerin (uygulama bildirimi abonelikleri, konular, alanlar, kişi susturma) kayıtlarını siler."""
+    """Kaldırılan özelliklerin (bildirimler, konular, alanlar) kayıtlarını depodan siler."""
     yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
     try:
         uyg = json.loads(yol.read_text(encoding="utf-8"))
     except Exception:
         return
-    silinen = [x for x in ("push", "konular", "kategoriler") if x in uyg]
-    for alt in ("kapsam", "sessiz_yazarlar"):
-        if isinstance(uyg.get("bildirim"), dict) and alt in uyg["bildirim"]:
-            uyg["bildirim"].pop(alt)
-            silinen.append("bildirim." + alt)
+    silinen = [x for x in ("push", "konular", "kategoriler", "bildirim") if x in uyg]
     if silinen:
         for x in silinen:
             uyg.pop(x, None)
@@ -1510,13 +1506,6 @@ def ayar_oku(yol: Path) -> dict:
     ayar["_uygulama"] = {"aranacaklar": [a.get("ad") for a in _liste(uyg.get("aranacaklar")) if isinstance(a, dict)],
                          "kesif": uyg.get("kesif") or {},
                          "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}}
-    # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
-    uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
-    if uyg_bildirim:
-        ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"].get("bildirim") or {}, **uyg_bildirim)
-    if os.environ.get("NTFY_KONU"):
-        ayar["ayarlar"]["bildirim"] = dict(ayar["ayarlar"].get("bildirim") or {},
-                                           ntfy_konu=os.environ["NTFY_KONU"])
     return ayar
 
 
@@ -1686,9 +1675,6 @@ def ad_degisikliklerini_uygula(ayar_yolu: Path, durum: dict) -> bool:
         for alan in ("kesif", "oneriler", "reddedilen"):
             if isinstance(uyg.get(alan), dict) and eski in uyg[alan]:
                 uyg[alan][yeni] = uyg[alan].pop(eski)
-        b = uyg.get("bildirim")
-        if isinstance(b, dict) and isinstance(b.get("sessiz_yazarlar"), list):
-            b["sessiz_yazarlar"] = [yeni if x == eski else x for x in b["sessiz_yazarlar"]]
         for a in _liste(uyg.get("aranacaklar")):
             if isinstance(a, dict) and a.get("ad") == eski:
                 a["ad"] = yeni
@@ -1934,19 +1920,14 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     durum["ogeler"] = tum[: int(a.get("akista_en_fazla", 1500))]
     durum.pop("yz", None)
 
-    # bildirimler: susturulanlar hariç, sessiz saatlerde biriktir
-    gercek_yeni = [o for o in yeni_ogeler if not o.get("ilk")]
-    diger = bildirimleri_hazirla(a, gercek_yeni)
-    mesajlar = []
-    if kesif_mesajlari:
-        mesajlar.append(("Kaynak önerisi: onayını bekliyor", kesif_mesajlari))
+    for m in kesif_mesajlari:
+        print("🔎 " + m)
     if denetim_mesajlari:
         print("\nAdres denetimi:")
         for m in denetim_mesajlari:
             print("  • " + m)
-        mesajlar.append(("Takip listesi: kontrol et", denetim_mesajlari))
-    bildirimleri_gonder(ist, a, durum, diger, mesajlar)
-    bulten_gonder(ist, a, durum)
+    for x in ("bekleyen_bildirim", "bulten_gun", "bulten_son"):   # bildirimler kaldırıldı
+        durum.pop(x, None)
 
     for o in durum["ogeler"]:
         o.pop("_metin", None)
@@ -1965,7 +1946,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     sayfa_uret(ayar, durum, cikti_dir / "index.html")
     rss_uret(ayar, durum, cikti_dir / "akis.xml")
 
-    print(f"\nBitti: {len(gercek_yeni)} yeni öğe, akışta toplam {len(durum['ogeler'])} öğe. "
+    print(f"\nBitti: {len([o for o in yeni_ogeler if not o.get('ilk')])} yeni öğe, akışta toplam {len(durum['ogeler'])} öğe. "
           f"Sayfa: {cikti_dir / 'index.html'}")
     return 0
 
@@ -2138,151 +2119,6 @@ def _siralama_anahtari(o: dict):
     return tarih
 
 
-# ───────────────────────── bildirimler ─────────────────────────
-
-def _dakika(s) -> int | None:
-    m = re.match(r"^\s*(\d{1,2})[:.](\d{2})\s*$", str(s or ""))
-    return int(m.group(1)) * 60 + int(m.group(2)) if m else None
-
-
-def sessiz_saatte_mi(b: dict, an: datetime | None = None) -> bool:
-    bas, bit = _dakika(b.get("sessiz_bas")), _dakika(b.get("sessiz_bit"))
-    if bas is None or bit is None or bas == bit:
-        return False
-    yerel = (an or simdi()).astimezone(TR_SAAT)
-    t = yerel.hour * 60 + yerel.minute
-    return bas <= t < bit if bas < bit else (t >= bas or t < bit)
-
-
-def bildirimleri_hazirla(a: dict, yeniler: list[dict]) -> list[dict]:
-    """Yeni öğeleri bildirim ayarlarına göre süzer (susturulan kişi/türler, yalnızca bülten seçeneği)."""
-    b = a.get("bildirim") or {}
-    sessiz_yazar = set(_liste(b.get("sessiz_yazarlar")))
-    sessiz_tur = set(_liste(b.get("sessiz_turler")))
-    return [o for o in yeniler
-            if not (b.get("anlik") is False or o["yazar"] in sessiz_yazar or o.get("tur", "yazi") in sessiz_tur)]
-
-
-def site_adresi(a: dict) -> str:
-    if a.get("site_adresi"):
-        return a["site_adresi"]
-    depo = os.environ.get("GITHUB_REPOSITORY", "")
-    if "/" in depo:
-        sahip, ad = depo.split("/", 1)
-        return f"https://{sahip}.github.io/{ad}/" if ad.lower() != f"{sahip.lower()}.github.io" else f"https://{ad}/"
-    return ""
-
-
-def bildirim_kanali_var(a: dict) -> bool:
-    return bool((a.get("bildirim") or {}).get("ntfy_konu"))
-
-
-def bildirimleri_gonder(ist: Istemci, a: dict, durum: dict, diger: list[dict],
-                        mesajlar: list[tuple[str, list[str]]]):
-    """Sessiz saatlerde biriktirir; sessiz saat bitince birikenleri tek bildirimde yollar."""
-    b = a.get("bildirim") or {}
-    if not bildirim_kanali_var(a):
-        return
-    bekleyen = durum.setdefault("bekleyen_bildirim", [])
-    if sessiz_saatte_mi(b):
-        if _dakika(b.get("bulten_saat")) is None:
-            bekleyen.extend(f"{o['yazar']}: {o['baslik']}" for o in diger)
-        for baslik, satirlar in mesajlar:
-            bekleyen.extend(f"{baslik} — {x}" for x in satirlar)
-        durum["bekleyen_bildirim"] = bekleyen[-60:]
-        if diger or mesajlar:
-            print("→ sessiz saatler: bildirim sabaha bırakıldı")
-        return
-    if bekleyen:
-        satirlar = bekleyen[:10] + ([f"…ve {len(bekleyen) - 10} tane daha"] if len(bekleyen) > 10 else [])
-        bildirim_gonder(ist, a, [], baslik=f"Sessiz saatlerde gelenler ({len(bekleyen)})", satirlar=satirlar)
-        durum["bekleyen_bildirim"] = []
-    if diger:
-        bildirim_gonder(ist, a, diger)
-    for baslik, satirlar in mesajlar:
-        bildirim_gonder(ist, a, [], baslik=baslik, satirlar=satirlar)
-
-
-def bildirim_gonder(ist: Istemci, a: dict, yeniler: list[dict], baslik: str | None = None,
-                    satirlar: list[str] | None = None, oncelik: str | None = None, etiket: str = "newspaper",
-                    tikla: str | None = None):
-    """Telefona bildirim (ntfy)."""
-    if not bildirim_kanali_var(a):
-        return
-    konu = (a.get("bildirim") or {}).get("ntfy_konu")
-    sunucu = (a.get("bildirim") or {}).get("ntfy_sunucu", "https://ntfy.sh").rstrip("/")
-    if satirlar is None:
-        satirlar = [f"{o['yazar']}: {o['baslik']}" for o in yeniler[:8]]
-        if len(yeniler) > 8:
-            satirlar.append(f"…ve {len(yeniler) - 8} tane daha")
-    baslik = baslik or f"{len(yeniler)} yeni içerik"
-    basliklar = {"Title": baslik.encode("utf-8"), "Tags": etiket}
-    if oncelik:
-        basliklar["Priority"] = oncelik
-    adres = site_adresi(a)
-    if len(yeniler) == 1:  # tek yazıysa bildirime dokununca doğrudan yazı açılsın
-        basliklar["Click"] = yeniler[0]["url"]
-        if adres:
-            basliklar["Actions"] = f"view, Akışı aç, {adres}"
-    elif adres:
-        basliklar["Click"] = adres
-    if tikla:
-        basliklar["Click"] = tikla
-    if not konu:
-        return
-    try:
-        ist.gonder(f"{sunucu}/{konu}", "\n".join(satirlar).encode("utf-8"), basliklar)
-        print("→ telefona bildirim gönderildi (ntfy)")
-    except Exception as e:
-        print(f"! bildirim gönderilemedi: {e}")
-
-
-# ───────────────────────── sabah bülteni ─────────────────────────
-
-def bulten_icerigi(durum: dict, baslangic: datetime) -> tuple[int, list[str]]:
-    """baslangic'tan beri gelen öğeleri kişiye göre gruplayıp bülten satırlarını üretir."""
-    ogeler = [o for o in durum["ogeler"]
-              if not o.get("ilk") and not o.get("konu_haberi") and (iso_oku(o.get("bulunma")) or baslangic) > baslangic]
-    if not ogeler:
-        return 0, []
-    satirlar = []
-    kisiler: dict[str, list[dict]] = {}
-    for o in ogeler:
-        if not o.get("konu_haberi"):
-            kisiler.setdefault(o["yazar"], []).append(o)
-    sirali = sorted(kisiler.items(), key=lambda x: (-len(x[1]), x[0]))
-    for ad, liste in sirali[:14]:
-        bas = kisalt(liste[0]["baslik"], 90)
-        satirlar.append(f"• {ad}: {bas}" if len(liste) == 1 else f"• {ad} ({len(liste)}): {bas} …")
-    if len(sirali) > 14:
-        satirlar.append(f"…ve {len(sirali) - 14} kişiden daha")
-    return len(ogeler), satirlar
-
-
-def bulten_gonder(ist: Istemci, a: dict, durum: dict, an: datetime | None = None) -> bool:
-    """Bülten saati geldiyse (günde bir kez) son bültenden beri gelenleri tek bildirimde yollar."""
-    b = a.get("bildirim") or {}
-    saat = _dakika(b.get("bulten_saat"))
-    if saat is None or not bildirim_kanali_var(a):
-        return False
-    an = an or simdi()
-    yerel = an.astimezone(TR_SAAT)
-    bugun = yerel.date().isoformat()
-    if durum.get("bulten_gun") == bugun or yerel.hour * 60 + yerel.minute < saat or sessiz_saatte_mi(b, an):
-        return False
-    son = iso_oku(durum.get("bulten_son"))
-    baslangic = max(son, an - timedelta(days=2)) if son else an - timedelta(hours=24)
-    sayi, satirlar = bulten_icerigi(durum, baslangic)
-    durum.update(bulten_gun=bugun, bulten_son=iso(an))
-    if not sayi:
-        print("☀ bülten: son bültenden beri yeni içerik yok, gönderilmedi")
-        return False
-    adres = site_adresi(a)
-    bildirim_gonder(ist, a, [], baslik=f"Günün özeti: {sayi} yeni içerik", satirlar=satirlar,
-                    etiket="sunny", tikla=(adres + "?bulten=1") if adres else None)
-    return True
-
-
 # ───────────────────────── çıktılar ─────────────────────────
 
 def rss_uret(ayar: dict, durum: dict, yol: Path):
@@ -2353,14 +2189,11 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "olusturma": iso(simdi()),
         "yenileme_dk": a.get("yenileme_dakika", 30),
         "depo": os.environ.get("GITHUB_REPOSITORY") or a.get("github_depo") or "",
-        "ntfy_konu": (a.get("bildirim") or {}).get("ntfy_konu") or "",
         "yazar_listesi": _yazar_listesi(ayar, durum),
         "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
         "gunluk_tarama": durum.get("gunluk_tarama", {}),
-        "bildirim": {k: (a.get("bildirim") or {}).get(k) for k in (
-            "sessiz_bas", "sessiz_bit", "sessiz_turler", "bulten_saat", "anlik")},
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",

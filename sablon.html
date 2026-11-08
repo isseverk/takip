@@ -97,8 +97,6 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .zaman-alan input{border:1px solid var(--cizgi);background:var(--zemin);color:inherit;border-radius:10px;padding:8px 10px;font-size:16px}
 .gizli-kutu{display:flex;gap:8px;align-items:center;margin-top:6px}
 .gizli-kutu code{flex:1;min-width:0;overflow-wrap:anywhere;font-size:12.5px;background:var(--ince);border-radius:8px;padding:6px 8px;user-select:all}
-.ntfy-blok{margin-top:14px;border-top:1px solid var(--cizgi);padding-top:10px}
-.ntfy-blok summary{cursor:pointer;font-weight:600;font-size:14.5px}
 .alt-baslik{font-size:13px;font-weight:600;color:var(--soluk);margin:14px 0 2px;text-transform:uppercase;letter-spacing:.04em}
 .yazar[role=button]{cursor:pointer}
 .bulten-ozet{font-size:14.5px;color:var(--soluk);margin:4px 2px 10px}
@@ -329,8 +327,6 @@ footer a{color:var(--soluk)}
       </div>
     </div>
 
-    <h2 class="bolum-baslik">Bildirimler</h2>
-    <div class="kart"><div class="ayar" id="bildirimAyar"></div></div>
 
     <h2 class="bolum-baslik">Diğer</h2>
     <div class="kart">
@@ -764,7 +760,6 @@ footer a{color:var(--soluk)}
     depo.yaz("gizlenen", gizlenenler().concat([Object.assign({zaman: Date.now()}, g)]));
     veriHazirla(); akisCiz();
   }
-  const bildirimAyari = () => Object.assign({}, yerelVeyaSunucu("bildirim_yerel", V.bildirim || {}));
   const yeniMi = o => !o.ilk && oncekiZiyaret !== null && o._b.getTime() > oncekiZiyaret;
 
   async function yenile(sessiz){
@@ -931,12 +926,6 @@ footer a{color:var(--soluk)}
         el("span",{class:"nokta", style:`background:${renk(ad)}`}), el("b",{text:ad, role:"button", style:"cursor:pointer", onclick: () => yazarAc(ad)}),
         el("span",{class:"say-rozet", text: l.length > 1 ? `${l.length} içerik` : ""})));
       l.forEach(o => kart.append(bultenOge(o)));
-      ic.append(kart);
-    }
-    for (const [k, l] of haberler){
-      const kart = el("div",{class:"kart"}, el("div",{class:"kart-ust"}, el("span",{text:"🔖"}), el("b",{text:`${k} — haberler`}),
-        el("span",{class:"say-rozet", text:`${l.length} haber`})));
-      l.slice(0, 12).forEach(o => kart.append(bultenOge(o, o.yazar + ": ")));
       ic.append(kart);
     }
   }
@@ -1388,20 +1377,7 @@ footer a{color:var(--soluk)}
     finally { $("adKaydet").disabled = false; }
   });
 
-  // ───────── BİLDİRİM AYARLARI
-  async function bildirimDegistir(fn, mesaj){
-    if (!GH.bagli()){ tost("Önce Ayarlar'dan GitHub bağlantısını kur"); return false; }
-    tost("Kaydediliyor…", 15000);
-    try {
-      await uygDosyaDegistir(i => { i.bildirim = Object.assign({}, i.bildirim); fn(i.bildirim); }, mesaj);
-      const b = bildirimAyari(); fn(b);
-      depo.yaz("bildirim_yerel", {deger: b, zaman: Date.now()});
-      tost(mesaj + " — sıradaki kontrolden itibaren geçerli", 4000);
-      if (durum.sekme === "kaynaklar") kaynaklarCiz();
-      if (durum.sekme === "ayarlar") bildirimCiz();
-      return true;
-    } catch(e){ tost(e.message, 6000); return false; }
-  }
+
 
   // ───────── EKLE FORMU
   function algila(girdi){
@@ -1550,7 +1526,6 @@ footer a{color:var(--soluk)}
     $("ghAnahtar").value = GH.anahtar() ? "••••••••••••" : "";
     $("ghSil").hidden = !GH.anahtar();
     if (GH.bagli() && !$("ghDurum").textContent) { $("ghDurum").className = "durum-yazi iyi"; $("ghDurum").textContent = "✓ Bağlantı kayıtlı"; }
-    bildirimCiz();
     esitlemeCiz();
     const h = $("hakkinda"); h.replaceChildren(el("h3",{text:"Hakkında"}),
       el("p",{text:`Son kontrol: ${new Date(V.olusturma).toLocaleString("tr-TR")} · ${(V.yazar_listesi||[]).filter(y => !y.kapali).length} kişi takipte`}));
@@ -1576,87 +1551,9 @@ footer a{color:var(--soluk)}
   });
   $("ghSil").addEventListener("click", () => { depo.sil("gh_anahtar"); $("ghDurum").textContent = ""; ayarlarCiz(); kaynaklarCiz(); tost("Bağlantı bu telefondan kaldırıldı"); });
 
-  function bildirimCiz(){
-    const a = $("bildirimAyar"); a.replaceChildren();
-    const konu = depo.al("ntfy_konu_yerel", "") || V.ntfy_konu;
-    const ntfy = el("div",{},
-      el("h3",{text: konu ? "✓ ntfy ile bildirim açık" : "Telefona bildirim (ntfy)"}));
-    if (!konu){
-      ntfy.append(el("p",{text:"İstersen ücretsiz ntfy uygulaması üzerinden yeni yazılar için bildirim alabilirsin. Kurmazsan bildirim gelmez; akış yine güncellenir."}),
-        el("ol",{class:"adimlar"}, el("li", null, el("a",{href:"https://play.google.com/store/apps/details?id=io.heckel.ntfy", target:"_blank", rel:"noopener", text:"ntfy uygulamasını Google Play'den kur"}), "."),
-          el("li",{text:"Aşağıdaki düğmeye bas, sonra çıkan \"ntfy'de abone ol\" düğmesine dokun."})),
-        el("button",{class:"dugme", type:"button", text:"ntfy bildirimlerini aç", onclick: bildirimAc}));
-    } else {
-      ntfy.append(el("p", null, "Konu adın: ", el("code",{text:konu}), ". Bu telefonda ntfy uygulamasında bu konuya abone olman gerekiyor."),
-        el("div",{class:"satir"},
-          el("a",{class:"dugme", href:`ntfy://ntfy.sh/${konu}`, text:"ntfy'de abone ol", style:"text-decoration:none"}),
-          el("button",{class:"dugme", type:"button", text:"Deneme", onclick: () => denemeBildirim(konu)}),
-          el("button",{class:"dugme tehlike", type:"button", text:"ntfy'yi kapat", onclick: async () => {
-            if (!confirm("ntfy bildirimleri kapatılsın mı?")) return;
-            if (await bildirimDegistir(b => { b.ntfy_konu = ""; }, "ntfy bildirimleri kapatıldı")){ depo.sil("ntfy_konu_yerel"); V.ntfy_konu = ""; bildirimCiz(); }
-          }})),
-        el("p",{style:"margin-top:8px;font-size:12.5px", text:"\"ntfy'de abone ol\" çalışmazsa ntfy uygulamasında + düğmesine basıp konu adını elle yaz."}));
-    }
-    a.append(ntfy);
-    if (konu) inceAyarCiz(a);
-  }
-
   // Uygulama bildirimleri (Web Push) kaldırıldı: bu cihazda eskiden açılmış bir abonelik varsa sessizce iptal et
   if (HTTP && "serviceWorker" in navigator) navigator.serviceWorker.ready
     .then(reg => reg.pushManager && reg.pushManager.getSubscription()).then(sub => sub && sub.unsubscribe()).catch(() => {});
-  const BILDIRIM_TURLERI = [["yazi","Köşe ve blog yazıları"], ["video","YouTube videoları"], ["podcast","Podcast bölümleri"],
-    ["paylasim","Bluesky / Telegram paylaşımları"], ["eksi","Ekşi Sözlük entry'leri"], ["instagram","Instagram paylaşımları"]];
-  function inceAyarCiz(a){
-    const b = bildirimAyari();
-    const sessizTur = new Set(b.sessiz_turler || []);
-    const gece = !!(b.sessiz_bas && b.sessiz_bit);
-    const kutu = el("div",{id:"inceAyar"},
-      el("div",{class:"alt-baslik", text:"Bildirim gelecek türler"}),
-      ...BILDIRIM_TURLERI.map(([t, yazi]) => el("label",{class:"onay"},
-        el("input",{type:"checkbox", "data-tur":t, ...(sessizTur.has(t) ? {} : {checked:""})}), el("span",{text:yazi}))),
-      el("div",{class:"alt-baslik", text:"Sabah bülteni"}),
-      el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bBulten", ...(b.bulten_saat ? {checked:""} : {})}),
-        el("span", null, "Her gün günün özetini tek bildirimle gönder", el("br"), el("small",{style:"color:var(--soluk)", text:"Son bültenden beri gelenler kişiye göre toplanır. Bildirime dokununca Günün özeti ekranı açılır."}))),
-      el("div",{class:"zaman-alan"}, el("input",{type:"time", id:"bBultenSaat", value: b.bulten_saat || "08:00"})),
-      el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bAnlik", ...(b.anlik === false ? {checked:""} : {})}),
-        el("span", null, "Anlık bildirimleri kapat, yalnızca bülten gelsin", el("br"), el("small",{style:"color:var(--soluk)", text:"Gün içinde tek tek bildirim gelmez; hepsi bültende toplanır."}))),
-      el("div",{class:"alt-baslik", text:"Sessiz saatler"}),
-      el("label",{class:"onay"}, el("input",{type:"checkbox", id:"bGece", ...(gece ? {checked:""} : {})}),
-        el("span", null, "Bu saatler arasında bildirim gönderme", el("br"), el("small",{style:"color:var(--soluk)", text:"Arada gelenler, sessiz saat bitince tek bildirimde toplanır."}))),
-      el("div",{class:"zaman-alan"}, el("input",{type:"time", id:"bBas", value: b.sessiz_bas || "23:00"}), "–",
-        el("input",{type:"time", id:"bBit", value: b.sessiz_bit || "07:30"})));
-    kutu.append(el("button",{class:"dugme ana", type:"button", id:"bKaydet", text:"Bildirim ayarlarını kaydet", onclick: async () => {
-      const turler = [...kutu.querySelectorAll("input[data-tur]")].filter(x => !x.checked).map(x => x.dataset.tur);
-      const geceAcik = $("bGece").checked, bas = $("bBas").value, bit = $("bBit").value;
-      if (geceAcik && (!bas || !bit || bas === bit)){ tost("Sessiz saatlerin başlangıcı ve bitişi farklı olmalı"); return; }
-      const bultenAcik = $("bBulten").checked, bultenSaat = $("bBultenSaat").value, anlikKapali = $("bAnlik").checked;
-      if (bultenAcik && !bultenSaat){ tost("Bülten saatini seç"); return; }
-      if (anlikKapali && !bultenAcik){ tost("Anlık bildirimleri kapatmak için önce sabah bültenini aç"); return; }
-      await bildirimDegistir(x => { delete x.kapsam; x.sessiz_turler = turler;
-        if (bultenAcik) x.bulten_saat = bultenSaat; else delete x.bulten_saat;
-        if (bultenAcik && anlikKapali) x.anlik = false; else delete x.anlik;
-        if (geceAcik){ x.sessiz_bas = bas; x.sessiz_bit = bit; } else { delete x.sessiz_bas; delete x.sessiz_bit; } }, "Bildirim ayarları kaydedildi");
-    }}));
-    a.append(kutu);
-  }
-  async function bildirimAc(){
-    if (!GH.bagli()){ tost("Önce GitHub bağlantısını kur"); return; }
-    const harf = "abcdefghijkmnpqrstuvwxyz23456789"; const r = crypto.getRandomValues(new Uint8Array(12));
-    const konu = "takip-" + [...r].map(x => harf[x % harf.length]).join("");
-    tost("Kaydediliyor…", 15000);
-    try {
-      await uygDosyaDegistir(i => { i.bildirim = Object.assign({}, i.bildirim, {ntfy_konu: konu}); }, "Bildirimler açıldı");
-      depo.yaz("ntfy_konu_yerel", konu);
-      tost("Bildirimler açıldı. Şimdi ntfy'de abone ol.", 4500);
-      bildirimCiz();
-    } catch(e){ tost(e.message, 6000); }
-  }
-  async function denemeBildirim(konu){
-    try {
-      const r = await fetch(`https://ntfy.sh/${konu}`, {method:"POST", body:"Bildirimler çalışıyor. Yeni yazılar böyle gelecek.", headers:{"Title":"Takip"}});
-      tost(r.ok ? "Deneme bildirimi gönderildi" : "Gönderilemedi");
-    } catch(e){ tost("Gönderilemedi — internet bağlantını kontrol et"); }
-  }
   $("simdiBtn").addEventListener("click", async () => {
     const s = $("simdiDurum");
     if (!GH.bagli()){ s.className = "durum-yazi kotu"; s.textContent = "Önce GitHub bağlantısını kur."; return; }

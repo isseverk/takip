@@ -6,7 +6,7 @@ Uygulamanın üç ekranı var:
 - **Akış:** Yeni içerikler en üstte, gün gün ayrılmış halde. Bir yazarın adına dokununca o yazarın sayfası açılır. Yazar filtresi, arama ve okundu işareti var. Yazar satırında **‹ ›** oklarıyla kayabilir ya da **☰ Yazar seç**'e dokunup listeden (isimle süzerek) seçebilirsin. Okunmuş bir yazının kartındaki **↺ Okunmadı yap** onu yeniden okunmamış yapar; **Hepsini okundu say**'dan sonra çıkan **Geri al** ile toplu işareti geri alabilirsin. Aşağı çekince yenilenir, internet yokken de son akışı gösterir. Kontroller 2 saatten uzun süredir yapılmadıysa en üstte uyarı çıkar.
 - **Günün özeti (☀ düğmesi):** Son 24 saatte, 3 günde ya da 7 günde gelenler kişiye göre toplu halde, yapay zekâ özetleriyle.
 - **Kaynaklar:** Yazar ya da kanal ekleyip çıkarırsın, bir kaynağın adresini değiştirirsin, bir kişinin adını düzeltirsin (⋯ → **Adını düzelt**). Telefonda YouTube'da ya da Chrome'da açtığın bir sayfayı **Paylaş → Takip** ile doğrudan ekleyebilirsin.
-- **Ayarlar:** GitHub bağlantısı, bildirimler ve "şimdi kontrol et" düğmesi.
+- **Ayarlar:** GitHub bağlantısı, cihazlar arası eşitleme ve "şimdi kontrol et" düğmesi.
 
 ---
 
@@ -33,7 +33,6 @@ Kontrolleri GitHub'ın sunucuları yarım saatte bir yapar, bilgisayarının aç
 **D. Telefona kur (Android)**
 8. Bu adresi telefonda **Chrome** ile aç. Altta "Takip'i yükle" önerisi çıkar. Çıkmazsa ⋮ menüsünden **Uygulamayı yükle** seç. Ana ekrana Takip simgesi gelir.
 9. Uygulamada **Ayarlar → GitHub bağlantısı** bölümüne git. "Anahtar nasıl alınır?" adımlarını izleyip anahtarı yapıştır ve **Kaydet ve dene**'ye bas. Bu adım telefondan ekleme ve çıkarma yapabilmen için gerekli.
-10. İstersen **Ayarlar → Bildirimler → Kuruluma başla**'ya bas ve üç adımı izle. Yeni yazılar Takip simgesiyle telefonuna bildirim olarak gelir (ayrıntısı aşağıda).
 
 Bundan sonra akış her yarım saatte bir kendiliğinden güncellenir. GitHub zamanlanmış işleri bazen birkaç dakika geciktirebilir.
 
@@ -96,17 +95,6 @@ Yeni türlerle ilgili bilmen gerekenler:
 
 **Instagram**, giriş yapmadan otomatik okumayı çoğu zaman engeller. Kalıcı çözüm için **rss.app** gibi bir servisten hesabın RSS adresini alıp telefondan **Blog / RSS** türüyle ekle.
 
-## Bildirimler
-
-Bildirim isteğe bağlıdır; kurmazsan akış yine güncellenir. İstersen ücretsiz **ntfy** uygulamasıyla alabilirsin: **Ayarlar → Bildirimler → ntfy bildirimlerini aç**'a bas, ntfy uygulamasını kur ve **ntfy'de abone ol** düğmesine dokun.
-
-Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
-- **Türler:** Örneğin Ekşi entry'leri ya da YouTube videoları için bildirim gelmesin.
-- **Sabah bülteni:** Her gün seçtiğin saatte (ör. 08:00) son bültenden beri gelenleri kişiye göre toplayan tek bir bildirim gelir. Dokununca Günün özeti ekranı açılır. İstersen **Anlık bildirimleri kapat** kutusunu da işaretle; o zaman gün içinde tek tek bildirim gelmez, hepsi bültende toplanır. Bülten, GitHub'ın zamanlaması nedeniyle seçtiğin saatten sonraki yarım saat içinde gelir.
-- **Sessiz saatler:** Örneğin 23:00–07:30 arası bildirim gelmez. Arada gelenler, sessiz saat bitince tek bildirimde toplanır.
-
-Tek bir yazı için gelen bildirime dokununca doğrudan yazı açılır.
-
 ## Okundu işaretleri ve cihazlar arası eşitleme
 
 Açtığın yazılar soluk görünür. Yanlışlıkla okundu sayılanı kartındaki **↺ Okunmadı yap** ile geri alabilirsin.
@@ -132,9 +120,9 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 
 ## Akışa hangi yazılar girer?
 
-- Bir kaynak ilk eklendiğinde son **14 günün** yazıları (en az en yeni 3'ü) bildirimsiz olarak akışa konur.
+- Bir kaynak ilk eklendiğinde son **14 günün** yazıları (en az en yeni 3'ü) akışa konur ("yeni" sayılmaz).
 - Sonraki her kontrolde yalnızca yeni yazılar eklenir. Yazının sayfasında tarih yoksa adresteki gün kullanılır (ör. `…/2026-10-23/…`); saati bilinmediği için kartta saat yazmaz.
-- Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse bildirim göndermez, 14 günden eskiyse hiç alınmaz.
+- Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse "yeni" sayılmaz, 14 günden eskiyse hiç alınmaz.
 - Akışta 45 günden eski içerik tutulmaz (yazının kendi tarihine bakılır).
 
 ## Doğrulama işareti (✓ / ?)
@@ -162,7 +150,7 @@ Gazeteciler yer değiştirdiğinde eski sayfaları açılmaya devam eder. Bu yü
 - **Erişim:** Yazarın sayfası 6 saattir açılmıyorsa, ya da açılıp hiç yazı vermiyorsa uyarır.
 - **Haber taraması:** Haftada bir Google Haberler'de yazarın adını tarar. Son 30 günde hangi sitelerde "X yazdı" şeklinde imzalı yazısı göründüğünü kaydeder. Sessiz kalan yazarlar 2–3 günde bir taranır.
 
-Yazar sessizken imzalı yazıları başka bir sitede görünüyorsa, sayfanın en üstünde şöyle bir uyarı çıkar: **"⚠ Can Ataklı: 20 gündür yeni yazı gelmedi; imzalı yazıları X sitesinde görünüyor — adresini değiştirmen gerekebilir"**. Yanında örnek yazının bağlantısı da olur. Telefon bildirimini açtıysan aynı uyarı telefonuna da gelir. Her sorun bir kez bildirilir, tekrar tekrar gelmez.
+Yazar sessizken imzalı yazıları başka bir sitede görünüyorsa, sayfanın en üstünde şöyle bir uyarı çıkar: **"⚠ Can Ataklı: 20 gündür yeni yazı gelmedi; imzalı yazıları X sitesinde görünüyor — adresini değiştirmen gerekebilir"**. Yanında örnek yazının bağlantısı da olur.
 
 Program adresi kendiliğinden değiştirmez. Haberlerde adı geçmek her zaman o sitede yazdığı anlamına gelmediği için son karar sende. Değişiklik gerekiyorsa uyarıdaki **Düzelt** düğmesine bas, ardından **⋯ → Adresini değiştir** seç.
 
