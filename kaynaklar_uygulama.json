@@ -136,7 +136,7 @@
       ]
     },
     {
-      "ad": "erdoğan sağlam",
+      "ad": "ERDOĞAN SAĞLAM",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -310,11 +310,6 @@
       "zaman": "2026-11-07T06:52:22+00:00",
       "aciklama": "T24, YouTube"
     },
-    "erdoğan sağlam": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T07:56:58+00:00",
-      "aciklama": "T24, YouTube"
-    },
     "evrim kepenek": {
       "durum": "bulundu",
       "zaman": "2026-11-07T08:00:32+00:00",
@@ -414,6 +409,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:40:05+00:00",
       "aciklama": "birgun.net"
+    },
+    "ERDOĞAN SAĞLAM": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T07:56:58+00:00",
+      "aciklama": "T24, YouTube"
     }
   },
   "oneriler": {
@@ -883,12 +883,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "erdoğan sağlam",
-      "yeni": "ERDOĞAN SAĞLAM",
-      "zaman": "2026-11-08T09:15:09.419Z"
-    }
-  ]
+  }
 }
