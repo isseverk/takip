@@ -238,7 +238,12 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [],
+  "aranacaklar": [
+    {
+      "ad": "TOLGA ŞARDAN",
+      "zaman": "2026-11-08T08:41:26.990Z"
+    }
+  ],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
