@@ -212,7 +212,7 @@
       ]
     },
     {
-      "ad": "selva demiralp",
+      "ad": "SELVA DEMİRALP",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -341,11 +341,6 @@
       "zaman": "2026-11-07T15:16:35+00:00",
       "aciklama": "Adı haberlerde geçiyor (bbc.com, sabah.com.tr, evrensel.net) ama köşe sayfası bulunamadı; adresi elle ekle"
     },
-    "selva demiralp": {
-      "durum": "bulunamadi",
-      "zaman": "2026-11-07T15:17:09+00:00",
-      "aciklama": "Adı haberlerde geçiyor (dunya.com, cnbce.com, haber.doviz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
-    },
     "tolga şardan": {
       "durum": "bulunamadi",
       "zaman": "2026-11-08T09:18:28.655Z",
@@ -430,6 +425,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:31:15+00:00",
       "aciklama": "Gazete Oku, YouTube"
+    },
+    "SELVA DEMİRALP": {
+      "durum": "bulunamadi",
+      "zaman": "2026-11-07T15:17:09+00:00",
+      "aciklama": "Adı haberlerde geçiyor (dunya.com, cnbce.com, haber.doviz.com) ama köşe sayfası bulunamadı; adresi elle ekle"
     }
   },
   "oneriler": {},
@@ -486,12 +486,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "selva demiralp",
-      "yeni": "SELVA DEMİRALP",
-      "zaman": "2026-11-08T09:44:35.558Z"
-    }
-  ]
+  }
 }
