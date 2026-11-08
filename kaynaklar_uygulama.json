@@ -769,45 +769,6 @@
       "zaman": "2026-11-08T08:48:55+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
-    },
-    "bekir ağırdır": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://mediacat.com/yazarlar/bekir-agirdir",
-          "etiket": "MediaCat",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "mediacat.com sitesindeki yazar sayfası; 17 yazı",
-            "ornekler": [
-              {
-                "baslik": "Felis Ödülleri’nde son gün geride kaldı",
-                "url": "https://mediacat.com/felis-odullerinde-son-gun-geride-kaldi/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Unilever Beauty & Wellbeing Connect ilk kez Brand Week Istanbul 2026’da",
-                "url": "https://mediacat.com/unilever-beauty-wellbeing-connect-ilk-kez-brand-week-istanbul-2026da/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Brand Week Istanbul 2026 sona erdi",
-                "url": "https://mediacat.com/brand-week-istanbul-son-gun-2026/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 17
-          },
-          "kimlik": "site|mediacat.com"
-        }
-      ],
-      "zaman": "2026-11-08T09:04:13+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: MediaCat"
     }
   },
   "reddedilen": {
@@ -829,6 +790,9 @@
     ],
     "MERDAN YANARDAĞ": [
       "site|cumhuriyet.com.tr"
+    ],
+    "bekir ağırdır": [
+      "site|mediacat.com"
     ]
   },
   "ad_esleme": {
