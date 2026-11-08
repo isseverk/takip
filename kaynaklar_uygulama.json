@@ -237,12 +237,7 @@
     "sessiz_bas": "23:00",
     "sessiz_bit": "07:30"
   },
-  "aranacaklar": [
-    {
-      "ad": "TOLGA ŞARDAN",
-      "zaman": "2026-11-08T08:41:26.990Z"
-    }
-  ],
+  "aranacaklar": [],
   "kesif": {
     "mustafa demirtaş": {
       "durum": "bulundu",
@@ -428,6 +423,11 @@
       "durum": "onay_bekliyor",
       "zaman": "2026-11-08T08:35:46+00:00",
       "aciklama": "Gazete Oku"
+    },
+    "TOLGA ŞARDAN": {
+      "durum": "onay_bekliyor",
+      "zaman": "2026-11-08T08:43:32+00:00",
+      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
     }
   },
   "oneriler": {
@@ -754,7 +754,45 @@
       ],
       "zaman": "2026-11-08T08:41:24+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Oku"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
+    },
+    "TOLGA ŞARDAN": {
+      "zaman": "2026-11-08T08:43:32+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "ornekler": [
+              {
+                "baslik": "İstihbarat birimleri, fon vurgunundan haberdar mıydı?",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/istihbarat-birimleri-fon-vurgunundan-haberdar-miydi,59785",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ölümün nereden geleceği bilinmeyen ülke: Yurttaşının yaşam güvenliğini sağlayamayan devlet, cenazelerde en önde saf…",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/olumun-nereden-gelecegi-bilinmeyen-ulke-yurttasinin-yasam-guvenligini-saglayamayan-devlet-cenazelerde-en-onde-saf-tutuyor,59749",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Türkiye Yüzyılı’nda Cumhuriyet Bayramı ve Sisli Vadi dosyasında ailelere “bizi eleştirdiniz” davası!",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/turkiye-yuzyilinda-cumhuriyet-bayrami-ve-sisli-vadi-dosyasinda-ailelere-bizi-elestirdiniz-davasi,59686",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 10
+          },
+          "kimlik": "site|t24.com.tr"
+        }
+      ],
+      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
     }
   }
 }
