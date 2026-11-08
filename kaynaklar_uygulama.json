@@ -621,7 +621,71 @@
       ],
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
     },
-    "Mahfi Eğilmez": {
+    "TOLGA ŞARDAN": {
+      "zaman": "2026-11-08T08:43:32+00:00",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "ornekler": [
+              {
+                "baslik": "İstihbarat birimleri, fon vurgunundan haberdar mıydı?",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/istihbarat-birimleri-fon-vurgunundan-haberdar-miydi,59785",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ölümün nereden geleceği bilinmeyen ülke: Yurttaşının yaşam güvenliğini sağlayamayan devlet, cenazelerde en önde saf…",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/olumun-nereden-gelecegi-bilinmeyen-ulke-yurttasinin-yasam-guvenligini-saglayamayan-devlet-cenazelerde-en-onde-saf-tutuyor,59749",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Türkiye Yüzyılı’nda Cumhuriyet Bayramı ve Sisli Vadi dosyasında ailelere “bizi eleştirdiniz” davası!",
+                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/turkiye-yuzyilinda-cumhuriyet-bayrami-ve-sisli-vadi-dosyasinda-ailelere-bizi-elestirdiniz-davasi,59686",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 10
+          },
+          "kimlik": "site|t24.com.tr"
+        }
+      ],
+      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
+    },
+    "Timur Soykan": {
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gazetepencere.com",
+          "etiket": "Gazete Pencere",
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "gazetepencere.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 1), en yenisi 12 gün önce",
+            "ornekler": [
+              {
+                "baslik": "Muğla Valisi de fondaymış!",
+                "url": "https://www.gazetepencere.com/gundem/timur-soykan-yazdi-muga-valisi-de-fondaymis-720997h",
+                "tarih": "2026-10-27T07:00:00+00:00",
+                "kanal": null
+              }
+            ],
+            "sayi": 1
+          },
+          "kimlik": "site|gazetepencere.com"
+        }
+      ],
+      "zaman": "2026-11-08T08:48:55+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
+    },
+    "MAHFİ EĞİLMEZ": {
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -692,12 +756,11 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Son Dakika"
     },
-    "TOLGA ŞARDAN": {
-      "zaman": "2026-11-08T08:43:32+00:00",
+    "Faruk Bildirici": {
       "kaynaklar": [
         {
           "tur": "sayfa",
-          "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec",
+          "url": "https://t24.com.tr/yazarlar/faruk-bildirici",
           "etiket": "T24",
           "dogrula": true,
           "otomatik": true,
@@ -705,20 +768,20 @@
             "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
             "ornekler": [
               {
-                "baslik": "İstihbarat birimleri, fon vurgunundan haberdar mıydı?",
-                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/istihbarat-birimleri-fon-vurgunundan-haberdar-miydi,59785",
+                "baslik": "Gazetecilerin paylaşımlarla tanıttığı parti",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/gazetecilerin-paylasimlarla-tanittigi-parti,56688",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Ölümün nereden geleceği bilinmeyen ülke: Yurttaşının yaşam güvenliğini sağlayamayan devlet, cenazelerde en önde saf…",
-                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/olumun-nereden-gelecegi-bilinmeyen-ulke-yurttasinin-yasam-guvenligini-saglayamayan-devlet-cenazelerde-en-onde-saf-tutuyor,59749",
+                "baslik": "Güvenlik kaynakları ne çok haber yazıyor!",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/guvenlik-kaynaklari-ne-cok-haber-yaziyor,53617",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Türkiye Yüzyılı’nda Cumhuriyet Bayramı ve Sisli Vadi dosyasında ailelere “bizi eleştirdiniz” davası!",
-                "url": "https://t24.com.tr/yazarlar/tolga-sardan-buyutec/turkiye-yuzyilinda-cumhuriyet-bayrami-ve-sisli-vadi-dosyasinda-ailelere-bizi-elestirdiniz-davasi,59686",
+                "baslik": "Öcalan yerine İmralı görüntüsü",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/ocalan-yerine-imrali-goruntusu,50718",
                 "tarih": null,
                 "kanal": null
               }
@@ -726,35 +789,82 @@
             "sayi": 10
           },
           "kimlik": "site|t24.com.tr"
-        }
-      ],
-      "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
-    },
-    "Timur Soykan": {
-      "kaynaklar": [
+        },
         {
-          "tur": "google_haber",
-          "site": "gazetepencere.com",
-          "etiket": "Gazete Pencere",
+          "tur": "sayfa",
+          "url": "https://ankahaber.net/etiket/medya-ombudsmani-faruk-bildirici",
+          "etiket": "Anka Haber",
+          "dogrula": true,
           "otomatik": true,
           "kanit": {
-            "gerekce": "gazetepencere.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 1), en yenisi 12 gün önce",
+            "gerekce": "ankahaber.net sitesindeki yazar sayfası; 15 yazı",
             "ornekler": [
               {
-                "baslik": "Muğla Valisi de fondaymış!",
-                "url": "https://www.gazetepencere.com/gundem/timur-soykan-yazdi-muga-valisi-de-fondaymis-720997h",
-                "tarih": "2026-10-27T07:00:00+00:00",
+                "baslik": "Gazetecilik kuşatmada, gazeteciler sokaklarda",
+                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-gazetecilik-kusatmada-gazeteciler-sokaklarda",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İzleyici kayyuma tepki verdi",
+                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-izleyici-kayyuma-tepki-verdi",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ne Ömer Çelik’e sorulabildi ne de Ümit Özlale’ye",
+                "url": "https://ankahaber.net/haber/ne-omer-celike-sorulabildi-ne-de-umit-ozlaleye",
+                "tarih": null,
                 "kanal": null
               }
             ],
-            "sayi": 1
+            "sayi": 15
           },
-          "kimlik": "site|gazetepencere.com"
+          "kimlik": "site|ankahaber.net"
         }
       ],
-      "zaman": "2026-11-08T08:48:55+00:00",
+      "zaman": "2026-11-08T08:52:29+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: T24, Anka Haber"
+    },
+    "deniz zeyrek": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.nationalturk.com/yazarlar/deniz-zeyrek",
+          "etiket": "NationalTurk",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "nationalturk.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "ABD’de iki paraşütçü havada çarpıştı! İkisi de hayatını kaybetti",
+                "url": "https://www.nationalturk.com/dunya/abd-parasut-kazasi-olenlen-kac-kisi/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Fon soruşturmasında Neslihan Mumcu hakkında mali tedbir talebi",
+                "url": "https://www.nationalturk.com/haberler/fon-sorusturmasi-neslihan-mumcu/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Trump’tan UFC patronu Dana White’a sürpriz teklif!",
+                "url": "https://www.nationalturk.com/dunya/trump-dana-whitea-surpriz-teklif/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|nationalturk.com"
+        }
+      ],
+      "zaman": "2026-11-08T08:53:02+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: NationalTurk"
     }
   },
   "reddedilen": {
@@ -764,40 +874,15 @@
     "Soner Yalçın": [
       "site|gazeteoku.com"
     ],
-    "Barış Pehlivan": [
+    "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
     ]
   },
-  "ad_degisiklikleri": [
-    {
-      "eski": "Murat Yetkin",
-      "yeni": "MURAT YEKİN",
-      "zaman": "2026-11-08T08:50:41.894Z"
-    },
-    {
-      "eski": "Fatih Altaylı",
-      "yeni": "FATİH ALTAYLI",
-      "zaman": "2026-11-08T08:50:53.112Z"
-    },
-    {
-      "eski": "Barış Pehlivan",
-      "yeni": "BARIŞ PEHLİVAN",
-      "zaman": "2026-11-08T08:51:04.901Z"
-    },
-    {
-      "eski": "İsmail Saymaz",
-      "yeni": "İSMAİL SAYMAZ",
-      "zaman": "2026-11-08T08:51:17.900Z"
-    },
-    {
-      "eski": "Mahfi Eğilmez",
-      "yeni": "MAHFİ EĞİLMEZ",
-      "zaman": "2026-11-08T08:51:56.080Z"
-    },
-    {
-      "eski": "Uğur Gürses",
-      "yeni": "UĞUR GÜRSES",
-      "zaman": "2026-11-08T08:52:08.108Z"
-    }
-  ]
+  "ad_esleme": {
+    "Murat Yetkin": "MURAT YEKİN",
+    "Fatih Altaylı": "FATİH ALTAYLI",
+    "Barış Pehlivan": "BARIŞ PEHLİVAN",
+    "İsmail Saymaz": "İSMAİL SAYMAZ",
+    "Mahfi Eğilmez": "MAHFİ EĞİLMEZ"
+  }
 }
