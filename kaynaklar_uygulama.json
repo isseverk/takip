@@ -207,7 +207,7 @@
       ]
     },
     {
-      "ad": "Soner Yalçın",
+      "ad": "SONER YALÇIN",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -659,32 +659,6 @@
       ],
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
     },
-    "Timur Soykan": {
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gazetepencere.com",
-          "etiket": "Gazete Pencere",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "gazetepencere.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 1), en yenisi 12 gün önce",
-            "ornekler": [
-              {
-                "baslik": "Muğla Valisi de fondaymış!",
-                "url": "https://www.gazetepencere.com/gundem/timur-soykan-yazdi-muga-valisi-de-fondaymis-720997h",
-                "tarih": "2026-10-27T07:00:00+00:00",
-                "kanal": null
-              }
-            ],
-            "sayi": 1
-          },
-          "kimlik": "site|gazetepencere.com"
-        }
-      ],
-      "zaman": "2026-11-08T08:48:55+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
-    },
     "MAHFİ EĞİLMEZ": {
       "kaynaklar": [
         {
@@ -904,17 +878,121 @@
       "zaman": "2026-11-08T08:59:46+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
+    },
+    "TİMUR SOYKAN": {
+      "kaynaklar": [
+        {
+          "tur": "google_haber",
+          "site": "gazetepencere.com",
+          "etiket": "Gazete Pencere",
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "gazetepencere.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 1), en yenisi 12 gün önce",
+            "ornekler": [
+              {
+                "baslik": "Muğla Valisi de fondaymış!",
+                "url": "https://www.gazetepencere.com/gundem/timur-soykan-yazdi-muga-valisi-de-fondaymis-720997h",
+                "tarih": "2026-10-27T07:00:00+00:00",
+                "kanal": null
+              }
+            ],
+            "sayi": 1
+          },
+          "kimlik": "site|gazetepencere.com"
+        }
+      ],
+      "zaman": "2026-11-08T08:48:55+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Pencere"
+    },
+    "can dündar": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://politikahaber.com/yazarlar/can-dundar",
+          "etiket": "Politika Haber",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "politikahaber.com sitesindeki yazar sayfası; 9 yazı",
+            "ornekler": [
+              {
+                "baslik": "Can Dündar: Sedat Peker bana ‘Asılmayı hak ettin’ diye mesaj göndermişti",
+                "url": "https://politikahaber.com/can-dundar-sedat-peker-bana-asilmayi-hak-ettin-diye-mesaj-gondermisti/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Burjuva siyaset, ahlak ve biz",
+                "url": "https://politikahaber.com/burjuva-siyaset-ahlak-ve-biz/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Özel Sektör Öğretmenleri Sendikası Genel Başkanı Eren Edibali: Sendikal krizin içinde bir mücadeleci sendika deneyimi",
+                "url": "https://politikahaber.com/ozel-sektor-ogretmenleri-sendikasi-genel-baskani-eren-edibali-sendikal-krizin-icinde-bir-mucadeleci-sendika-deneyimi/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 9
+          },
+          "kimlik": "site|politikahaber.com"
+        }
+      ],
+      "zaman": "2026-11-08T09:01:18+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Politika Haber"
+    },
+    "yalçın karatepe": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/yalcin-karatepe",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Fon skandalıyla ilgili inceleme ve denetleme görevi verilen Cumhurbaşkanlığı Devlet Denetleme Kurulu (DDK)…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/ddk-kendi-baskaninin-daha-once-calistigi-yeri-inceleyecek-denetim-tartismasi-2542573",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İktisatçı Prof. Dr. Yalçın Karatepe, Borsa İstanbul’daki fon krizinin tüm yönleriyle araştırılması için Devlet…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/yalcin-karatepe-den-fon-skandalinda-carpici-degerlendirme-simdi-kim-kimi-denetleyecek-2540875",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İktisatçı Prof. Dr. Yalçın Karatepe, bazı fonlardaki manipülasyona neden bu kadar geç müdahale edildiği konusunda…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/iktisatci-prof-dr-karatepe-fon-krizine-gec-mudahaleyi-degerlendirdi-yetkililer-mudahale-etmedi-mi-yoksa-edemedi-mi-2539715",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        }
+      ],
+      "zaman": "2026-11-08T09:01:57+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
     "nevşin mengü": [
       "site|gazeteoku.com"
     ],
-    "Soner Yalçın": [
-      "site|gazeteoku.com"
-    ],
     "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
+    ],
+    "SONER YALÇIN": [
+      "site|gazeteoku.com"
     ]
   },
   "ad_esleme": {
@@ -923,93 +1001,12 @@
     "Barış Pehlivan": "BARIŞ PEHLİVAN",
     "İsmail Saymaz": "İSMAİL SAYMAZ",
     "Mahfi Eğilmez": "MAHFİ EĞİLMEZ",
-    "Uğur Gürses": "UĞUR GÜRSES"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "Can Ataklı",
-      "yeni": "CAN ATAKLI",
-      "zaman": "2026-11-08T08:59:07.445Z"
-    },
-    {
-      "eski": "Soner Yalçın",
-      "yeni": "SONER YALÇIN",
-      "zaman": "2026-11-08T08:59:20.497Z"
-    },
-    {
-      "eski": "Sinan Meydan",
-      "yeni": "SİNAN MEYDAN",
-      "zaman": "2026-11-08T08:59:37.517Z"
-    },
-    {
-      "eski": "Murat Ağırel",
-      "yeni": "MURAT AĞIREL",
-      "zaman": "2026-11-08T08:59:49.825Z"
-    },
-    {
-      "eski": "Barış Terkoğlu",
-      "yeni": "BARIŞ TERKOĞLU",
-      "zaman": "2026-11-08T09:00:07.713Z"
-    },
-    {
-      "eski": "Timur Soykan",
-      "yeni": "TİMUR SOYKAN",
-      "zaman": "2026-11-08T09:00:23.204Z"
-    },
-    {
-      "eski": "Fehim Taştekin",
-      "yeni": "FEHİM TAŞTEKİN",
-      "zaman": "2026-11-08T09:00:33.980Z"
-    },
-    {
-      "eski": "Zafer Arapkirli",
-      "yeni": "ZAFER ARAPKİRLİ",
-      "zaman": "2026-11-08T09:00:45.545Z"
-    },
-    {
-      "eski": "Faruk Bildirici",
-      "yeni": "FARUK BİLDİRİCİ",
-      "zaman": "2026-11-08T09:00:57.275Z"
-    },
-    {
-      "eski": "murat batı",
-      "yeni": "MURAT BATI",
-      "zaman": "2026-11-08T09:01:14.289Z"
-    },
-    {
-      "eski": "hakan aksay",
-      "yeni": "HAKAN AKSAY",
-      "zaman": "2026-11-08T09:01:24.384Z"
-    },
-    {
-      "eski": "evren balta",
-      "yeni": "EVREN BALTA",
-      "zaman": "2026-11-08T09:01:36.512Z"
-    },
-    {
-      "eski": "barçın yinanç",
-      "yeni": "BARÇIN YİNANÇ",
-      "zaman": "2026-11-08T09:01:47.857Z"
-    },
-    {
-      "eski": "tolga şirin",
-      "yeni": "TOLGA ŞİRİN",
-      "zaman": "2026-11-08T09:02:01.642Z"
-    },
-    {
-      "eski": "füsun sarp nebil",
-      "yeni": "FÜSUN SARP NEBİL",
-      "zaman": "2026-11-08T09:02:27.042Z"
-    },
-    {
-      "eski": "tolga şirin",
-      "yeni": "TOLGA ŞİRİN",
-      "zaman": "2026-11-08T09:02:39.605Z"
-    },
-    {
-      "eski": "nevşin mengü",
-      "yeni": "NEVŞİN MENGÜ",
-      "zaman": "2026-11-08T09:03:09.531Z"
-    }
-  ]
+    "Uğur Gürses": "UĞUR GÜRSES",
+    "Can Ataklı": "CAN ATAKLI",
+    "Soner Yalçın": "SONER YALÇIN",
+    "Sinan Meydan": "SİNAN MEYDAN",
+    "Murat Ağırel": "MURAT AĞIREL",
+    "Barış Terkoğlu": "BARIŞ TERKOĞLU",
+    "Timur Soykan": "TİMUR SOYKAN"
+  }
 }
