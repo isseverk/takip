@@ -422,7 +422,7 @@
     },
     "nevşin mengü": {
       "durum": "onay_bekliyor",
-      "zaman": "2026-11-08T08:31:43+00:00",
+      "zaman": "2026-11-08T08:35:46+00:00",
       "aciklama": "Gazete Oku"
     }
   },
@@ -607,7 +607,7 @@
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
     },
     "nevşin mengü": {
-      "zaman": "2026-11-08T08:31:43+00:00",
+      "zaman": "2026-11-08T08:35:46+00:00",
       "kaynaklar": [
         {
           "tur": "google_haber",
@@ -643,44 +643,147 @@
       ],
       "aciklama": "Gazete Oku"
     },
-    "Barış Pehlivan": {
+    "Mahfi Eğilmez": {
       "kaynaklar": [
         {
           "tur": "sayfa",
-          "url": "https://www.sondakika.com/baris-pehlivan",
-          "etiket": "Son Dakika",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/mahfi-egilmez",
+          "etiket": "Cumhuriyet",
           "dogrula": true,
           "otomatik": true,
           "kanit": {
-            "gerekce": "sondakika.com sitesindeki yazar sayfası; 25 yazı",
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
             "ornekler": [
               {
-                "baslik": "Rotterdam'da Hollanda Atatürkçü Düşünce Derneği'nin düzenlediği etkinlikte Cumhuriyet'in 103. kuruluş yıl dönümü…",
-                "url": "https://www.sondakika.com/dunya/haber-rotterdam-da-cumhuriyet-in-103-yili-baris-pehlivan-20386988/",
+                "baslik": "Mahfi Eğilmez, sanayi üretimindeki gerileme ile yatırım ve finansmana erişimdeki sorunlara dikkat çekti. Eğilmez,…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/mahfi-egilmez-den-sanayi-uyarisi-tehlike-canlari-caliyor-2549205",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Ahbap Derneği soruşturması kapsamında gözaltına alınan ünlü şarkıcı Haluk Levent'le ilgili gazeteci Barış Pehlivan'dan…",
-                "url": "https://www.sondakika.com/haber/haber-haluk-levent-dosyasiyla-ilgili-gundem-yaratacak-20049451/",
+                "baslik": "Mahfi Eğilmez, siyasi ilişkiler ile ekonomik kaynakların paylaşımı arasındaki bağa dikkat çekerek kayırmacılığın…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/mahfi-egilmez-den-ahbap-cavus-uyarisi-siyasi-iliskiler-ekonomiyi-sekillendiriyor-2548208",
                 "tarih": null,
                 "kanal": null
               },
               {
-                "baslik": "Gazeteci Barış Pehlivan'ın adı, taciz iddialarına karıştı. Eski sevgilisi, ayrılığın ardından Pehlivan'ın peşini…",
-                "url": "https://www.sondakika.com/haber/haber-gazeteci-baris-pehlivanin-eski-sevgilisinden-20025449/",
+                "baslik": "İktisatçı Mahfi Eğilmez, Türkiye’de ekonomik büyümenin yurttaşların refahına aynı ölçüde yansımadığını belirterek…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/mahfi-egilmez-acikladi-ekonomi-buyuyor-yurttas-neden-yoksullasiyor-2547349",
                 "tarih": null,
                 "kanal": null
               }
             ],
             "sayi": 25
           },
-          "kimlik": "site|sondakika.com"
+          "kimlik": "site|cumhuriyet.com.tr"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.borsaningundemi.com/etiket/mahfi-egilmez",
+          "etiket": "Borsanın Gündemi",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "borsaningundemi.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Mahfi Eğilmez yazdı! Trump gerçekten 'topal ördek' mi",
+                "url": "https://www.borsaningundemi.com/haber/mahfi-egilmez-yazdi-trump-gercekten-topal-ordek-mi-1913853",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Merkez Bankası’nın faiz adımına ekonomistlerden yorum",
+                "url": "https://www.borsaningundemi.com/haber/merkez-bankasinin-faiz-adimina-ekonomistlerden-yorum-1912361",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Mahfi Eğilmez değerlendirdi: Fon krizi ve Borsa İstanbul",
+                "url": "https://www.borsaningundemi.com/haber/mahfi-egilmez-degerlendirdi-fon-krizi-ve-borsa-istanbul-1911623",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|borsaningundemi.com"
         }
       ],
-      "zaman": "2026-11-08T08:32:46+00:00",
+      "zaman": "2026-11-08T08:39:15+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Son Dakika"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Borsanın Gündemi"
+    },
+    "Uğur Gürses": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/ugur-gurses",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 18 yazı",
+            "ornekler": [
+              {
+                "baslik": "Ekonomi yazarı Uğur Gürses, fon piyasasına ilişkin Devlet Denetleme Kurulu’na yaptığı soruşturma çağrısının mahkeme…",
+                "url": "https://www.cumhuriyet.com.tr/siyaset/ekonomi-yazarinin-fon-sorusturmasi-paylasimina-engel-manipulasyonu-yapanlar-bile-bu-hizda-derdest-edilmediler-2539667",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Hazirandan bu yana art arda 6 toplantıda faiz artıran banka bu toplantıda beklentilere paralel politika faizini 250…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/artis-ne-zaman-bitecek-ekonomistler-faiz-kararini-degerlendirdi-2154257",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Türkiye Cumhuriyet Merkez Bankası Başkanı Hafize Gaye Erkan’ın İstanbul’da artan kira fiyatlarından yakınıp ev…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/ekonomistlerden-merkez-bankasi-baskani-hafize-gaye-erkanin-sozlerine-2152222",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 18
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.diken.com.tr/yazarlar/ugur-gurses",
+          "etiket": "Diken",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "diken.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Hatırlayalım, kötülük tek gerçeklik değil",
+                "url": "https://www.diken.com.tr/hatirlayalim-kotuluk-tek-gerceklik-degil/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ünlü adamın 'yanındaki' kadın",
+                "url": "https://www.diken.com.tr/unlu-adamin-yanindaki-kadin/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Tek başına sahneye çıkılır, tiyatro tek başına yapılmaz",
+                "url": "https://www.diken.com.tr/tek-basina-sahneye-cikilir-tiyatro-tek-basina-yapilmaz/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|diken.com.tr"
+        }
+      ],
+      "zaman": "2026-11-08T08:39:51+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
     }
   }
 }
