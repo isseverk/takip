@@ -58,7 +58,7 @@
       ]
     },
     {
-      "ad": "bekir ağırdır",
+      "ad": "BEKİR AĞIRDIR",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -316,11 +316,6 @@
       "zaman": "2026-11-07T06:51:59+00:00",
       "aciklama": "Medyascope, YouTube"
     },
-    "bekir ağırdır": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:52:10+00:00",
-      "aciklama": "T24, MediaCat"
-    },
     "cansu çamlıbel": {
       "durum": "bulundu",
       "zaman": "2026-11-07T06:52:22+00:00",
@@ -430,6 +425,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-08T09:18:10.515Z",
       "aciklama": "T24 (onaylandı)"
+    },
+    "BEKİR AĞIRDIR": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:52:10+00:00",
+      "aciklama": "T24, MediaCat"
     }
   },
   "oneriler": {
@@ -567,9 +567,6 @@
     "MERDAN YANARDAĞ": [
       "site|cumhuriyet.com.tr"
     ],
-    "bekir ağırdır": [
-      "site|mediacat.com"
-    ],
     "TİMUR SOYKAN": [
       "site|gazetepencere.com"
     ],
@@ -579,6 +576,9 @@
     ],
     "bahadır özgür": [
       "site|cumhuriyet.com.tr"
+    ],
+    "BEKİR AĞIRDIR": [
+      "site|mediacat.com"
     ]
   },
   "ad_esleme": {
@@ -597,12 +597,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "bekir ağırdır",
-      "yeni": "BEKİR AĞIRDIR",
-      "zaman": "2026-11-08T09:26:56.162Z"
-    }
-  ]
+  }
 }
