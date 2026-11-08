@@ -224,7 +224,6 @@
   ],
   "kapali_yazarlar": [],
   "bildirim": {
-    "kapsam": "hepsi",
     "sessiz_turler": [
       "yazi",
       "video",
@@ -717,78 +716,45 @@
       ],
       "zaman": "2026-11-08T08:39:15+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Borsanın Gündemi"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Son Dakika"
     },
-    "Uğur Gürses": {
+    "Soner Yalçın": {
       "kaynaklar": [
         {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/ugur-gurses",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
+          "tur": "google_haber",
+          "site": "gazeteoku.com",
+          "etiket": "Gazete Oku",
           "otomatik": true,
           "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 18 yazı",
+            "gerekce": "gazeteoku.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 10), en yenisi 2 gün önce",
             "ornekler": [
               {
-                "baslik": "Ekonomi yazarı Uğur Gürses, fon piyasasına ilişkin Devlet Denetleme Kurulu’na yaptığı soruşturma çağrısının mahkeme…",
-                "url": "https://www.cumhuriyet.com.tr/siyaset/ekonomi-yazarinin-fon-sorusturmasi-paylasimina-engel-manipulasyonu-yapanlar-bile-bu-hizda-derdest-edilmediler-2539667",
-                "tarih": null,
+                "baslik": "Nazi propagandasından Soğuk Savaş’a uzandı... Yöntem bugün de sürüyor: Devrimciliği patolojiye indirgemek",
+                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/nazi-propagandasindan-soguk-savasa-uzandi-yontem-bugun-de-suruyor-devrimciligi-patolojiye-indirgemek/1303167",
+                "tarih": "2026-11-06T01:55:00+00:00",
                 "kanal": null
               },
               {
-                "baslik": "Hazirandan bu yana art arda 6 toplantıda faiz artıran banka bu toplantıda beklentilere paralel politika faizini 250…",
-                "url": "https://www.cumhuriyet.com.tr/ekonomi/artis-ne-zaman-bitecek-ekonomistler-faiz-kararini-degerlendirdi-2154257",
-                "tarih": null,
+                "baslik": "CIA’dan neoliberal tarihçiliğe... Devrimci mücadeleyi kişilik sorununa dönüştürmek: Sol'un tarihine ideolojik ameliyat",
+                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/ciadan-neoliberal-tarihcilige-devrimci-mucadeleyi-kisilik-sorununa-donusturmek-solun-tarihine-ideolojik-ameliyat/1301731",
+                "tarih": "2026-11-03T01:55:00+00:00",
                 "kanal": null
               },
               {
-                "baslik": "Türkiye Cumhuriyet Merkez Bankası Başkanı Hafize Gaye Erkan’ın İstanbul’da artan kira fiyatlarından yakınıp ev…",
-                "url": "https://www.cumhuriyet.com.tr/ekonomi/ekonomistlerden-merkez-bankasi-baskani-hafize-gaye-erkanin-sozlerine-2152222",
-                "tarih": null,
+                "baslik": "Cumhuriyetçi avukatlarda kazanma iradesi, neoliberal gazetecilerde yenilgi psikolojisi: Tarihin iki yüzü",
+                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/cumhuriyetci-avukatlarda-kazanma-iradesi-neoliberal-gazetecilerde-yenilgi-psikolojisi-tarihin-iki-yuzu/1298984",
+                "tarih": "2026-10-27T01:55:00+00:00",
                 "kanal": null
               }
             ],
-            "sayi": 18
+            "sayi": 10
           },
-          "kimlik": "site|cumhuriyet.com.tr"
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://www.diken.com.tr/yazarlar/ugur-gurses",
-          "etiket": "Diken",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "diken.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Hatırlayalım, kötülük tek gerçeklik değil",
-                "url": "https://www.diken.com.tr/hatirlayalim-kotuluk-tek-gerceklik-degil/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Ünlü adamın 'yanındaki' kadın",
-                "url": "https://www.diken.com.tr/unlu-adamin-yanindaki-kadin/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Tek başına sahneye çıkılır, tiyatro tek başına yapılmaz",
-                "url": "https://www.diken.com.tr/tek-basina-sahneye-cikilir-tiyatro-tek-basina-yapilmaz/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|diken.com.tr"
+          "kimlik": "site|gazeteoku.com"
         }
       ],
-      "zaman": "2026-11-08T08:39:51+00:00",
+      "zaman": "2026-11-08T08:41:24+00:00",
       "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Oku"
     }
   }
 }
