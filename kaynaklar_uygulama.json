@@ -27,13 +27,6 @@
       "kaynaklar": [
         {
           "tur": "sayfa",
-          "url": "https://www.diken.com.tr/yazarlar/bahadir-ozgur",
-          "etiket": "Diken",
-          "dogrula": true,
-          "otomatik": true
-        },
-        {
-          "tur": "sayfa",
           "url": "https://halktv.com.tr/yazar/bahadir-ozgur-33740",
           "dogrula": true,
           "etiket": "halktv.com.tr"
