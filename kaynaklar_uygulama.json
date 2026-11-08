@@ -814,5 +814,12 @@
     "İsmail Saymaz": "İSMAİL SAYMAZ",
     "Mahfi Eğilmez": "MAHFİ EĞİLMEZ",
     "Uğur Gürses": "UĞUR GÜRSES"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "Can Ataklı",
+      "yeni": "CAN ATAKLI",
+      "zaman": "2026-11-08T08:59:07.445Z"
+    }
+  ]
 }
