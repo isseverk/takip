@@ -692,44 +692,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Son Dakika"
     },
-    "Soner Yalçın": {
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gazeteoku.com",
-          "etiket": "Gazete Oku",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "gazeteoku.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 10), en yenisi 2 gün önce",
-            "ornekler": [
-              {
-                "baslik": "Nazi propagandasından Soğuk Savaş’a uzandı... Yöntem bugün de sürüyor: Devrimciliği patolojiye indirgemek",
-                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/nazi-propagandasindan-soguk-savasa-uzandi-yontem-bugun-de-suruyor-devrimciligi-patolojiye-indirgemek/1303167",
-                "tarih": "2026-11-06T01:55:00+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "CIA’dan neoliberal tarihçiliğe... Devrimci mücadeleyi kişilik sorununa dönüştürmek: Sol'un tarihine ideolojik ameliyat",
-                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/ciadan-neoliberal-tarihcilige-devrimci-mucadeleyi-kisilik-sorununa-donusturmek-solun-tarihine-ideolojik-ameliyat/1301731",
-                "tarih": "2026-11-03T01:55:00+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "Cumhuriyetçi avukatlarda kazanma iradesi, neoliberal gazetecilerde yenilgi psikolojisi: Tarihin iki yüzü",
-                "url": "https://www.gazeteoku.com/yazar/soner-yalcin/cumhuriyetci-avukatlarda-kazanma-iradesi-neoliberal-gazetecilerde-yenilgi-psikolojisi-tarihin-iki-yuzu/1298984",
-                "tarih": "2026-10-27T01:55:00+00:00",
-                "kanal": null
-              }
-            ],
-            "sayi": 10
-          },
-          "kimlik": "site|gazeteoku.com"
-        }
-      ],
-      "zaman": "2026-11-08T08:41:24+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
-    },
     "TOLGA ŞARDAN": {
       "zaman": "2026-11-08T08:43:32+00:00",
       "kaynaklar": [
@@ -771,6 +733,9 @@
   },
   "reddedilen": {
     "nevşin mengü": [
+      "site|gazeteoku.com"
+    ],
+    "Soner Yalçın": [
       "site|gazeteoku.com"
     ]
   }
