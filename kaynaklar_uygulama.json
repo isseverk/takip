@@ -794,6 +794,116 @@
       "zaman": "2026-11-08T08:54:54+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
+    },
+    "şaban sevinç": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/saban-sevinc",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Tutuklu gazeteciler Şaban Sevinç ve Mustafa Balcı hakkında iddianame hazırlandı. Üç ayrı suçtan cezalandırılmaları…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/saban-sevinc-ve-mustafa-balci-hakkinda-uc-ayri-suctan-hapis-istemi-2553251",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Fon soruşturması kapsamında yaptıkları haberler gerekçe gösterilerek tutuklanan gazeteciler Mustafa Balcı ve Şaban…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/fon-sorusturmasinda-tutuklanan-mustafa-balci-ve-saban-sevinc-baska-cezaevine-nakledildi-2545613",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İstanbul Cumhuriyet Başsavcılığı'nın yürüttüğü fon soruşturmasına ilişkin soruşturmada gözaltına alınan Şaban Sevinç…",
+                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteciler-saban-sevinc-ve-mustafa-balci-tutuklama-talebiyle-hakimlige-sevk-edildi-2545164",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.hurriyet.com.tr/haberleri/saban-sevinc",
+          "etiket": "Hürriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "hurriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "fakir hausgerate ile lezzetli tarifler",
+                "url": "https://www.hurriyet.com.tr/kelebek/fakir-hausgerate-ile-lezzetli-tarifler/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "AK Parti'den asılsız iddialara karşı hukuki adım: Şaban Sevinç, Timur Soykan ve Zeynel Emre'ye tazminat davası",
+                "url": "https://www.hurriyet.com.tr/gundem/ak-partiden-asilsiz-iddialara-karsi-hukuki-adim-saban-sevinc-timur-soykan-ve-zeynel-emreye-tazminat-davasi-43339974",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Fon soruşturmasında yeni gelişme: Şaban Sevinç ve Mustafa Balcı tutuklama talebiyle sulh ceza hakimliğe sevk edildi",
+                "url": "https://www.hurriyet.com.tr/gundem/fon-sorusturmasinda-yeni-gelisme-saban-sevinc-ve-mustafa-balci-gozaltina-alindi-43334896",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|hurriyet.com.tr"
+        }
+      ],
+      "zaman": "2026-11-08T08:59:06+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Hürriyet"
+    },
+    "merdan yanardağ": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/merdan-yanardag",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "“Siyasal casusluk” suçlamasıyla bir yıldır tutuklu bulunan TELE1 Genel Yayın Yönetmeni Merdan Yanardağ, hakkındaki…",
+                "url": "https://www.cumhuriyet.com.tr/siyaset/tutuklulugunun-birinci-yili-merdan-yanardag-dan-yeni-mesaj-enseyi-karatmaya-gerek-yok-2551107",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Bir ülkede gerçekler değil de, gerçekleri araştırmak için mücadele eden gazetecilerin uğradığı baskılar gündemdeyse…",
+                "url": "https://www.cumhuriyet.com.tr/yazarlar/mustafa-balbay/iletisim-caginda-gazeteci-tutuklamak-2549675",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Mesleğe başladığımız 80’li yılların başında hapis yatmış gazeteciler parmakla gösterilirdi. Zira parmakla gösterilecek…",
+                "url": "https://www.cumhuriyet.com.tr/yazarlar/miyase-ilknur/savcilar-ilk-hedefiniz-gazetecilerdir-ileri-2549679",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        }
+      ],
+      "zaman": "2026-11-08T08:59:46+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
