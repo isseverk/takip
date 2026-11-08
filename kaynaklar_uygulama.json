@@ -486,5 +486,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "selva demiralp",
+      "yeni": "SELVA DEMİRALP",
+      "zaman": "2026-11-08T09:44:35.558Z"
+    }
+  ]
 }
