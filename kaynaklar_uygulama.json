@@ -1008,5 +1008,12 @@
     "Murat Ağırel": "MURAT AĞIREL",
     "Barış Terkoğlu": "BARIŞ TERKOĞLU",
     "Timur Soykan": "TİMUR SOYKAN"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "deniz zeyrek",
+      "yeni": "DENİZ ZEYREK",
+      "zaman": "2026-11-08T09:03:38.101Z"
+    }
+  ]
 }
