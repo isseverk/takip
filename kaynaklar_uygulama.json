@@ -228,6 +228,18 @@
           "otomatik": true
         }
       ]
+    },
+    {
+      "ad": "gökçer tahincioğlu",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true
+        }
+      ]
     }
   ],
   "kapali": [
@@ -363,9 +375,9 @@
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
     },
     "gökçer tahincioğlu": {
-      "durum": "onay_bekliyor",
-      "zaman": "2026-11-07T15:17:58+00:00",
-      "aciklama": "T24, Aposto"
+      "durum": "bulundu",
+      "zaman": "2026-11-08T09:18:10.515Z",
+      "aciklama": "T24 (onaylandı)"
     },
     "ismail arı": {
       "durum": "onay_bekliyor",
@@ -502,74 +514,6 @@
         }
       ],
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
-    },
-    "gökçer tahincioğlu": {
-      "zaman": "2026-11-07T15:17:58+00:00",
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme",
-          "etiket": "T24",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
-            "ornekler": [
-              {
-                "baslik": "“Hançer timi” gölgesinde “barışmak”",
-                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/hancer-timi-golgesinde-barismak,59809",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "35 insanı ölüme götüren 20 cm’lik kolon, zamanaşımı ve zaman tüneli",
-                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/35-insani-olume-goturen-20-cmlik-kolon-zamanasimi-ve-zaman-tuneli,59774",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Fon skandalının AKP’deki “yansımaları” ve seçim olasılıklarının gölgesinde kalan “süreç”",
-                "url": "https://t24.com.tr/yazarlar/gokcer-tahincioglu-yuzlesme/fon-skandalinin-akpdeki-yansimalari-ve-secim-olasiliklarinin-golgesinde-kalan-surec,59672",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 10
-          }
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://aposto.com/a/gokcer-tahincioglu",
-          "etiket": "Aposto",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "aposto.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Kılıçdaroğlu’ndan erken seçim çıkışı: Siyasi rest mi, Erdoğan’a adaylık yolu mu?",
-                "url": "https://aposto.com/s/kilicdaroglu-nun-sozleri-ve-yenileme-secimi-ihtimalleri",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Kuraklık: Türkiye 'medyasız dönem'e mi giriyor? Spektrum · 15 Eki 2026 →",
-                "url": "https://aposto.com/s/kuraklik-turkiye-medyasiz-doneme-mi-giriyor",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Operasyonlar ülkesinde seçime doğru: Yargı hakikatle buluşabilir mi? Spektrum · 29 Eyl 2026 →",
-                "url": "https://aposto.com/s/operasyonlar-ulkesinde-secime-dogru-yargi-hakikatle-bulusabilir",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          }
-        }
-      ],
-      "aciklama": "T24, Aposto"
     },
     "ismail arı": {
       "zaman": "2026-11-08T07:49:36+00:00",
