@@ -883,5 +883,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "merdan yanardağ",
+      "yeni": "MERDAN YANARDAĞ",
+      "zaman": "2026-11-08T09:13:52.617Z"
+    }
+  ]
 }
