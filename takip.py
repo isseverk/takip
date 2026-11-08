@@ -267,6 +267,7 @@ def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
     sonuc = []
     for e in girdiler:
         baslik = re.sub(r"\s+-\s+[^-]{1,40}$", "", e.get("title", "")).strip()
+        ham_baslik = baslik          # imza kalıbına bakmak için ("Ruşen Çakır yorumladı: …")
         # "Can Ataklı yazdı: ..." / "... | Can Ataklı" gibi ekleri at
         baslik = re.sub(r"^" + re.escape(ad) + r"\s*(yazdı)?\s*[:|-]\s*", "", baslik, flags=re.I)
         baslik = re.sub(r"\s*[|-]\s*" + re.escape(ad) + r"\s*$", "", baslik, flags=re.I).strip()
@@ -274,7 +275,7 @@ def google_haber_oku(ist: Istemci, ad: str, site: str) -> list[dict]:
             continue
         tarih = datetime(*e["published_parsed"][:6], tzinfo=timezone.utc) if e.get("published_parsed") else None
         sonuc.append({"url": e["link"], "baslik": kisalt(baslik, 200), "tarih": iso(tarih), "tur": "yazi",
-                      "_yedek": True})
+                      "_yedek": True, "_gn_baslik": ham_baslik})
     sonuc.sort(key=lambda o: o.get("tarih") or "", reverse=True)
     return sonuc
 
@@ -379,6 +380,15 @@ GENEL_KOSE_YOLU = re.compile(r"/(kose-yazisi|kose-yazilari|kose-yazari|koseyazis
 IMZA_DENETIM_SINIRI = 6       # bir kaynak için bir çalışmada en çok kaç yazının imzasına bakılsın
 
 
+def baslikta_imza_var(baslik: str, ad: str) -> bool:
+    """Başlık kişinin imzasını taşıyor mu? "Ruşen Çakır yorumladı: …", "Can Ataklı yazdı | …", "… | Ruşen Çakır"."""
+    b, a = sade(baslik), sade(ad)
+    if not a or a not in b:
+        return False
+    return bool(re.search(r"(?:^|[|:\-\u2013\u2014]\s*)" + re.escape(a) + r"\s+(?:" + IMZA_EKLERI + r")\b", b)
+                or re.search(r"[|\u2013\u2014]\s*" + re.escape(a) + r"\s*$", b))
+
+
 def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: str, kd: dict,
                           ad: str | None = None) -> list[dict]:
     """Google Haberler yedeğinden gelenleri asıl adreslerine göre süzer: yalnızca yazarın kendi yazıları.
@@ -395,7 +405,9 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
         return bool(desen.search(u)) if desen else (urlparse(u).path.startswith(on_ek) and len(urlparse(u).path) > len(on_ek) + 3)
 
     def imza_karari(o: dict, gercek: str) -> str | None:
-        """imza / ad_sayfada / belirsiz (kabul) ya da red; bakılamadıysa None."""
+        """imza / ad_sayfada / belirsiz / baslik_imzasi (kabul) ya da red; bakılamadıysa None."""
+        if ad and baslikta_imza_var(o.get("_gn_baslik") or "", ad):
+            return "baslik_imzasi"   # adresinde adı yok ama başlığı "Ruşen Çakır yorumladı: …" biçiminde
         if not ad or not kose_deseni.search(gercek):
             return "red"
         karar = imza_kaydi.get(gercek)
@@ -452,7 +464,7 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
                 sonuc.append(o)
             else:
                 karar = imza_karari(o, gercek)
-                if karar in ("imza", "ad_sayfada", "belirsiz"):
+                if karar in ("imza", "ad_sayfada", "belirsiz", "baslik_imzasi"):
                     gk = _gn_kimlik(o["url"])
                     if gk in red:
                         red.remove(gk)
@@ -2042,6 +2054,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     for o in durum["ogeler"]:
         o.pop("_metin", None)
         o.pop("_yazar_meta", None)
+        o.pop("_gn_baslik", None)
         o.pop("yz_ozet", None)     # yapay zekâ özetleri kaldırıldı
         o.pop("yz_deneme", None)
         o.pop("konular", None)
@@ -2173,6 +2186,9 @@ def adres_denetimi(ist: Istemci, ayar: dict, durum: dict, zorla: bool = False) -
             kod = "tasinmis_olabilir"
             aciklama = (f"{gun} gündür yeni yazı gelmedi; son 30 günde imzalı yazıları "
                         f"{o['ad']} ({o['alan']}) sitesinde görünüyor — adresini değiştirmen gerekebilir")
+        elif bos and bos[0].get("yedek") == "google_haber":
+            kod, aciklama = "bos", (f"{bos[0]['etiket']} sitesi bulut sunucularından gelen istekleri engelliyor; "
+                                    "Google Haberler üzerinden de kişinin yazıları bulunamadı")
         elif bos:
             kod, aciklama = "bos", f"{bos[0]['etiket']} sayfası açılıyor ama yazı bulunamıyor (site tasarımı/adresi değişmiş olabilir)"
         elif sessiz:
