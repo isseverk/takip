@@ -42,7 +42,7 @@
       ]
     },
     {
-      "ad": "merdan yanardağ",
+      "ad": "MERDAN YANARDAĞ",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -285,11 +285,6 @@
       "zaman": "2026-11-07T06:39:39+00:00",
       "aciklama": "YouTube"
     },
-    "merdan yanardağ": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:40:05+00:00",
-      "aciklama": "birgun.net"
-    },
     "ahmet şık": {
       "durum": "bulundu",
       "zaman": "2026-11-07T06:40:16+00:00",
@@ -414,6 +409,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:51:35+00:00",
       "aciklama": "birgun.net, YouTube"
+    },
+    "MERDAN YANARDAĞ": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:40:05+00:00",
+      "aciklama": "birgun.net"
     }
   },
   "oneriler": {
@@ -744,45 +744,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Hürriyet"
     },
-    "merdan yanardağ": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/merdan-yanardag",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "“Siyasal casusluk” suçlamasıyla bir yıldır tutuklu bulunan TELE1 Genel Yayın Yönetmeni Merdan Yanardağ, hakkındaki…",
-                "url": "https://www.cumhuriyet.com.tr/siyaset/tutuklulugunun-birinci-yili-merdan-yanardag-dan-yeni-mesaj-enseyi-karatmaya-gerek-yok-2551107",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Bir ülkede gerçekler değil de, gerçekleri araştırmak için mücadele eden gazetecilerin uğradığı baskılar gündemdeyse…",
-                "url": "https://www.cumhuriyet.com.tr/yazarlar/mustafa-balbay/iletisim-caginda-gazeteci-tutuklamak-2549675",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Mesleğe başladığımız 80’li yılların başında hapis yatmış gazeteciler parmakla gösterilirdi. Zira parmakla gösterilecek…",
-                "url": "https://www.cumhuriyet.com.tr/yazarlar/miyase-ilknur/savcilar-ilk-hedefiniz-gazetecilerdir-ileri-2549679",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|cumhuriyet.com.tr"
-        }
-      ],
-      "zaman": "2026-11-08T08:59:46+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
-    },
     "TİMUR SOYKAN": {
       "kaynaklar": [
         {
@@ -847,6 +808,45 @@
       "zaman": "2026-11-08T09:04:13+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: MediaCat"
+    },
+    "MERDAN YANARDAĞ": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/merdan-yanardag",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "“Siyasal casusluk” suçlamasıyla bir yıldır tutuklu bulunan TELE1 Genel Yayın Yönetmeni Merdan Yanardağ, hakkındaki…",
+                "url": "https://www.cumhuriyet.com.tr/siyaset/tutuklulugunun-birinci-yili-merdan-yanardag-dan-yeni-mesaj-enseyi-karatmaya-gerek-yok-2551107",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Bir ülkede gerçekler değil de, gerçekleri araştırmak için mücadele eden gazetecilerin uğradığı baskılar gündemdeyse…",
+                "url": "https://www.cumhuriyet.com.tr/yazarlar/mustafa-balbay/iletisim-caginda-gazeteci-tutuklamak-2549675",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Mesleğe başladığımız 80’li yılların başında hapis yatmış gazeteciler parmakla gösterilirdi. Zira parmakla gösterilecek…",
+                "url": "https://www.cumhuriyet.com.tr/yazarlar/miyase-ilknur/savcilar-ilk-hedefiniz-gazetecilerdir-ileri-2549679",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        }
+      ],
+      "zaman": "2026-11-08T08:59:46+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
@@ -883,17 +883,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "merdan yanardağ",
-      "yeni": "MERDAN YANARDAĞ",
-      "zaman": "2026-11-08T09:13:52.617Z"
-    },
-    {
-      "eski": "deniz zeyrek",
-      "yeni": "DENİZ ZEYREK",
-      "zaman": "2026-11-08T09:14:12.132Z"
-    }
-  ]
+  }
 }
