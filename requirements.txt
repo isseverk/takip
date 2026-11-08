@@ -3,4 +3,3 @@ beautifulsoup4>=4.12
 feedparser>=6.0
 PyYAML>=6.0
 curl_cffi>=0.7
-pywebpush>=2.0

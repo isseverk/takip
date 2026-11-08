@@ -107,14 +107,7 @@ Uygulamada **Kaynaklar → Konular → + Konu**'ya bas ve bir konu yaz (ör. *as
 
 ## Bildirimler
 
-**Uygulama bildirimleri (önerilen):** Yeni yazılar Takip simgesiyle doğrudan telefonunun bildirimlerine gelir; ayrı bir uygulama gerekmez. Takip'in telefona uygulama olarak kurulu olması gerekir. Bir kez ayarlanır:
-1. **Ayarlar → Bildirimler → Kuruluma başla**'ya bas. Uygulama bir bildirim anahtarı oluşturur ve sana gizli bir anahtar gösterir.
-2. **Kopyala**'ya bas, sonra **GitHub'da gizli ayar ekleme sayfasını aç** bağlantısına dokun. **Name** kutusuna `VAPID_GIZLI` yaz, **Secret** kutusuna kopyaladığın anahtarı yapıştır ve **Add secret**'e bas.
-3. Uygulamaya dön ve **Bu cihazda bildirimleri aç**'a bas, izin istediğinde **İzin ver** de.
-
-Sıradaki kontrolde telefonuna "Takip bildirimleri açık ✓" diye bir deneme bildirimi gelir. Bilgisayarında da Takip'i açıp 3. adımı yaparsan bildirimler oraya da gelir. Gizli anahtar yalnızca GitHub'ın gizli ayarlarında durur, depoda görünmez; kimseyle paylaşma.
-
-**ntfy ile (alternatif yol):** Aynı bölümdeki **ntfy ile bildirim** kısmını aç ve **ntfy bildirimlerini aç**'a bas. Ücretsiz **ntfy** uygulamasını kurman ve **ntfy'de abone ol** düğmesine dokunman yeterli. İkisi birden açıksa her bildirim iki kez gelir; birini kapat.
+Bildirim isteğe bağlıdır; kurmazsan akış yine güncellenir. İstersen ücretsiz **ntfy** uygulamasıyla alabilirsin: **Ayarlar → Bildirimler → ntfy bildirimlerini aç**'a bas, ntfy uygulamasını kur ve **ntfy'de abone ol** düğmesine dokun.
 
 Açtıktan sonra aynı bölümden ince ayar yapabilirsin, sonra **Bildirim ayarlarını kaydet**'e bas:
 - **Ne zaman:** Her yeni içerikte ya da yalnızca konularına uyanlarda.
@@ -165,21 +158,14 @@ Kartlarda kaynağın yanında küçük bir işaret durur; dokununca açıklamas�
 
 Program, başlığında kişinin adının haber öznesi olarak geçtiği sayfaları ("X gözaltına alındı", "X adli kontrolle serbest bırakıldı") artık kişinin yazısı saymaz; "Ad Soyad | Başlık" ya da "… yorumladı" gibi imza kalıpları ise sorun değildir. Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumlar da kendiliğinden temizlenir; kişinin başka kaynağı kalmazsa yeniden aranır ve bulunanlar Onay bekleyenler'e düşer.
 
-## Yapay zekâ özetleri (isteğe bağlı, ücretsiz)
+## Günlük kaynak taraması
 
-Yeni köşe ve blog yazılarına Google Gemini ile üç cümlelik özet eklenir. Akışta **✨ Özet** olarak görünür, dokununca tamamı açılır. Bir kez ayarlanır; bilgisayardan daha kolay:
-
-1. **aistudio.google.com/apikey** adresine Google hesabınla gir, **Create API key**'e bas ve çıkan anahtarı kopyala.
-2. GitHub'da deponun **Settings → Secrets and variables → Actions** sayfasına git, **New repository secret**'a bas.
-3. **Name** kutusuna `GEMINI_ANAHTAR` yaz, **Secret** kutusuna anahtarı yapıştır ve **Add secret**'e bas.
-
-Sıradaki kontrolden itibaren yeni yazılar özetlenir. Durumu **Ayarlar → Yapay zekâ özetleri** bölümünde görürsün.
-
-- Anahtar yalnızca GitHub'ın gizli ayarlarında durur; depoda ya da telefonda görünmez.
-- Program, anahtarın erişebildiği modeller arasından uygun bir "Flash" modelini kendisi seçer. Google bir modeli emekliye ayırırsa yenisine kendiliğinden geçer.
-- Her kontrolde en çok 10 yazı özetlenir. Günlük ücretsiz sınır dolarsa özetler birkaç saat ara verip kaldığı yerden devam eder.
-- Sitesi doğrudan okunamayan (Google Haberler üzerinden takip edilen) yazarların yazıları özetlenemez.
-- Gemini'ye yalnızca zaten yayımlanmış yazıların metni gönderilir. Ücretsiz kullanımda Google bu metinleri hizmetini geliştirmek için kullanabilir.
+Program her kişiyi günde bir kez yeniden arar (her kontrolde 2 kişi; yarım saatte bir çalıştığı için herkes gün içinde sırayla taranır). Takip ettiklerine ek olarak yeni bir köşe, blog ya da kanal bulursa onu doğrudan eklemez; son içerik örnekleriyle **Kaynaklar → Onay bekleyenler**'e koyar ve kartta "🔁 Günlük taramada bulundu" yazar.
+- **Seçilenleri takip et** işaretlediklerini ekler; işaretlemediklerin bir daha önerilmez.
+- **Hiçbirini ekleme** hepsini reddeder; mevcut kaynaklarına dokunmaz ve bunlar da bir daha önerilmez.
+- Köşe yazısı ya da blogu takip edilen kişiler için YouTube kanalı önerilmez. Zaten takip edilen siteler yeniden denenmez.
+- Ekşi başlıkları ve takipten çıkardığın kişiler taranmaz. Yazar sayfasında "yeni kaynak taraması … önce" satırı son taramanın ne zaman yapıldığını gösterir.
+- Mevcut bağlantıların çalışıp çalışmadığı zaten her yarım saatte bir denetlenir; çalışmayanlar Kaynaklar'da uyarıyla görünür.
 
 ## Adres denetimi — yazarlar hâlâ aynı yerde mi?
 

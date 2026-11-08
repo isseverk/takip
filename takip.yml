@@ -1,0 +1,99 @@
+name: Takip akışını güncelle
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "kaynaklar.yaml"
+      - "kaynaklar_uygulama.json"
+      - "sablon.html"
+      - "uygulama/**"
+      - "takip.py"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: takip
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.yayin.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+
+      # Yarım saatlik durum kaydı ayrı "veri" dalında tek kayıt olarak tutulur (depo şişmesin)
+      - name: Durum kaydını getir
+        run: |
+          mkdir -p veri
+          if git ls-remote --exit-code origin veri >/dev/null 2>&1; then
+            # dal var: mutlaka oradan al, alınamazsa eski kayıtla çalışıp aynı yazıları tekrar bildirmeyelim
+            git fetch --depth=1 origin veri
+            git show FETCH_HEAD:durum.json > veri/durum.json
+            echo "Durum veri dalından alındı"
+          else
+            echo "veri dalı henüz yok; depodaki kayıtla başlanıyor"
+          fi
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Kütüphaneleri kur
+        run: pip install -r requirements.txt
+
+      - name: Kaynakları kontrol et
+        env:
+          TZ: Europe/Istanbul
+          NTFY_KONU: ${{ secrets.NTFY_KONU }}
+        run: python takip.py
+
+      - name: Durum kaydını sakla
+        run: |
+          git config user.name "takip-botu"
+          git config user.email "takip-botu@users.noreply.github.com"
+          tmp=$(mktemp -d)
+          cp veri/durum.json "$tmp/durum.json"
+          cd "$tmp"
+          git init -q -b veri
+          git add durum.json
+          git -c user.name=takip-botu -c user.email=takip-botu@users.noreply.github.com commit -q -m "Durum $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" veri:veri
+
+      - name: Telefondan yapılan değişiklikleri ve arama sonuçlarını kaydet
+        run: |
+          if [ -f kaynaklar_uygulama.json ] && ! git diff --quiet -- kaynaklar_uygulama.json; then
+            git add kaynaklar_uygulama.json
+            git commit -m "Arama sonuçları eklendi"
+            for i in 1 2 3; do
+              git pull --rebase --autostash -X theirs && git push && break
+              sleep 5
+            done
+          fi
+
+      # GitHub, 60 gün hiç kayıt olmayan depolarda zamanlanmış çalışmayı durdurur; 50 günde bir canlı tut
+      - name: Depoyu canlı tut
+        run: |
+          son=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - son )) -gt $(( 50 * 86400 )) ]; then
+            git commit --allow-empty -m "Canlı tut"
+            git pull --rebase --autostash && git push
+          fi
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+      - id: yayin
+        uses: actions/deploy-pages@v5
