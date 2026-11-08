@@ -894,5 +894,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "yalçın karatepe",
+      "yeni": "YALÇIN KARATEPE",
+      "zaman": "2026-11-08T09:09:22.446Z"
+    }
+  ]
 }
