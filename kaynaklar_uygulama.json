@@ -234,21 +234,6 @@
     "4d43e995a22b"
   ],
   "kapali_yazarlar": [],
-  "push": {
-    "acik_anahtar": "BCcO0ON70AuQEagDb2azHPi5-jpTlqBs-inNpL6G_SBXXoEtnF98mrlYpS6Ompes1yD761cBDP2Dy8pjA57Q0Ew",
-    "abonelikler": [
-      {
-        "endpoint": "https://fcm.googleapis.com/fcm/send/eFrVoF1TJo8:APA91bGWjob0G57dK6UZW-c0iZiDZe-diW_Ut0Y11rRuDsNhIr3LLbA8GLjgzJGepCvMAjW9Ay9n2CAmVORal_u0KAzK3Uwm_ZWpwdbW4PSMBjxZZ2HANR0P_ioW-XppAAknQVXCDFAO",
-        "keys": {
-          "p256dh": "BM3yucxDnptRspv2Y8PXYfHPRHadJL-_JlxCxuFj-ncspqsDRkPfouSgVZcLSSrCLZk2o54SOUZ-kp_FzFCIliw",
-          "auth": "EqQtvAyYhQWdPKpIxMWD0A"
-        },
-        "cihaz": "Android telefon (07.11.2026)",
-        "zaman": "2026-11-06T22:11:49.186Z",
-        "onay": "2026-11-06T22:12:17+00:00"
-      }
-    ]
-  },
   "bildirim": {
     "kapsam": "hepsi",
     "sessiz_turler": [
