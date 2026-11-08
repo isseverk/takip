@@ -12,23 +12,6 @@
       ]
     },
     {
-      "ad": "ayşenur arslan",
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gunebakis.com.tr",
-          "etiket": "Günebakış Gazetesi Trabzon",
-          "otomatik": true
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://halktv.com.tr/yazar/aysenur-arslan-30364",
-          "dogrula": true,
-          "etiket": "halktv.com.tr"
-        }
-      ]
-    },
-    {
       "ad": "bahadır özgür",
       "kaynaklar": [
         {
