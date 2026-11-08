@@ -59,7 +59,7 @@
       ]
     },
     {
-      "ad": "cansu çamlıbel",
+      "ad": "CANSU ÇAMLIBEL",
       "kaynaklar": [
         {
           "tur": "sayfa",
@@ -305,11 +305,6 @@
       "zaman": "2026-11-07T06:51:59+00:00",
       "aciklama": "Medyascope, YouTube"
     },
-    "cansu çamlıbel": {
-      "durum": "bulundu",
-      "zaman": "2026-11-07T06:52:22+00:00",
-      "aciklama": "T24, YouTube"
-    },
     "evrim kepenek": {
       "durum": "bulundu",
       "zaman": "2026-11-07T08:00:32+00:00",
@@ -419,6 +414,11 @@
       "durum": "bulundu",
       "zaman": "2026-11-07T06:52:10+00:00",
       "aciklama": "T24, MediaCat"
+    },
+    "CANSU ÇAMLIBEL": {
+      "durum": "bulundu",
+      "zaman": "2026-11-07T06:52:22+00:00",
+      "aciklama": "T24, YouTube"
     }
   },
   "oneriler": {
@@ -586,12 +586,5 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  },
-  "ad_degisiklikleri": [
-    {
-      "eski": "cansu çamlıbel",
-      "yeni": "CANSU ÇAMLIBEL",
-      "zaman": "2026-11-08T09:28:56.772Z"
-    }
-  ]
+  }
 }
