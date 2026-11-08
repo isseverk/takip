@@ -633,45 +633,6 @@
         }
       ],
       "aciklama": "T24 · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce"
-    },
-    "bahadır özgür": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/bahadir-ozgur",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 12 yazı",
-            "ornekler": [
-              {
-                "baslik": "Fon vurgununa ilişkin haberleriyle gündeme gelen gazeteci Bahadır Özgür, “soruşturmanın gizliliğini ihlal”…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteci-bahadir-ozgur-yurt-disi-yasagi-ve-adli-kontrolle-serbest-birakildi-2547261",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Son dakika haberi... Gazeteci Bahadır Özgür gözaltına alındı. Gelişmeyi Halk TV İnternet Sitesi Genel Yayın Yönetmeni…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/son-dakika-gazeteci-bahadir-ozgur-gozaltina-alindi-2547124",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İstanbul Cumhuriyet Başsavcılığı, gazeteci Bahadır Özgür hakkında, MASAK’ın suç duyurusu üzerine soruşturma başlattı.…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/gazeteci-bahadir-ozgur-hakkinda-sorusturma-baslatildi-gerekce-4-yil-onceki-isid-haberi-2494001",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 12
-          },
-          "kimlik": "site|cumhuriyet.com.tr"
-        }
-      ],
-      "zaman": "2026-11-08T08:54:54+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
@@ -703,6 +664,9 @@
     "şaban sevinç": [
       "site|cumhuriyet.com.tr",
       "site|hurriyet.com.tr"
+    ],
+    "bahadır özgür": [
+      "site|cumhuriyet.com.tr"
     ]
   },
   "ad_esleme": {
