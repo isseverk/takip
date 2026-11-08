@@ -767,5 +767,12 @@
     "Barış Pehlivan": [
       "site|sondakika.com"
     ]
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "Murat Yetkin",
+      "yeni": "MURAT YEKİN",
+      "zaman": "2026-11-08T08:50:41.894Z"
+    }
+  ]
 }
