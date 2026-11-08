@@ -597,5 +597,12 @@
     "Fehim Taştekin": "FEHİM TAŞTEKİN",
     "Zafer Arapkirli": "ZAFER ARAPKİRLİ",
     "Faruk Bildirici": "FARUK BİLDİRİCİ"
-  }
+  },
+  "ad_degisiklikleri": [
+    {
+      "eski": "gökçer tahincioğlu",
+      "yeni": "GÖKÇER TAHİNCİOĞLU",
+      "zaman": "2026-11-08T09:26:15.720Z"
+    }
+  ]
 }
