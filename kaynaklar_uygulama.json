@@ -495,45 +495,6 @@
         }
       ],
       "aciklama": "Cumhuriyet · Önerilmeyenler: birgun.net sayfası var ama son yazısı 9807 gün önce; medyascope.tv (adı geçiyor ama orada yazmıyor); bianet.org sayfası var ama son yazısı 205 gün önce"
-    },
-    "GÖKÇER TAHİNCİOĞLU": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://aposto.com/a/gokcer-tahincioglu",
-          "etiket": "Aposto",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "aposto.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Kılıçdaroğlu’ndan erken seçim çıkışı: Siyasi rest mi, Erdoğan’a adaylık yolu mu?",
-                "url": "https://aposto.com/s/kilicdaroglu-nun-sozleri-ve-yenileme-secimi-ihtimalleri",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Kuraklık: Türkiye 'medyasız dönem'e mi giriyor? Spektrum · 15 Eki 2026 →",
-                "url": "https://aposto.com/s/kuraklik-turkiye-medyasiz-doneme-mi-giriyor",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Operasyonlar ülkesinde seçime doğru: Yargı hakikatle buluşabilir mi? Spektrum · 29 Eyl 2026 →",
-                "url": "https://aposto.com/s/operasyonlar-ulkesinde-secime-dogru-yargi-hakikatle-bulusabilir",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|aposto.com"
-        }
-      ],
-      "zaman": "2026-11-08T09:19:18+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Aposto"
     }
   },
   "reddedilen": {
@@ -568,6 +529,9 @@
     ],
     "BEKİR AĞIRDIR": [
       "site|mediacat.com"
+    ],
+    "GÖKÇER TAHİNCİOĞLU": [
+      "site|aposto.com"
     ]
   },
   "ad_esleme": {
