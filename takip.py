@@ -76,6 +76,24 @@ def iso(dt: datetime | None) -> str | None:
     return dt.astimezone(timezone.utc).isoformat(timespec="seconds") if dt else None
 
 
+_URL_TARIHI = re.compile(r"(?<!\d)(20\d\d)[-/_](0[1-9]|1[0-2])[-/_](0[1-9]|[12]\d|3[01])(?!\d)")
+
+
+ESKI_YAZI_GUN = 3   # bundan eski tarihli bir yazı ilk kez görülürse "yeni" sayılmaz
+
+
+def url_tarihi(url: str) -> datetime | None:
+    """Adreste yazının günü varsa (…/2026-10-23/… ya da …/2026/10/23/…) onu döndürür (saat bilinmez)."""
+    m = _URL_TARIHI.search(urlparse(url).path)
+    if not m:
+        return None
+    try:
+        dt = datetime(int(m[1]), int(m[2]), int(m[3]), 12, tzinfo=TR_SAAT)   # saat bilinmiyor: gün ortası
+    except ValueError:
+        return None
+    return dt if dt <= simdi() + timedelta(days=1) else None
+
+
 def iso_oku(s: str | None) -> datetime | None:
     if not s:
         return None
@@ -363,6 +381,9 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
             cozulen += 1
             if yazara_ait(gercek):
                 o["gn_url"], o["url"] = o["url"], url_temizle(gercek)
+                son_parca = urlparse(gercek).path.rstrip("/").rsplit("/", 1)[-1]
+                # ".../ad-soyad-yazdi-..." gibi başlık kalıbıyla mı, yazarın klasöründen mi tanındı
+                o["_dogrulama"] = ("baslik_kalibi" if re.search(r"-(yazdi|yorumladi)(-|$)", son_parca) else "yazar_klasoru")
                 sonuc.append(o)
             else:
                 reddedilen += 1
@@ -382,6 +403,8 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
                 o["_eski"] = True
     guvenme = k.get("yedek_dogrula") or kd.get("ad_her_sayfada")
     if cozulemeyen and not guvenme:
+        for o in cozulemeyen:
+            o["_dogrulama"] = "belirsiz"
         sonuc += cozulemeyen
     kd["yedek_red"] = red[-400:]
     kd["gn_cozum"] = dict(list(onbellek.items())[-600:])
@@ -1197,10 +1220,14 @@ def ayrinti_getir(ist: Istemci, oge: dict, yazar_adi: str | None) -> bool:
 
     if yazar_adi:
         aranan = sade(yazar_adi)
-        yazar_meta = sade(meta("author", "article:author", "dc.creator") or "")
-        ld_metin = " ".join(s.get_text() for s in corba.find_all("script", type="application/ld+json"))
-        if aranan not in yazar_meta and aranan not in sade(ld_metin) and aranan not in sade(corba.get_text(" ")[:20000]):
-            return False
+        imza = _imza_yerinde_mi(corba, aranan, meta("author", "article:author", "dc.creator"))
+        if not imza:
+            if aranan not in sade(corba.get_text(" ")[:20000]):
+                return False
+            # adı yalnızca metinde geçiyor: başlığında da adı varsa büyük olasılıkla onun hakkında bir haber
+            if baslik_onun_hakkinda(meta("og:title", "twitter:title") or oge.get("baslik") or "", yazar_adi):
+                return False
+        oge["_imza"] = imza
 
     baslik = meta("og:title", "twitter:title")
     if baslik:
@@ -1213,6 +1240,9 @@ def ayrinti_getir(ist: Istemci, oge: dict, yazar_adi: str | None) -> bool:
         if not t:
             m = re.search(r'"datePublished"\s*:\s*"([^"]+)"', metin)
             t = m.group(1) if m else None
+        if not t:
+            z = corba.find("time", attrs={"datetime": True})
+            t = z["datetime"] if z else None
         dt = iso_oku(t)
         if dt:
             oge["tarih"] = iso(dt)
@@ -1220,6 +1250,40 @@ def ayrinti_getir(ist: Istemci, oge: dict, yazar_adi: str | None) -> bool:
     if len(govde) > 600:
         oge["_metin"] = govde
     return True
+
+
+def baslik_onun_hakkinda(baslik: str, ad: str) -> bool:
+    """Başlıkta kişinin adı haber öznesi olarak mı geçiyor? ("Bahadır Özgür adli kontrolle serbest bırakıldı")
+    "Ad Soyad | Başlık", "Ad Soyad: ..." gibi imza ön ekleri ve "... yazdı/yorumladı" kalıpları sayılmaz."""
+    b, a = sade(baslik), sade(ad)
+    if not a or a not in b:
+        return False
+    ayrac = r"[|:\-\u2013\u2014/·•]"
+    if re.search(r"(?:^|" + ayrac + r")\s*" + re.escape(a) + r"\s*(?:$|" + ayrac + ")", b):
+        return False
+    return not re.search(re.escape(a) + r"\s+(yazdi|yorumladi|yaziyor|anlatiyor|soruyor|cevapliyor|degerlendirdi)\b", b)
+
+
+_IMZA_SINIFI = re.compile(r"author|yazar|byline|writer|muhabir|editor", re.I)
+
+
+def _imza_yerinde_mi(corba: BeautifulSoup, aranan: str, yazar_meta: str | None) -> bool:
+    """Ad, sayfanın imza yerinde mi (yazar meta etiketi, yapılandırılmış veri ya da imza kutusu)?
+    Yalnızca metnin bir yerinde geçmesi yetmez: o kişi hakkında bir haber de olabilir."""
+    if aranan in sade(yazar_meta or ""):
+        return True
+    for sc in corba.find_all("script", type="application/ld+json"):
+        for m in re.finditer(r'"(?:author|creator)"\s*:\s*(\[[^\]]{0,800}\]|\{[^}]{0,500}\}|"[^"]{0,120}")', sc.string or sc.get_text() or ""):
+            if aranan in sade(m.group(1)):
+                return True
+    for e in corba.find_all(attrs={"rel": "author"}) + corba.find_all(attrs={"itemprop": "author"}):
+        if aranan in sade(e.get_text(" "))[:300]:
+            return True
+    for e in corba.find_all(class_=_IMZA_SINIFI, limit=60):
+        t = e.get_text(" ", strip=True)
+        if len(t) < 200 and aranan in sade(t):
+            return True
+    return False
 
 
 def makale_metni(corba: BeautifulSoup) -> str:
@@ -1324,7 +1388,8 @@ def ayar_oku(yol: Path) -> dict:
                          "kesif": uyg.get("kesif") or {},
                          "konular": _liste(uyg.get("konular")),
                          "push": uyg.get("push") if isinstance(uyg.get("push"), dict) else {},
-                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}}
+                         "oneriler": uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {},
+                         "kategoriler": uyg.get("kategoriler") if isinstance(uyg.get("kategoriler"), dict) else {}}
     # telefondan yapılan bildirim ayarları (konu adı, sessiz saatler, susturulan yazarlar/türler…)
     uyg_bildirim = {k: v for k, v in (uyg.get("bildirim") or {}).items() if v not in (None, "")}
     if uyg_bildirim:
@@ -1360,6 +1425,46 @@ def kaynaklari_listele(ayar: dict):
             if k.get("aktif") is False:
                 continue
             yield y, k, k.get("tur", "sayfa"), kaynak_anahtari(y["ad"], k)
+
+
+def icerik_dogrulamasi(tur: str, k: dict, imza_dogrulandi: bool) -> str:
+    """İçeriğin gerçekten o kişiye ait olduğunu neye dayanarak söylüyoruz?"""
+    if imza_dogrulandi:
+        return "imza"                 # yazının sayfasında kişinin adı (imza) bulundu
+    if tur == "sayfa":
+        return "yazar_sayfasi"        # kişinin kendi yazı listesi sayfasından
+    if tur == "rss":
+        return "imza" if k.get("yazar_filtresi") else "kendi_sitesi"
+    if tur == "youtube":
+        return "kanal"
+    if tur in ("bluesky", "telegram", "instagram", "eksi_yazar", "podcast"):
+        return "hesap"
+    if tur == "youtube_ara":
+        return "ad_geciyor"           # başlığında adı geçiyor: konuk ya da konu da olabilir
+    if tur == "eksi_baslik":
+        return "baslik"
+    return "belirsiz"
+
+
+def dogrulama_isaretini_tamamla(ayar: dict, durum: dict) -> None:
+    """Bu özellikten önce akışa girmiş öğelere de (bilinen kadarıyla) doğrulama bilgisi ekler."""
+    bilgi = {anahtar: (tur, k) for _y, k, tur, anahtar in kaynaklari_listele(ayar)}
+    for o in durum.get("ogeler", []):
+        if not o.get("tarih") and url_tarihi(o.get("url", "")):
+            o["tarih"], o["tarih_gun"] = iso(url_tarihi(o["url"])), True
+        if o.get("dogrulama") or o.get("konu_haberi"):
+            continue
+        if o.get("gn_url"):
+            son = urlparse(o["url"]).path.rstrip("/").rsplit("/", 1)[-1]
+            o["dogrulama"] = "baslik_kalibi" if re.search(r"-(yazdi|yorumladi)(-|$)", son) else "yazar_klasoru"
+        elif "news.google.com" in o.get("url", ""):
+            o["dogrulama"] = "belirsiz"
+        elif o.get("kaynak_id") in bilgi:
+            tur, k = bilgi[o["kaynak_id"]]
+            if tur == "sayfa" and baslik_onun_hakkinda(o.get("baslik") or "", o.get("yazar") or ""):
+                o["dogrulama"] = "ad_sayfada"     # başlığında kendi adı geçiyor: onun hakkında bir haber olabilir
+            else:
+                o["dogrulama"] = icerik_dogrulamasi(tur, k, False)   # eski kayıtlarda imza denetiminin sonucu bilinmiyor
 
 
 def kose_yazarlarinin_youtubeunu_cikar(ayar_yolu: Path, durum: dict) -> list[str]:
@@ -1398,7 +1503,37 @@ def kose_yazarlarinin_youtubeunu_cikar(ayar_yolu: Path, durum: dict) -> list[str
     return cikarilan
 
 
+def tek_yazi_kaynaklarini_cikar(ayar_yolu: Path) -> list[str]:
+    """Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumları temizler.
+    Kişinin başka kaynağı kalmazsa yeniden aranır (bulunanlar onayına sunulur)."""
+    yol = Path(ayar_yolu).with_name(UYGULAMA_DOSYASI)
+    try:
+        uyg = json.loads(yol.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    cikarilan = []
+    for y in _liste(uyg.get("yazarlar")):
+        kaynaklar = _liste(y.get("kaynaklar"))
+        kalan = [k for k in kaynaklar if not (k.get("otomatik") and k.get("tur") == "sayfa"
+                                               and k.get("url") and _tek_yazi_adresi(k["url"]))]
+        if len(kalan) < len(kaynaklar):
+            y["kaynaklar"] = kalan
+            cikarilan.append(y["ad"])
+            if not kalan:
+                ar = _liste(uyg.get("aranacaklar"))
+                if not any((x.get("ad") if isinstance(x, dict) else x) == y["ad"] for x in ar):
+                    ar.append({"ad": y["ad"], "zaman": iso(simdi())})
+                uyg["aranacaklar"] = ar
+                (uyg.get("kesif") or {}).pop(y["ad"], None)
+    if cikarilan:
+        yol.write_text(json.dumps(uyg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print("– yazar sayfası yerine tek bir haber olarak eklenmiş kaynak çıkarıldı: " + ", ".join(cikarilan))
+    return cikarilan
+
+
 def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool = False) -> int:
+    if not sadece_kontrol:
+        tek_yazi_kaynaklarini_cikar(ayar_yolu)   # yeniden aranacaklar varsa hemen aşağıda aranır
     ayar = ayar_oku(ayar_yolu)
     a = ayar["ayarlar"]
     ist = Istemci(bekleme=float(a.get("istekler_arasi_bekleme", 0.7)))
@@ -1415,6 +1550,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         ayar = ayar_oku(ayar_yolu)  # çıkarılan kanallar olmadan yeniden oku
         a = ayar["ayarlar"]
         a["_push"] = push_durumu(ayar)
+    dogrulama_isaretini_tamamla(ayar, durum)
+    akis_siniri = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
     ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 40))
     baslangic = simdi()
@@ -1473,20 +1610,37 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         dogrula = k.get("dogrula", bool(k.get("yazar_dizini")) or kd.get("tahmini", False))
         eklenen = 0
         for o in taze:
-            if tur == "sayfa" and not o.pop("_yedek", False) and ayrinti_sayaci < ayrinti_siniri \
+            yedekten = bool(o.pop("_yedek", False))
+            imza_dogrulandi = False
+            if tur == "sayfa" and not yedekten and ayrinti_sayaci < ayrinti_siniri \
                     and k.get("ayrinti", True):
                 ayrinti_sayaci += 1
                 try:
                     if not ayrinti_getir(ist, o, (k.get("bul") or y["ad"]) if dogrula else None):
                         gorulen.add(o["url"])  # başka yazarın yazısı; bir daha bakma
                         continue
+                    imza_dogrulandi = bool(o.pop("_imza", False)) if dogrula else False
+                    if dogrula and not imza_dogrulandi:
+                        # imza kutusu bulunamadı; adres kişinin klasöründeyse yine de onun yazısıdır
+                        o["_dogrulama"] = ("yazar_klasoru" if _slug(k.get("bul") or y["ad"]) in urlparse(o["url"]).path.lower()
+                                           else "ad_sayfada")
                 except Exception as e:
                     print(f"   (ayrıntı alınamadı: {o['url']} — {e})")
+            o["dogrulama"] = o.pop("_dogrulama", None) or icerik_dogrulamasi(tur, k, imza_dogrulandi)
+            if not o.get("tarih") and url_tarihi(o["url"]):
+                o["tarih"], o["tarih_gun"] = iso(url_tarihi(o["url"])), True   # sayfada tarih yoktu; adresteki gün
+            yazi_tarihi = iso_oku(o.get("tarih"))
+            if yazi_tarihi and yazi_tarihi < akis_siniri:
+                gorulen.add(o["url"])      # akışta tutulandan da eski bir yazı; yeni değil
+                continue
+            # listede geç beliren eski bir yazı (ör. "çok okunanlar" kutusu ya da arama yedeği):
+            # akışa gerçek tarihiyle girer ama "yeni" sayılmaz, bildirim gitmez
+            gec_kalmis = bool(yazi_tarihi and yazi_tarihi < simdi() - timedelta(days=ESKI_YAZI_GUN))
             if _ayni_baslik_var(durum["ogeler"] + yeni_ogeler, y["ad"], o["baslik"]):
                 gorulen.add(o["url"])
                 continue
             o.update(id=kimlik(o["url"]), yazar=y["ad"], kaynak=o.pop("_kaynak", None) or kd["etiket"], kaynak_id=anahtar,
-                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)))
+                     bulunma=iso(simdi()), ilk=ilk_kez or bool(o.pop("_eski", False)) or gec_kalmis)
             yeni_ogeler.append(o)
             mevcut_url.add(o["url"])
             eklenen += 1
@@ -1563,7 +1717,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     # akışı güncelle ve buda
     sinir = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
     tum = yeni_ogeler + durum["ogeler"]
-    tum = [o for o in tum if (iso_oku(o.get("bulunma")) or simdi()) >= sinir]
+    # yazının kendi tarihi biliniyorsa ona, bilinmiyorsa bulunduğu zamana bakılır
+    tum = [o for o in tum if (iso_oku(o.get("tarih")) or iso_oku(o.get("bulunma")) or simdi()) >= sinir]
     tum.sort(key=_siralama_anahtari, reverse=True)
     durum["ogeler"] = tum[: int(a.get("akista_en_fazla", 1500))]
     # isteğe bağlı: yeni köşe/blog yazılarına yapay zekâ özeti (GEMINI_ANAHTAR gizli ayarı varsa)
@@ -1773,6 +1928,71 @@ def _siralama_anahtari(o: dict):
     if tarih > bulunma + timedelta(hours=6):
         tarih = bulunma
     return tarih
+
+
+# ───────────────────────── yazar kategorileri ─────────────────────────
+# Kullanıcı bir kişinin kategorilerini seçmediyse, son yazılarının başlık ve özetlerine bakıp öneri yapılır.
+
+KATEGORILER = ["Siyaset", "Araştırmacı gazetecilik", "Hukuk", "Ekonomi", "Dış politika", "Tarih", "Teknoloji",
+               "Bilim", "Sağlık", "Çevre", "Eğitim", "Toplumsal haklar", "Spor"]
+_KATEGORI_KELIMELERI = {
+    "Siyaset": ["chp", "akp", "ak parti", "mhp", "dem parti", "iyi parti", "secim", "erdogan", "ozgur ozel", "bahceli",
+                "imamoglu", "meclis", "muhalefet", "iktidar", "kurultay", "cumhurbaskan", "bakan", "milletvekil", "parti"],
+    "Araştırmacı gazetecilik": ["belge", "ortaya cikti", "ihale", "rusvet", "yolsuzluk", "mafya", "istihbarat", "organize",
+                                "kara para", "vurgun", "sorusturma dosya", "ifadesi", "kulis", "operasyon", "itirafci"],
+    "Hukuk": ["mahkeme", "dava", "savci", "yargi", "anayasa", "tutuklan", "iddianame", "hakim", "durusma", "yargitay",
+              "aym", "avukat", "ceza", "beraat", "tahliye", "kanun", "davas"],
+    "Ekonomi": ["enflasyon", "faiz", "merkez bankasi", "dolar", "doviz", "ekonomi", "butce", "vergi", "borsa", "asgari ucret",
+                "piyasa", "buyume", "ihracat", "cari acik", "kredi", "maas", "emekli", "tcmb", "fed"],
+    "Dış politika": ["nato", "abd", "rusya", "israil", "iran", "suriye", "ukrayna", "avrupa birligi", "trump", "putin",
+                     "diplomasi", "gazze", "azerbaycan", "yunanistan", "dis politika", "washington", "brüksel", "bruksel"],
+    "Tarih": ["ataturk", "osmanli", "tarih", "lozan", "padisah", "cumhuriyet'in", "kurtulus savasi", "sultan", "1923", "1919"],
+    "Teknoloji": ["yapay zeka", "teknoloji", "internet", "sosyal medya", "yazilim", "siber", "dijital", "algoritma"],
+    "Bilim": ["bilim", "arastirma", "uzay", "nasa", "fizik", "deney", "akademi", "bilimsel", "evrim"],
+    "Sağlık": ["saglik", "hastane", "doktor", "hekim", "salgin", "asi", "ilac", "kanser", "hasta"],
+    "Çevre": ["iklim", "cevre", "maden", "orman", "yangin", "kuraklik", "kirlilik", "deprem", "sel", "enerji"],
+    "Eğitim": ["egitim", "okul", "ogrenci", "ogretmen", "universite", "yks", "mufredat", "meb", "sinav"],
+    "Toplumsal haklar": ["kadin", "cocuk", "isci", "sendika", "lgbt", "multeci", "insan haklari", "ifade ozgurlugu",
+                         "basin ozgurlugu", "siddet", "ayrimcilik", "gazeteci"],
+    "Spor": ["futbol", "mac", "maci", "macta", "macin", "galatasaray", "fenerbahce", "besiktas", "trabzonspor", "transfer", "teknik direktor", "lig",
+             "gol", "hakem", "derbi", "milli takim", "basketbol", "uefa", "tff", "sampiyon"],
+}
+
+
+def kategori_oner(ogeler: list[dict]) -> list[str]:
+    """Bir kişinin içeriklerinden en baskın 1-2 kategoriyi çıkarır (en az 3 içerik gerekir)."""
+    if len(ogeler) < 3:
+        return []
+    # kısa kelimeler ("mac", "sel", "abd") yalnızca tam kelime olarak sayılır; uzunlar ekleriyle de eşleşir
+    desenler = {kat: [re.compile(r"(?<![a-z0-9])" + re.escape(sade(k)) + (r"(?![a-z0-9])" if len(k) <= 4 else ""))
+                      for k in kelimeler]
+                for kat, kelimeler in _KATEGORI_KELIMELERI.items()}
+    say = {kat: 0 for kat in desenler}
+    for o in ogeler:
+        metin = sade(" ".join(str(o.get(x) or "") for x in ("baslik", "ozet", "yz_ozet")))
+        for kat, d in desenler.items():
+            if any(x.search(metin) for x in d):
+                say[kat] += 1
+    sirali = sorted(((n / len(ogeler), kat) for kat, n in say.items() if n), reverse=True)
+    return [kat for oran, kat in sirali[:2] if oran >= 0.25]
+
+
+def yazar_kategorileri(ayar: dict, durum: dict) -> dict:
+    """{ad: {"liste": [...], "otomatik": bool}} — kullanıcının seçimi yoksa öneri."""
+    secilen = (ayar.get("_uygulama") or {}).get("kategoriler") or {}
+    sinir = simdi() - timedelta(days=60)
+    kisi_ogeleri: dict[str, list[dict]] = {}
+    for o in durum.get("ogeler", []):
+        if not o.get("konu_haberi") and (iso_oku(o.get("tarih") or o.get("bulunma")) or simdi()) >= sinir:
+            kisi_ogeleri.setdefault(o["yazar"], []).append(o)
+    sonuc = {}
+    for y in ayar.get("yazarlar", []):
+        ad = y["ad"]
+        if ad in secilen and isinstance(secilen[ad], list):
+            sonuc[ad] = {"liste": [k for k in secilen[ad] if k in KATEGORILER], "otomatik": False}
+        else:
+            sonuc[ad] = {"liste": kategori_oner(kisi_ogeleri.get(ad, [])), "otomatik": True}
+    return sonuc
 
 
 # ───────────────────────── konular ─────────────────────────
@@ -2313,6 +2533,8 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
+        "kategori_listesi": KATEGORILER,
+        "kategoriler": yazar_kategorileri(ayar, durum),
         "konular": konu_listesi(ayar),
         "konu_durumu": {ad: {k: v for k, v in kd.items() if k != "gorulen"}
                         for ad, kd in (durum.get("konular") or {}).items()},
@@ -2329,7 +2551,7 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "yazarlar": yazarlar,
         "ogeler": [
             {k: o.get(k) for k in ("id", "url", "baslik", "ozet", "yazar", "kaynak", "tur", "tarih",
-                                   "bulunma", "ilk", "yz_ozet", "konu_haberi", "kaynak_id") if k in o or k in ("id", "url")}
+                                   "bulunma", "ilk", "yz_ozet", "konu_haberi", "kaynak_id", "dogrulama", "tarih_gun") if k in o or k in ("id", "url")}
             for o in durum["ogeler"]
         ],
         "kaynaklar": kaynaklar,

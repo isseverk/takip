@@ -144,6 +144,20 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 - Son içerikleri, yapay zekâ özetleriyle.
 - **Akışta yalnızca bunu göster**, **Bildirimleri kapat/aç** ve **Kaynakları düzenle** düğmeleri.
 
+## Alanlar (kategoriler)
+
+Her kişinin altında hangi alanlarda yazdığı görünür (Siyaset, Hukuk, Ekonomi, Dış politika, Araştırmacı gazetecilik, Spor…). Sen seçmediysen program son iki ayın başlıklarına bakıp en baskın bir-iki alanı **otomatik** önerir (kesik çizgili etiketler). Kişinin kartında ya da yazar sayfasında **düzenle**'ye dokunup kendin seçebilirsin; seçimin `kaynaklar_uygulama.json` içinde `kategoriler` altında saklanır. **Otomatiğe bırak** seçimini siler.
+
+Akışın üstündeki 🏷 satırından bir alan seçince yalnızca o alandaki kişilerin içerikleri görünür ve yazar satırı da o alandakilere daralır.
+
+## Doğrulama işareti (✓ / ?)
+
+Kartlarda kaynağın yanında küçük bir işaret durur; dokununca açıklaması çıkar.
+- **✓** — içeriğin o kişiye ait olduğu belli: yazının sayfasında imzası var, kişinin kendi yazı listesinden ya da kendi sitesi/kanalı/hesabından geldi, ya da Google Haberler üzerinden gelip adresi kişinin yazar klasöründe çıktı.
+- **?** — emin değiliz: YouTube'da başlığında adı geçen program (konuk ya da konu olabilir), adresi doğrulanamayan Google Haberler sonucu, imza yerinde değil de yalnızca sayfanın bir yerinde adı geçen yazı.
+
+Program, başlığında kişinin adının haber öznesi olarak geçtiği sayfaları ("X gözaltına alındı", "X adli kontrolle serbest bırakıldı") artık kişinin yazısı saymaz; "Ad Soyad | Başlık" ya da "… yorumladı" gibi imza kalıpları ise sorun değildir. Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumlar da kendiliğinden temizlenir; kişinin başka kaynağı kalmazsa yeniden aranır ve bulunanlar Onay bekleyenler'e düşer.
+
 ## Yapay zekâ özetleri (isteğe bağlı, ücretsiz)
 
 Yeni köşe ve blog yazılarına Google Gemini ile üç cümlelik özet eklenir. Akışta **✨ Özet** olarak görünür, dokununca tamamı açılır. Bir kez ayarlanır; bilgisayardan daha kolay:

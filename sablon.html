@@ -114,7 +114,15 @@ h1{font:600 22px/1.1 var(--serif);margin:0;letter-spacing:-.01em;flex:1;min-widt
 .etiket-yeni{font-size:11px;font-weight:700;color:var(--yeni);letter-spacing:.04em}
 .baslik{display:block;font:600 17.5px/1.32 var(--serif);text-decoration:none;color:var(--metin);margin:2px 0}
 .baslik::after{content:"";position:absolute;inset:0;border-radius:14px}
-.oge .yazar,.oge .yz,.oge .kaydet-dugme{position:relative;z-index:1}
+.oge .yazar,.oge .yz,.oge .kaydet-dugme,.oge .dogru{position:relative;z-index:1}
+.dogru{border:0;background:none;font:700 12.5px var(--sans);padding:0 3px;cursor:pointer;line-height:1.2}
+.dogru.kesin{color:var(--yeni)}.dogru.supheli{color:var(--uyari);border:1px solid currentColor;border-radius:6px;padding:0 5px;font-size:11.5px}
+.kat-satir{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;padding:0 14px 8px 30px;font-size:12.5px;color:var(--soluk)}
+.kat-etiket{font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 6px;background:var(--ince);color:var(--metin)}
+.kat-etiket.oneri{background:none;border:1px dashed var(--cizgi);color:var(--soluk)}
+.kat-duzenle{border:0;background:none;color:var(--vurgu);font:600 12.5px var(--sans);cursor:pointer;padding:2px 4px}
+.kat-secim{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.kat-secim .cip{font-size:14.5px;padding:7px 13px}
 .kaydet-dugme{border:0;background:none;font-size:19px;line-height:1;padding:8px;cursor:pointer;color:var(--soluk)}
 .oge .kaydet-dugme{position:absolute;top:2px;right:2px}
 .oge .meta{padding-right:30px}
@@ -241,6 +249,7 @@ footer a{color:var(--soluk)}
     <div id="akisUst">
       <input class="arama" id="arama" type="search" placeholder="Başlıkta veya yazarda ara…" autocomplete="off">
       <div class="filtreler" id="turFiltre" role="group" aria-label="İçerik türü"></div>
+      <div class="filtreler" id="kategoriFiltre" role="group" aria-label="Alan" hidden></div>
       <div class="filtreler" id="yazarFiltre" role="group" aria-label="Yazar"></div>
       <div class="filtreler" id="konuFiltre" role="group" aria-label="Konu" hidden></div>
     </div>
@@ -431,6 +440,23 @@ footer a{color:var(--soluk)}
   </form>
 </dialog>
 
+<!-- Kategori düzenleme -->
+<dialog class="levha" id="kategoriLevha">
+  <form method="dialog" id="kategoriForm">
+    <div class="levha-tutamak"></div>
+    <h2 id="katBaslik">Alanlar</h2>
+    <p style="margin:0;color:var(--soluk);font-size:14px">Bu kişi hangi alanlarda yazıyor/konuşuyor? Akışı alana göre süzmek için kullanılır.</p>
+    <div class="kat-secim" id="katSecim"></div>
+    <small id="katNot" style="display:block;color:var(--soluk);font-size:13px"></small>
+    <div class="durum-yazi kotu" id="katHata"></div>
+    <div class="levha-alt">
+      <button class="dugme" value="iptal" formnovalidate>Vazgeç</button>
+      <button class="dugme" id="katOto" value="oto" type="button">Otomatiğe bırak</button>
+      <button class="dugme ana" id="katKaydet" value="kaydet">Kaydet</button>
+    </div>
+  </form>
+</dialog>
+
 <!-- Yazar sayfası -->
 <dialog class="levha" id="yazarLevha">
   <form method="dialog">
@@ -463,6 +489,20 @@ footer a{color:var(--soluk)}
     sil(k){ try{ localStorage.removeItem(k); }catch(e){} }
   };
   const TUR = {yazi:"Yazı", video:"Video", paylasim:"Paylaşım", podcast:"Podcast", eksi:"Ekşi", instagram:"Instagram", haber:"Haber"};
+  // içeriğin gerçekten o kişiye ait olduğu neye dayanıyor
+  const DOGRULAMA = {
+    imza: [true, "İmza kontrol edildi: yazının sayfasında kişinin adı var."],
+    yazar_sayfasi: [true, "Kişinin sitedeki kendi yazı listesinden alındı."],
+    yazar_klasoru: [true, "Google Haberler üzerinden bulundu; adresi kişinin sitedeki yazar klasöründe."],
+    baslik_kalibi: [true, "Google Haberler üzerinden bulundu; adresi kişinin adını taşıyan \"…-yazdı / -yorumladı\" kalıbında."],
+    kendi_sitesi: [true, "Kişinin kendi sitesinin akışından."],
+    kanal: [true, "Kişinin kendi YouTube kanalından."],
+    hesap: [true, "Kişinin kendi hesabından."],
+    ad_sayfada: [false, "Yazının sayfasında adı geçiyor ama imza yerinde görünmüyor — onun hakkında bir haber ya da başkasının yazısı olabilir."],
+    ad_geciyor: [false, "YouTube'da başlığında adı geçtiği için bulundu — kişinin kendisi olmayabilir (konuk, konu ya da adaşı)."],
+    baslik: [false, "Takip ettiğin Ekşi başlığına yazılan bir entry; kişinin kendisine ait değil."],
+    belirsiz: [false, "Google Haberler'de adıyla çıktı ama asıl adresi doğrulanamadı — kişiye ait olmayabilir."]
+  };
   const KAYNAK_TUR = {sayfa:"Köşe", google_haber:"Köşe", youtube:"YouTube", youtube_ara:"YouTube'da adı geçen", rss:"Blog/RSS", bluesky:"Bluesky", telegram:"Telegram", podcast:"Podcast", eksi_yazar:"Ekşi", eksi_baslik:"Ekşi başlık", instagram:"Instagram"};
   const AY = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const GUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
@@ -670,7 +710,7 @@ footer a{color:var(--soluk)}
           depo.sil("esit_parola"); depo.sil("esit_hata"); ES.anahtarOnbellek = null; tost("Bu cihazda eşitleme kapatıldı"); esitlemeCiz();
         }})));
   }
-  const durum = { sekme: "akis", tur: depo.al("f_tur", "hepsi"), yazar: depo.al("f_yazar", "hepsi"), konu: depo.al("f_konu", "hepsi"), ara: "", limit: 80, kaynakAra: "" };
+  const durum = { sekme: "akis", tur: depo.al("f_tur", "hepsi"), yazar: depo.al("f_yazar", "hepsi"), konu: depo.al("f_konu", "hepsi"), kategori: depo.al("f_kategori", "hepsi"), ara: "", limit: 80, kaynakAra: "" };
   let ogeler = [];
 
   // ───────── yardımcılar
@@ -737,6 +777,13 @@ footer a{color:var(--soluk)}
     veriHazirla(); akisCiz();
   }
   const konuListesi = () => yerelVeyaSunucu("konular_yerel", V.konular || []);
+  // kişinin alanları: telefondan değiştirildiyse sıradaki kontrol yansıtana kadar yerel seçim geçerli
+  function kategorileri(ad){
+    const y = depo.al("kategori_yerel", {})[ad];
+    if (y && y.zaman > new Date(V.olusturma).getTime() && Date.now() - y.zaman < 6*3600e3)
+      return y.oto ? {liste: [], otomatik: true, bekliyor: true} : {liste: y.liste || [], otomatik: false};
+    return (V.kategoriler || {})[ad] || {liste: [], otomatik: true};
+  }
   const bildirimAyari = () => Object.assign({}, yerelVeyaSunucu("bildirim_yerel", V.bildirim || {}));
   const yeniMi = o => !o.ilk && oncekiZiyaret !== null && o._b.getTime() > oncekiZiyaret;
 
@@ -771,6 +818,7 @@ footer a{color:var(--soluk)}
     return (kayitli ? kayitliOgeler() : ogeler).filter(o =>
       (kayitli || durum.tur === "hepsi" || (o.tur||"yazi") === durum.tur) &&
       (durum.yazar === "hepsi" || o.yazar === durum.yazar) &&
+      (durum.kategori === "hepsi" || (!o.konu_haberi && kategorileri(o.yazar).liste.includes(durum.kategori))) &&
       (durum.konu === "hepsi" || (o._konular||[]).includes(durum.konu)) &&
       (!q || sade(o.baslik + " " + o.yazar + " " + (o.ozet||"") + " " + (o.yz_ozet||"")).includes(q)));
   }
@@ -781,8 +829,15 @@ footer a{color:var(--soluk)}
       Object.keys(TUR).filter(t => turSay[t]).map(t => [t, TUR[t], turSay[t]]));
     if (!turlar.some(x => x[0] === durum.tur)) durum.tur = "hepsi";
     cipler($("turFiltre"), turlar, durum.tur, "tur");
+    const katSay = {};
+    for (const o of ogeler) if (!o.konu_haberi) for (const k of kategorileri(o.yazar).liste) katSay[k] = (katSay[k]||0) + 1;
+    const katlar = [["hepsi","🏷 Tüm alanlar"]].concat((V.kategori_listesi || []).filter(k => katSay[k] || k === durum.kategori).map(k => [k, k, katSay[k]||0]));
+    if (!katlar.some(x => x[0] === durum.kategori)) durum.kategori = "hepsi";
+    $("kategoriFiltre").hidden = katlar.length < 3;
+    cipler($("kategoriFiltre"), katlar, durum.kategori, "kategori");
     const yazarSay = {}; for (const o of ogeler) yazarSay[o.yazar] = (yazarSay[o.yazar]||0)+1;
-    const yazarlar = [["hepsi","Tüm yazarlar"]].concat(V.yazarlar.map(y => [y, y, yazarSay[y]||0]));
+    const alandakiler = V.yazarlar.filter(y => durum.kategori === "hepsi" || y === durum.yazar || kategorileri(y).liste.includes(durum.kategori));
+    const yazarlar = [["hepsi", durum.kategori === "hepsi" ? "Tüm yazarlar" : "Bu alandaki herkes"]].concat(alandakiler.map(y => [y, y, yazarSay[y]||0]));
     if (!yazarlar.some(x => x[0] === durum.yazar)) durum.yazar = "hepsi";
     cipler($("yazarFiltre"), yazarlar, durum.yazar, "yazar");
     const konular = konuListesi();
@@ -807,8 +862,12 @@ footer a{color:var(--soluk)}
       const meta = el("div",{class:"meta"},
         el("span",{class:"yazar", role:"button", tabindex:"0", title:"Yazar sayfası", onclick: () => yazarAc(o.yazar)}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar),
         el("span",{class:"tur " + tur, text: TUR[tur] || tur}),
-        el("span",{text: o.kaynak || ""}),
-        el("span",{text: saat(o._t), title: o._t.toLocaleString("tr-TR")}));
+        el("span",{text: o.kaynak || ""}));
+      const dg = DOGRULAMA[o.dogrulama];
+      if (dg) meta.append(el("button",{class:"dogru " + (dg[0] ? "kesin" : "supheli"), type:"button", title: dg[1],
+        "aria-label": dg[0] ? "Kişiye ait: " + dg[1] : "Doğrulanmadı: " + dg[1], text: dg[0] ? "✓" : "?",
+        onclick: e => { e.preventDefault(); tost((dg[0] ? "✓ " : "? ") + dg[1], 5000); }}));
+      if (!o.tarih_gun) meta.append(el("span",{text: saat(o._t), title: o._t.toLocaleString("tr-TR")}));
       if (yeniMi(o)) meta.append(el("span",{class:"etiket-yeni", text:"YENİ"}));
       for (const k of (o._konular||[]).slice(0,2)) meta.append(el("span",{class:"konu-etiket", text:"🔖 " + k}));
       const a = el("a",{class:"baslik", href:o.url, target:"_blank", rel:"noopener noreferrer", text:o.baslik});
@@ -850,7 +909,9 @@ footer a{color:var(--soluk)}
     const a = el("a",{href:o.url, target:"_blank", rel:"noopener noreferrer", text: (onEk || "") + o.baslik});
     a.addEventListener("click", () => okunduYap(o, kap));
     const gun = gunEtiketi(o._t);
-    kap.append(a, el("small",{text:[TUR[o.tur||"yazi"] || o.tur, o.kaynak, (gun === "Bugün" ? "" : gun + " ") + saat(o._t)].filter(Boolean).join(" · ")}));
+    kap.append(a, el("small",{text:[TUR[o.tur||"yazi"] || o.tur, o.kaynak, o.tarih_gun ? gun : (gun === "Bugün" ? "" : gun + " ") + saat(o._t)].filter(Boolean).join(" · ")}));
+    const dg = DOGRULAMA[o.dogrulama];
+    if (dg && !dg[0]) kap.querySelector("small").append(" ", el("button",{class:"dogru supheli", type:"button", title: dg[1], text:"?", onclick: () => tost("? " + dg[1], 5000)}));
     for (const k of (o._konular||[]).slice(0,2)) kap.querySelector("small").append(" ", el("span",{class:"konu-etiket", text:"🔖 " + k}));
     if (o.yz_ozet){ const p = el("p",{class:"yz"}, el("b",{text:"✨ Özet"}), o.yz_ozet); p.onclick = () => p.classList.toggle("acik"); kap.append(p); }
     return kap;
@@ -910,6 +971,7 @@ footer a{color:var(--soluk)}
       `Son 30 günde ${ay.length} içerik` + (ay.length ? " (" + Object.entries(turSay).map(([t,n]) => `${t.toLocaleLowerCase("tr-TR")} ${n}`).join(", ") + ")" : ""),
       ay.length >= 2 ? `haftada ~${haftalik < 3 ? haftalik.toFixed(1).replace(".", ",") : Math.round(haftalik)}` : null,
       kendi[0] ? "son içerik " + onceki(kendi[0]._t) : null].filter(Boolean).join(" · ")}));
+    if (y && !y.kapali){ const ks = kategoriSatiri(ad, () => $("yazarLevha").close()); ks.style.padding = "0 0 10px"; ic.append(ks); }
     if (d && d.durum && d.durum !== "tamam") ic.append(el("div",{class:"uyari-kutu", style:"display:block;margin:0 0 10px"}, el("b",{text:"⚠ "}), d.aciklama || ""));
     const dugmeler = el("div",{class:"satir", style:"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"},
       el("button",{class:"dugme", type:"button", text:"Akışta yalnızca bunu göster", onclick: () => { $("yazarLevha").close(); durum.yazar = (V.yazarlar||[]).includes(ad) ? ad : "hepsi"; depo.yaz("f_yazar", durum.yazar); if (durum.yazar === "hepsi"){ durum.ara = ad; $("arama").value = ad; } sekmeAc("akis"); }}));
@@ -1151,6 +1213,7 @@ footer a{color:var(--soluk)}
       else if (susturulan.has(y.ad)) ust.append(el("span",{title:"Bildirimleri kapalı", style:"font-size:13px", text:"🔕"}));
       ust.append(el("button",{class:"menu-dugme", type:"button", "aria-label": y.ad + " seçenekleri", text:"⋯", onclick: () => yazarMenu(y)}));
       kart.append(ust);
+      if (!y.kapali) kart.append(kategoriSatiri(y.ad));
       if (d && d.durum && d.durum !== "tamam") kart.append(el("div",{style:"padding:0 14px 8px;font-size:13px;color:var(--uyari)", text:d.aciklama}));
       for (const k of (y.kapali ? y.kaynaklar : y.kaynaklar.filter(k => !k.kapali))){
         const ikon = k.kapali ? "–" : k.durum === "hata" ? "✗" : k.durum === "uyari" ? "!" : k.durum === "bekliyor" ? "…" : "✓";
@@ -1208,6 +1271,7 @@ footer a{color:var(--soluk)}
         }, "YouTube araması eklendi", `${y.ad}: YouTube'da adı geçen programlar eklendi`);
       }});
       s.push({yazi:"Akışta yalnızca bu kişiyi göster", fn: () => { durum.yazar = y.ad; depo.yaz("f_yazar", y.ad); sekmeAc("akis"); }});
+      s.push({yazi:"🏷 Alanlarını düzenle", fn: () => kategoriAc(y.ad)});
       const sessiz = (bildirimAyari().sessiz_yazarlar || []).includes(y.ad);
       s.push({yazi: sessiz ? "🔔 Bildirimlerini yeniden aç" : "🔕 Bildirimlerini kapat (akışta görünmeye devam eder)", fn: () =>
         bildirimDegistir(b => { const l = new Set(b.sessiz_yazarlar || []); sessiz ? l.delete(y.ad) : l.add(y.ad); b.sessiz_yazarlar = [...l]; },
@@ -1369,6 +1433,60 @@ footer a{color:var(--soluk)}
     try { await konuKaydet(yeni, konuEski); $("konuLevha").close(); }
     catch(err){ $("kHata").textContent = err.message; }
     finally { $("kKaydet").disabled = false; }
+  });
+
+  // ───────── ALANLAR (kategoriler)
+  function kategoriSatiri(ad, once){
+    const k = kategorileri(ad);
+    const satir = el("div",{class:"kat-satir"});
+    if (k.liste.length){
+      for (const x of k.liste) satir.append(el("span",{class:"kat-etiket" + (k.otomatik ? " oneri" : ""), text: x}));
+      if (k.otomatik) satir.append(el("span",{text:"otomatik"}));
+    } else satir.append(el("span",{text: k.bekliyor ? "Alanlar otomatik belirlenecek" : k.otomatik ? "Alan belirlenmedi" : "Alan seçilmedi"}));
+    satir.append(el("button",{class:"kat-duzenle", type:"button", text: k.liste.length ? "düzenle" : "seç", onclick: () => { if (once) once(); kategoriAc(ad); }}));
+    return satir;
+  }
+  let katAd = null;
+  function kategoriAc(ad){
+    katAd = ad;
+    const k = kategorileri(ad), secili = new Set(k.liste);
+    $("katBaslik").textContent = "🏷 " + ad;
+    const kap = $("katSecim"); kap.replaceChildren();
+    for (const x of (V.kategori_listesi || [])){
+      const b = el("button",{class:"cip", type:"button", "aria-pressed": String(secili.has(x)), text: x});
+      b.onclick = () => b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true"));
+      kap.append(b);
+    }
+    $("katNot").textContent = k.otomatik ? "Şu an seçili olanlar son yazılarının başlıklarından otomatik önerildi. Kaydedersen senin seçimin geçerli olur." : "";
+    $("katOto").hidden = k.otomatik;
+    $("katHata").textContent = "";
+    $("kategoriLevha").showModal();
+  }
+  async function kategoriKaydet(ad, liste){
+    if (!GH.bagli()) throw new Error("Önce Ayarlar'dan GitHub bağlantısını kur.");
+    await uygDosyaDegistir(i => {
+      i.kategoriler = Object.assign({}, i.kategoriler);
+      if (liste) i.kategoriler[ad] = liste; else delete i.kategoriler[ad];
+    }, liste ? `Alanlar: ${ad}` : `Alanlar otomatiğe bırakıldı: ${ad}`);
+    const yerel = depo.al("kategori_yerel", {});
+    yerel[ad] = liste ? {liste, zaman: Date.now()} : {oto: true, zaman: Date.now()};
+    depo.yaz("kategori_yerel", yerel);
+    akisCiz(); if (durum.sekme === "kaynaklar") kaynaklarCiz();
+  }
+  $("kategoriForm").addEventListener("submit", async e => {
+    if (e.submitter && e.submitter.value === "iptal") return;
+    e.preventDefault();
+    const liste = [...$("katSecim").querySelectorAll('[aria-pressed="true"]')].map(b => b.textContent);
+    $("katKaydet").disabled = true; $("katHata").textContent = "Kaydediliyor…";
+    try { await kategoriKaydet(katAd, liste); $("kategoriLevha").close(); tost(`${katAd}: alanlar kaydedildi`); }
+    catch(err){ $("katHata").textContent = err.message; }
+    finally { $("katKaydet").disabled = false; }
+  });
+  $("katOto").addEventListener("click", async () => {
+    $("katOto").disabled = true; $("katHata").textContent = "Kaydediliyor…";
+    try { await kategoriKaydet(katAd, null); $("kategoriLevha").close(); tost(`${katAd}: alanlar sıradaki kontrolde otomatik belirlenecek`, 4500); }
+    catch(err){ $("katHata").textContent = err.message; }
+    finally { $("katOto").disabled = false; }
   });
 
   // ───────── BİLDİRİM AYARLARI
