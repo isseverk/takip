@@ -78,6 +78,7 @@ def iso(dt: datetime | None) -> str | None:
 _URL_TARIHI = re.compile(r"(?<!\d)(20\d\d)[-/_](0[1-9]|1[0-2])[-/_](0[1-9]|[12]\d|3[01])(?!\d)")
 
 
+TERK_EDILMIS_GUN = 120   # en yeni yazısı bundan eskiyse kaynak "artık yazmıyor" uyarısı verir
 ESKI_YAZI_GUN = 3   # bundan eski tarihli bir yazı ilk kez görülürse "yeni" sayılmaz
 ILK_GOSTERIM_GUN = 14   # kaynak eklenince bu kadar günlük yazılar akışa (bildirimsiz) konur
 PENCERE_EN_FAZLA = 12
@@ -1926,6 +1927,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             if not o.get("tarih") and url_tarihi(o["url"]):
                 o["tarih"], o["tarih_gun"] = iso(url_tarihi(o["url"])), True   # sayfada tarih yoktu; adresteki gün
             yazi_tarihi = iso_oku(o.get("tarih"))
+            if yazi_tarihi and (not iso_oku(kd.get("en_yeni_yazi")) or yazi_tarihi > iso_oku(kd["en_yeni_yazi"])):
+                kd["en_yeni_yazi"] = iso(yazi_tarihi)    # bu kaynakta görülen en yeni yazının tarihi
             if yazi_tarihi and yazi_tarihi < akis_siniri:
                 gorulen.add(o["url"])      # akışta tutulandan da eski bir yazı; yeni değil
                 continue
@@ -1954,6 +1957,28 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         # Sayfada görünen her şeyi "görüldü" say ki ilk çalıştırmada eski yazılar akışa dolmasın
         simdiki = [o["url"] for o in ogeler]
         kd["gorulen"] = (simdiki + [u for u in kd["gorulen"] if u not in set(simdiki)])[:400]
+        # Sayfa açılıyor ama en yeni yazısı çok eski: kişi orada artık yazmıyor (ör. 2018'de ayrılmış)
+        if not kd.get("en_yeni_yazi"):
+            # önceki sürümden kalan kaynak: akıştaki yazılarından, yoksa listedeki ilk yazıyı bir kez açıp öğren
+            tarihler = [t for o in durum["ogeler"] + yeni_ogeler if o.get("kaynak_id") == anahtar
+                        for t in [iso_oku(o.get("tarih"))] if t]
+            tarihler += [t for o in ogeler for t in [iso_oku(o.get("tarih"))] if t]   # akış/RSS listesindeki tarihler
+            if not tarihler and ogeler and tur == "sayfa" and ayrinti_sayaci < ayrinti_siniri and not kd.get("yedek"):
+                ayrinti_sayaci += 1
+                ilk_oge = {"url": ogeler[0]["url"], "baslik": ogeler[0].get("baslik", "")}
+                try:
+                    ayrinti_getir(ist, ilk_oge, None)
+                except Exception:
+                    pass
+                t = iso_oku(ilk_oge.get("tarih")) or url_tarihi(ilk_oge["url"])
+                if t:
+                    tarihler.append(t)
+            if tarihler:
+                kd["en_yeni_yazi"] = iso(max(tarihler))
+        en_yeni = iso_oku(kd.get("en_yeni_yazi"))
+        if en_yeni and en_yeni < simdi() - timedelta(days=TERK_EDILMIS_GUN) and kd.get("durum") == "tamam":
+            kd.update(durum="uyari", not_=f"Bu sayfadaki en yeni yazı {en_yeni.astimezone(TR_SAAT):%d.%m.%Y} tarihli; "
+                                          "kişi burada artık yazmıyor görünüyor. Kaynağı kaldırabilir ya da yeni adresini ekleyebilirsin")
         isaret = "★" if eklenen and not ilk_kez else "✓"
         print(f"{isaret} {etiket}: {len(ogeler)} öğe, {eklenen} {'ilk gösterim' if ilk_kez else 'yeni'}")
 
@@ -2254,6 +2279,7 @@ def _yazar_listesi(ayar: dict, durum: dict) -> list[dict]:
                 "son_basari": kd.get("son_basari"),
                 "not_": kd.get("not_") or ("Site doğrudan okunamıyor; Google Haberler üzerinden takip ediliyor"
                                            if tur == "google_haber" else None),
+                "yedek": "google_haber" if tur == "google_haber" else kd.get("yedek"),
             })
         sonuc.append({"ad": y["ad"], "kok": y.get("_kok", "yaml"), "kapali": y.get("aktif") is False,
                       "kaynaklar": kayitlar})

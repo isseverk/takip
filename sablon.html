@@ -215,6 +215,7 @@ dialog.levha h2{font:600 20px var(--serif);margin:2px 0 4px}
 .tost{position:fixed;left:50%;bottom:calc(var(--alt-bar) + 14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;
   background:var(--metin);color:var(--zemin);padding:10px 16px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);
   box-shadow:0 6px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:12px}
+.kaynak-not{padding:0 14px 10px 38px;font-size:12.5px;color:var(--uyari);line-height:1.4}
 .tost-eylem{border:0;background:none;color:var(--zemin);font:700 14px var(--sans);text-decoration:underline;cursor:pointer;padding:2px 0;white-space:nowrap}
 .kaydir-kap{position:relative}
 .kaydir-ok{position:absolute;top:0;bottom:10px;width:40px;border:0;cursor:pointer;font:700 22px/1 var(--sans);color:var(--metin);z-index:2;padding:0}
@@ -1190,8 +1191,10 @@ footer a{color:var(--soluk)}
           el("span",{class:sinif, text:ikon}),
           el("span", null, el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || "", k.otomatik ? el("span",{class:"oto", text:"otomatik bulundu"}) : null),
           el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.not_ && /kanal sayfası/.test(k.not_) ? "kanal sayfasından · " : k.not_ ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
+          el("span",{class:"adres", text: (k.kapali ? "kapalı · " : k.yedek === "youtube_sayfa" ? "kanal sayfasından · " : k.yedek === "google_haber" ? "Google Haberler üzerinden · " : k.durum === "bekliyor" ? "ilk kontrol bekleniyor · " : k.durum === "hata" ? "açılamıyor · " : "") + kisaAdres(k.adres)}));
         kart.append(satir);
+        // sorunlu kaynakta nedeni de yazsın (ör. "en yeni yazı 2018 tarihli")
+        if (!k.kapali && k.durum === "uyari" && k.not_) kart.append(el("div",{class:"kaynak-not", text: k.not_}));
       }
       if (!y.kapali && y.kaynaklar.length && y.kaynaklar.every(k => k.kapali))
         kart.append(el("div",{style:"padding:4px 14px 10px;font-size:13px;color:var(--soluk)", text:"Bütün kaynakları kapalı — aşağıdaki Kapatılanlar bölümünden yeniden açabilirsin."}));
