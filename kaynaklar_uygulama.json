@@ -210,6 +210,17 @@
           "etiket": "dunya.com"
         }
       ]
+    },
+    {
+      "ad": "SERVET YILDIRIM",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.milliyet.com.tr/yazarlar/servet-yildirim/",
+          "dogrula": true,
+          "etiket": "milliyet.com.tr"
+        }
+      ]
     }
   ],
   "kapali": [
