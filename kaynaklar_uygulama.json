@@ -4,12 +4,6 @@
       "ad": "deniz zeyrek",
       "kaynaklar": [
         {
-          "tur": "google_haber",
-          "site": "gazeteoku.com",
-          "etiket": "Gazete Oku",
-          "otomatik": true
-        },
-        {
           "tur": "sayfa",
           "url": "https://www.nefes.com.tr/yazarlar/deniz-zeyrek",
           "dogrula": true,
