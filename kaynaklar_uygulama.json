@@ -221,6 +221,17 @@
           "etiket": "milliyet.com.tr"
         }
       ]
+    },
+    {
+      "ad": "GÜVEN SAK",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ekonomim.com/yazar/guven-sak/215",
+          "dogrula": true,
+          "etiket": "ekonomim.com"
+        }
+      ]
     }
   ],
   "kapali": [
