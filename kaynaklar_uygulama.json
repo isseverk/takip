@@ -329,6 +329,12 @@
           "url": "https://www.bloomberg.com/opinion/authors/AR3OYuAmvcU/noah-smith",
           "dogrula": true,
           "etiket": "bloomberg.com"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.noahpinion.blog/archive?sort=new",
+          "dogrula": true,
+          "etiket": "noahpinion.blog"
         }
       ]
     },
