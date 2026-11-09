@@ -2036,6 +2036,37 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 for a in [kaynak_anahtari(y["ad"], k)]
                 if k.get("yedek_dogrula") or (durum["kaynaklar"].get(a) or {}).get("ad_her_sayfada")}
 
+    # kişinin hâlâ takip edilen sitelerinin alan adları (kaldırılan bir sitenin yazıları bunlardan ayrılır)
+    kisi_alanlari: dict[str, set[str]] = {}
+    kisi_kaynaklari: dict[str, list[str]] = {}
+    for y, k, tur, a_ in kaynaklari_listele(ayar):
+        kisi_alanlari.setdefault(y["ad"], set()).add(_kaynak_alani(k) or "youtube.com")
+        kisi_kaynaklari.setdefault(y["ad"], []).append(a_)
+
+    akistaki_adresler = {o["url"] for o in durum["ogeler"]}
+
+    def yeni_kaynaga_bagla(o: dict) -> bool:
+        """Kaldırılan sitedeki yazının aynısı kişinin takip edilen sitesinde de varsa içeriği oraya bağlar
+        (ör. Gazete Oku kaldırılıp Nefes eklenince aynı yazı Nefes adresiyle kalır)."""
+        harf = lambda x: re.sub(r"[^a-z0-9]", "", x)          # tire/noktalama farkları önemsiz
+        baslik = re.sub(r"\s+[-|\u2013]\s+" + re.escape(o["yazar"]) + r"\s*$", "", o.get("baslik") or "", flags=re.I)
+        iz = harf(_slug(baslik))
+        if len(iz) < 4:
+            return False
+        for a_ in kisi_kaynaklari.get(o["yazar"], []):
+            kd_ = durum["kaynaklar"].get(a_) or {}
+            for u in kd_.get("gorulen") or []:
+                parca = re.sub(r"\d+$", "", harf(urlparse(u).path.rstrip("/").rsplit("/", 1)[-1]))  # sondaki numara
+                if parca and (parca == iz or (len(iz) >= 16 and parca.startswith(iz))
+                              or (len(parca) >= 16 and iz.startswith(parca))):
+                    if u in akistaki_adresler:
+                        return False       # aynı yazı yeni kaynaktan zaten akışta
+                    akistaki_adresler.add(u)
+                    o.update(url=u, kaynak=kd_.get("etiket") or o.get("kaynak"), kaynak_id=a_, dogrulama="yazar_sayfasi")
+                    o.pop("gn_url", None)
+                    return True
+        return False
+
     def akista_kalsin(o: dict) -> bool:
         if o.get("konu_haberi"):
             return False   # konu takibi kaldırıldı
@@ -2044,7 +2075,15 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
         if kid in guvensiz and _gn_kimlik(o["url"]):
             return False   # yazara ait olduğu doğrulanamamış
-        return not kid or kid in aktif_anahtarlar or (o["yazar"], o.get("tur", "yazi")) in aktif_turler
+        if not kid or kid in aktif_anahtarlar:
+            return True
+        if (o["yazar"], o.get("tur", "yazi")) not in aktif_turler:
+            return False
+        # kaynağı kaldırılmış ama kişinin aynı türde başka kaynağı var: adres değişikliği mi, başka site mi?
+        alan = _alan_adi(o.get("url", ""))
+        if not alan or "google." in alan or alan in kisi_alanlari.get(o["yazar"], set()):
+            return True    # aynı sitede adres değişikliği: geçmiş korunur
+        return yeni_kaynaga_bagla(o)   # başka siteydi: aynı yazı yeni kaynakta varsa ona bağla, yoksa çıkar
 
     once = len(durum["ogeler"])
     durum["ogeler"] = [o for o in durum["ogeler"] if akista_kalsin(o)]
