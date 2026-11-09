@@ -331,6 +331,17 @@
           "etiket": "gzeromedia.com"
         }
       ]
+    },
+    {
+      "ad": "MARTİN WOLF",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ft.com/martin-wolf",
+          "dogrula": true,
+          "etiket": "ft.com"
+        }
+      ]
     }
   ],
   "kapali": [
