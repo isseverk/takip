@@ -265,6 +265,17 @@
           "etiket": "birgun.net"
         }
       ]
+    },
+    {
+      "ad": "EVRİM KEPENEK",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://bianet.org/yazar/evrim-kepenek-116",
+          "dogrula": true,
+          "etiket": "bianet.org"
+        }
+      ]
     }
   ],
   "kapali": [
