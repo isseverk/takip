@@ -696,6 +696,116 @@
       "zaman": "2026-11-09T13:06:34+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Haberler, Sabah"
+    },
+    "FARUK BİLDİRİCİ": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/faruk-bildirici",
+          "etiket": "T24",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "t24.com.tr sitesindeki yazar sayfası; 10 yazı",
+            "ornekler": [
+              {
+                "baslik": "Gazetecilerin paylaşımlarla tanıttığı parti",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/gazetecilerin-paylasimlarla-tanittigi-parti,56688",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Güvenlik kaynakları ne çok haber yazıyor!",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/guvenlik-kaynaklari-ne-cok-haber-yaziyor,53617",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Öcalan yerine İmralı görüntüsü",
+                "url": "https://t24.com.tr/yazarlar/faruk-bildirici/ocalan-yerine-imrali-goruntusu,50718",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 10
+          },
+          "kimlik": "site|t24.com.tr"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://ankahaber.net/etiket/medya-ombudsmani-faruk-bildirici",
+          "etiket": "Anka Haber",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "ankahaber.net sitesindeki yazar sayfası; 15 yazı",
+            "ornekler": [
+              {
+                "baslik": "Gazetecilik kuşatmada, gazeteciler sokaklarda",
+                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-gazetecilik-kusatmada-gazeteciler-sokaklarda",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İzleyici kayyuma tepki verdi",
+                "url": "https://ankahaber.net/haber/medya-ombudsmani-faruk-bildirici-izleyici-kayyuma-tepki-verdi",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Ne Ömer Çelik’e sorulabildi ne de Ümit Özlale’ye",
+                "url": "https://ankahaber.net/haber/ne-omer-celike-sorulabildi-ne-de-umit-ozlaleye",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 15
+          },
+          "kimlik": "site|ankahaber.net"
+        }
+      ],
+      "zaman": "2026-11-09T16:35:20+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: T24, Anka Haber"
+    },
+    "DENİZ ZEYREK": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.nationalturk.com/yazarlar/deniz-zeyrek",
+          "etiket": "NationalTurk",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "nationalturk.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Enver Çevik, fon soruşturmasında gözaltında",
+                "url": "https://www.nationalturk.com/turkiye/enver-cevik-fon-sorusturmasi/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Galatasaray’a Victor Osimhen şoku! Derbide yok!",
+                "url": "https://www.nationalturk.com/video/galatasaray-victor-osimhen-7/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "2026 FIFA Dünya Kupası",
+                "url": "https://www.nationalturk.com/category/2026-fifa-dunya-kupasi/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|nationalturk.com"
+        }
+      ],
+      "zaman": "2026-11-09T16:35:55+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: NationalTurk"
     }
   },
   "reddedilen": {
