@@ -243,6 +243,17 @@
           "etiket": "t24.com.tr"
         }
       ]
+    },
+    {
+      "ad": "AZİZ ÇELİK",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.birgun.net/profil/aziz-celik-257",
+          "dogrula": true,
+          "etiket": "birgun.net"
+        }
+      ]
     }
   ],
   "kapali": [
