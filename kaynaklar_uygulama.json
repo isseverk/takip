@@ -561,44 +561,6 @@
       "zaman": "2026-11-09T05:38:12+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Ekonomi Gazetesi"
-    },
-    "TAHA AKYOL": {
-      "kaynaklar": [
-        {
-          "tur": "google_haber",
-          "site": "gazeteoku.com",
-          "etiket": "Gazete Oku",
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "gazeteoku.com sitesinde kendi imzalı yazıları (site doğrudan açılmıyor, Google Haberler üzerinden; adresi yazar klasöründe olanlar: 4), en yenisi dün",
-            "ornekler": [
-              {
-                "baslik": "Şimşek’in sözü neden geçmedi?",
-                "url": "https://www.gazeteoku.com/yazar/taha-akyol/simsekin-sozu-neden-gecmedi/1303900",
-                "tarih": "2026-11-08T04:00:35+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "Otokrasi sandığa gömüldü",
-                "url": "https://www.gazeteoku.com/yazar/taha-akyol/otokrasi-sandiga-gomuldu/1303146",
-                "tarih": "2026-11-05T21:01:00+00:00",
-                "kanal": null
-              },
-              {
-                "baslik": "Mehmet Uçum ne diyor?",
-                "url": "https://www.gazeteoku.com/yazar/taha-akyol/mehmet-ucum-ne-diyor/1302177",
-                "tarih": "2026-11-03T21:01:00+00:00",
-                "kanal": null
-              }
-            ],
-            "sayi": 4
-          },
-          "kimlik": "site|gazeteoku.com"
-        }
-      ],
-      "zaman": "2026-11-09T05:46:52+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Gazete Oku"
     }
   },
   "reddedilen": {
@@ -643,6 +605,9 @@
     "AZİZ ÇELİK": [
       "site|sendika.org",
       "site|sondakika.com"
+    ],
+    "TAHA AKYOL": [
+      "site|gazeteoku.com"
     ]
   },
   "ad_esleme": {
