@@ -298,6 +298,17 @@
           "etiket": "karar.com"
         }
       ]
+    },
+    {
+      "ad": "ABDÜLKADİR SELVİ",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.hurriyet.com.tr/yazarlar/abdulkadir-selvi/",
+          "dogrula": true,
+          "etiket": "hurriyet.com.tr"
+        }
+      ]
     }
   ],
   "kapali": [
