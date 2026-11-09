@@ -562,77 +562,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Ekonomi Gazetesi"
     },
-    "AZİZ ÇELİK": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://sendika.org/yazar/aziz-celik",
-          "etiket": "Sendika.Org",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "sendika.org sitesindeki yazar sayfası; 3 yazı",
-            "ornekler": [
-              {
-                "baslik": "7 İklim 4 Kıta",
-                "url": "https://sendika.org/category/7-iklim-4-kita",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "DİSK’in Ankara’ya taşınması üstüne",
-                "url": "https://sendika.org/2026/05/diskin-ankaraya-tasinmasi-ustune-747338",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Faruk Pekin’in anı kitabı: “Dede koruk yer, torunun dişleri kamaşır”",
-                "url": "https://sendika.org/2025/01/faruk-pekinin-ani-kitabi-dede-koruk-yer-torunun-disleri-kamasir-718307",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 3
-          },
-          "kimlik": "site|sendika.org"
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://www.sondakika.com/aziz-celik",
-          "etiket": "Son Dakika",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "sondakika.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Önümüzdeki yıl emeklilerin durumunun iyileştirilmesine yönelik düzenleme yapılacağı açıklamaları değerlendiren Sosyal…",
-                "url": "https://www.sondakika.com/guncel/haber-emekli-maaslarina-duzenleme-hazirligi-aziz-celik-m-20373498/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Haber: Erva GÜN (ANKARA) - Çalışma ve Sosyal Güvenlik Bakanlığı'nın Temmuz 2026 verilerine göre Türkiye'de…",
-                "url": "https://www.sondakika.com/guncel/haber-turkiye-de-15-2-milyon-isci-sendikasiz-prof-dr-20094841/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İzzet Altınmeşe, Kahtalı Mıçe gibi ünlü sanatçılara sahnede kemanıyla eşlik eden Adıyamanlı ünlü sanatçı Kahtalı…",
-                "url": "https://www.sondakika.com/3-sayfa/haber-kahtali-hamido-nun-oglu-sinan-celik-parkta-olu-18794526/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|sondakika.com"
-        }
-      ],
-      "zaman": "2026-11-09T05:40:23+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Sendika.Org, Son Dakika"
-    },
     "TAHA AKYOL": {
       "kaynaklar": [
         {
@@ -710,6 +639,10 @@
     ],
     "ÇİĞDEM TOKER": [
       "site|yurtsever.org.tr"
+    ],
+    "AZİZ ÇELİK": [
+      "site|sendika.org",
+      "site|sondakika.com"
     ]
   },
   "ad_esleme": {
