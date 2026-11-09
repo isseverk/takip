@@ -502,6 +502,20 @@ def yedek_sonuclarini_suz(ist: Istemci, ogeler: list[dict], k: dict, sayfa_url: 
     # çözülemeyenleri de güvenilmez sayıp almayız (yaml'da yedek_dogrula: true ile de zorlanabilir).
     if cozulen >= 3:
         kd["ad_her_sayfada"] = reddedilen > cozulen / 2
+    # Kişinin adı sitenin hemen her sayfasında geçiyorsa (ör. ekonomim.com'da yazar listesi), adıyla aranınca
+    # çıkan ama imzası doğrulanamayan köşe yazıları büyük olasılıkla başka yazarlarındır: alınmaz.
+    kd["belirsiz_guvensiz"] = bool(kd.get("ad_her_sayfada") and cozulen >= 20)
+    if kd["belirsiz_guvensiz"]:
+        kalan = []
+        for o in sonuc:
+            if o.get("_dogrulama") in ("belirsiz", "ad_sayfada"):
+                reddedilen += 1
+                gk = _gn_kimlik(o.get("gn_url") or "")
+                if gk and gk not in red:
+                    red.append(gk)
+            else:
+                kalan.append(o)
+        sonuc = kalan
     if "yedek_cozum" not in kd or kd.get("ad_her_sayfada"):   # geriye dönük bulunanlar bildirim yaratmasın
         esik = iso(simdi() - timedelta(days=2))
         for o in sonuc:
@@ -1551,11 +1565,39 @@ def _site_adini_at(baslik: str, url: str) -> str:
             break
         bas, ayrac, kuyruk = m.groups()
         k = sade(kuyruk)
-        if ayrac == "|" or site in k.replace(" ", "") or "gazete" in k or k.endswith((".com", ".net", ".tr")):
+        if site in k.replace(" ", "") or "gazete" in k or k.endswith((".com", ".net", ".tr")):
+            baslik = bas                       # "Başlık | Gazete Adı"
+        elif ayrac == "|" and len(bas) <= 30 and len(kuyruk) > len(bas) and len(bas.split()) <= 4:
+            baslik = kuyruk                    # "Yazar Adı | Başlık" (ör. T24): baştaki ad atılır
+            break
+        elif ayrac == "|":
             baslik = bas
         else:
             break
     return baslik
+
+
+def yazar_adini_at(baslik: str, ad: str) -> str:
+    """Başlıktaki yazar imzasını atar: "Çiğdem Toker | Başlık" → "Başlık", "Başlık - Taha Akyol" → "Başlık"."""
+    b = bosluk(baslik)
+    a = sade(ad)
+    if not a:
+        return b
+    m = re.match(r"^(.{2,60}?)\s*[|:\u2013\u2014-]\s+(.{4,})$", b)
+    if m and sade(m.group(1)) == a:
+        return m.group(2).strip()
+    m = re.match(r"^(.{4,}?)\s+[|\u2013\u2014-]\s*(.{2,60})$", b)
+    if m and sade(m.group(2)) == a:
+        return m.group(1).strip()
+    return b
+
+
+def adresten_baslik(url: str) -> str:
+    """Başlık bulunamadığında adresteki yazı adından okunur bir başlık üretir."""
+    son = urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]
+    son = re.sub(r"([,_-]?\d{4,})+$", "", re.sub(r"\.\w{2,5}$", "", son))
+    metin = bosluk(son.replace("-", " ").replace("_", " "))
+    return metin[:1].upper() + metin[1:] if metin else url
 
 
 # ───────────────────────── ana akış ─────────────────────────
@@ -1666,6 +1708,35 @@ def icerik_dogrulamasi(tur: str, k: dict, imza_dogrulandi: bool) -> str:
     if tur == "eksi_baslik":
         return "baslik"
     return "belirsiz"
+
+
+def basliklari_onar(ist: Istemci, durum: dict, sinir: int = 15) -> None:
+    """Başlık yerine yazarın adı gelmiş ("Çiğdem Toker") ya da başında/sonunda ad olan başlıkları düzeltir.
+    Adı-başlık yüzünden "aynı yazı" sanılıp atlanan yazılar için o kaynağın son iki haftası yeniden taranır."""
+    duzeltilen, kaynaklar = 0, set()
+    for o in durum.get("ogeler", []):
+        if o.get("konu_haberi") or not o.get("yazar"):
+            continue
+        yeni = yazar_adini_at(o.get("baslik") or "", o["yazar"])
+        if sade(yeni) == sade(o["yazar"]) or not yeni:
+            kaynaklar.add(o.get("kaynak_id"))
+            if sinir > 0:
+                sinir -= 1
+                gecici = {"url": o["url"], "baslik": ""}
+                try:
+                    ayrinti_getir(ist, gecici, None)
+                except Exception:
+                    pass
+                yeni = yazar_adini_at(gecici.get("baslik") or "", o["yazar"])
+            if not yeni or sade(yeni) == sade(o["yazar"]):
+                yeni = adresten_baslik(o["url"])
+        if yeni != o.get("baslik"):
+            o["baslik"] = yeni
+            duzeltilen += 1
+    for a in kaynaklar:
+        (durum.get("kaynaklar", {}).get(a) or {}).pop("bosluk_tamam", None)   # atlananları bir kez daha ara
+    if duzeltilen:
+        print(f"– {duzeltilen} başlık düzeltildi (yazar adı ayıklandı)")
 
 
 def gec_gelen_eskileri_ayikla(durum: dict) -> None:
@@ -1862,6 +1933,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         a = ayar["ayarlar"]
     dogrulama_isaretini_tamamla(ayar, durum)
     gec_gelen_eskileri_ayikla(durum)
+    basliklari_onar(ist, durum)
     if not sadece_kontrol:
         kesif_mesajlari = kesif_mesajlari + gunluk_tarama(ist, ayar, ayar_yolu, durum)
     akis_siniri = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
@@ -1957,6 +2029,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
                 except Exception as e:
                     print(f"   (ayrıntı alınamadı: {o['url']} — {e})")
             o["dogrulama"] = o.pop("_dogrulama", None) or icerik_dogrulamasi(tur, k, imza_dogrulandi)
+            o["baslik"] = yazar_adini_at(o.get("baslik") or "", y["ad"])
+            if not o["baslik"] or sade(o["baslik"]) == sade(y["ad"]):
+                o["baslik"] = adresten_baslik(o["url"])     # başlık yerine yalnızca yazarın adı gelmişti
             if not o.get("tarih") and url_tarihi(o["url"]):
                 o["tarih"], o["tarih_gun"] = iso(url_tarihi(o["url"])), True   # sayfada tarih yoktu; adresteki gün
             yazi_tarihi = iso_oku(o.get("tarih"))
@@ -2075,6 +2150,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
         if kid in guvensiz and _gn_kimlik(o["url"]):
             return False   # yazara ait olduğu doğrulanamamış
+        if o.get("gn_url") and o.get("dogrulama") in ("belirsiz", "ad_sayfada") \
+                and (durum["kaynaklar"].get(kid) or {}).get("belirsiz_guvensiz"):
+            return False   # adı her sayfada geçen sitede imzası doğrulanamamış köşe yazısı (başkasının olabilir)
         if not kid or kid in aktif_anahtarlar:
             return True
         if (o["yazar"], o.get("tur", "yazi")) not in aktif_turler:
@@ -2292,8 +2370,8 @@ def _etiket_tahmin(k: dict, tur: str) -> str:
 
 def _ayni_baslik_var(ogeler: list[dict], yazar: str, baslik: str) -> bool:
     b = sade(baslik)
-    if len(b) < 12:
-        return False
+    if len(b) < 12 or b == sade(yazar):
+        return False      # başlık yerine yazarın adı gelmişse bu bir "aynı yazı" işareti değildir
     return any(o["yazar"] == yazar and sade(o["baslik"]) == b for o in ogeler[:600])
 
 
