@@ -527,6 +527,116 @@
       "zaman": "2026-11-09T09:59:57+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
+    },
+    "MAHFİ EĞİLMEZ": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://haber.doviz.com/gundem-haberleri/mahfi-egilmez-tuik-in-enflasyonu-yuzde-31-51-kredi-kartlarininki-yuzde-42-2",
+          "etiket": "Doviz.com",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "haber.doviz.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Yerel & Sektörel",
+                "url": "https://haber.doviz.com/yerel-ve-sektorel-haberleri",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Altın",
+                "url": "https://haber.doviz.com/altin-ve-degerli-metal-haberleri",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Cumhurbaşkanı Erdoğan'dan İran ve Ukrayna için diplomasi mesajı: Türkiye barış masasına hazır",
+                "url": "https://haber.doviz.com/gundem-haberleri/cumhurbaskani-erdogan-dan-iran-ve-ukrayna-icin-diplomasi-mesaji-turkiye-baris-masasina-hazir/948364",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|haber.doviz.com"
+        }
+      ],
+      "zaman": "2026-11-09T10:54:09+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Doviz.com"
+    },
+    "UĞUR GÜRSES": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.cumhuriyet.com.tr/haberleri/ugur-gurses",
+          "etiket": "Cumhuriyet",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 18 yazı",
+            "ornekler": [
+              {
+                "baslik": "Ekonomi yazarı Uğur Gürses, fon piyasasına ilişkin Devlet Denetleme Kurulu’na yaptığı soruşturma çağrısının mahkeme…",
+                "url": "https://www.cumhuriyet.com.tr/siyaset/ekonomi-yazarinin-fon-sorusturmasi-paylasimina-engel-manipulasyonu-yapanlar-bile-bu-hizda-derdest-edilmediler-2539667",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Hazirandan bu yana art arda 6 toplantıda faiz artıran banka bu toplantıda beklentilere paralel politika faizini 250…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/artis-ne-zaman-bitecek-ekonomistler-faiz-kararini-degerlendirdi-2154257",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Türkiye Cumhuriyet Merkez Bankası Başkanı Hafize Gaye Erkan’ın İstanbul’da artan kira fiyatlarından yakınıp ev…",
+                "url": "https://www.cumhuriyet.com.tr/ekonomi/ekonomistlerden-merkez-bankasi-baskani-hafize-gaye-erkanin-sozlerine-2152222",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 18
+          },
+          "kimlik": "site|cumhuriyet.com.tr"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.diken.com.tr/yazarlar/ugur-gurses",
+          "etiket": "Diken",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "diken.com.tr sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "İstemediğimiz kişi neden kıymetlenir?",
+                "url": "https://www.diken.com.tr/istemedigimiz-kisi-neden-kiymetlenir/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Okul ne için var?",
+                "url": "https://www.diken.com.tr/okul-ne-icin-var/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "İki şair, bir roman",
+                "url": "https://www.diken.com.tr/iki-sair-bir-roman/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|diken.com.tr"
+        }
+      ],
+      "zaman": "2026-11-09T10:54:46+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
     }
   },
   "reddedilen": {
