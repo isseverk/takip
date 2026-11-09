@@ -227,6 +227,8 @@ def sayfa_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
             try:
                 ogeler = rss_oku(ist, {"url": sablon.format(url=url.rstrip("/"))}, durum, yazar)
                 durum["yedek"] = "site_rss"
+                # yazar akışında podcast bölümleri ve videolar da olur (ör. FT); yalnızca yazılar alınır
+                ogeler = [o for o in ogeler if not medya_ogesi_mi(o)]
                 for o in ogeler:
                     o["_yedek"] = True       # yazı sayfaları da engelli; tek tek açmaya çalışma
                 return ogeler[: int(k.get("en_fazla", 25))]
@@ -625,8 +627,23 @@ def rss_oku(ist: Istemci, k: dict, durum: dict, yazar: str) -> list[dict]:
             baslik, ozet = paylasim_bol(ozet) if ozet else (link, "")
         oge = {"url": url_temizle(link), "baslik": kisalt(baslik, 300),
                "ozet": kisalt(ozet, 260), "tarih": iso(tarih), "tur": k.get("icerik_turu", "yazi")}
+        # ses/video eki taşıyan öğe (podcast bölümü, video) — yazı kaynaklarında ayıklanır
+        turler = [str(x.get("type") or "") for x in (e.get("enclosures") or []) + (e.get("media_content") or [])]
+        if any(t.startswith(("audio", "video")) for t in turler):
+            oge["_medya"] = True
         sonuc.append(oge)
     return sonuc
+
+
+# Yazı (köşe) kaynaklarında podcast/video öğelerini ayırmak için
+_MEDYA_ADRESI = re.compile(r"/(video|videos|videolar|podcast|podcasts|audio|listen|watch|izle|dinle)(/|$)|youtube\.com|youtu\.be|acast\.|spotify\.com", re.I)
+_MEDYA_BASLIGI = re.compile(r"\b(podcast|video|videosu|watch|listen|episode|webinar|canlı yayın)\b|"
+                            r"\b(FT News Briefing|Economics Show|Unhedged|Rachman Review|Behind the Money|Money Clinic|"
+                            r"The Swamp|Tech Tonic|FT Weekend podcast|Working It|Lunch with the FT podcast)\b", re.I)
+
+
+def medya_ogesi_mi(o: dict) -> bool:
+    return bool(o.get("_medya") or _MEDYA_ADRESI.search(o.get("url", "")) or _MEDYA_BASLIGI.search(o.get("baslik", "")))
 
 
 def paylasim_bol(metin: str) -> tuple[str, str]:
@@ -2150,6 +2167,8 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             return False   # Google Haberler yedeğinden gelmiş ama yazara ait olmadığı anlaşılmış
         if kid in guvensiz and _gn_kimlik(o["url"]):
             return False   # yazara ait olduğu doğrulanamamış
+        if (durum["kaynaklar"].get(kid) or {}).get("yedek") == "site_rss" and medya_ogesi_mi(o):
+            return False   # yazı kaynağının RSS'inden gelmiş podcast/video
         if o.get("gn_url") and o.get("dogrulama") in ("belirsiz", "ad_sayfada") \
                 and (durum["kaynaklar"].get(kid) or {}).get("belirsiz_guvensiz"):
             return False   # adı her sayfada geçen sitede imzası doğrulanamamış köşe yazısı (başkasının olabilir)
@@ -2193,6 +2212,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         o.pop("_metin", None)
         o.pop("_yazar_meta", None)
         o.pop("_gn_baslik", None)
+        o.pop("_medya", None)
         o.pop("yz_ozet", None)     # yapay zekâ özetleri kaldırıldı
         o.pop("yz_deneme", None)
         o.pop("konular", None)
