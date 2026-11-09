@@ -562,45 +562,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Ekonomi Gazetesi"
     },
-    "ÇİĞDEM TOKER": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://yurtsever.org.tr/konu/cigdem-toker",
-          "etiket": "Yurtsever",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "yurtsever.org.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Çiğdem Toker fon skandalını açıkladı: Aynı zamanda TVF krizi",
-                "url": "https://yurtsever.org.tr/2026/cigdem-toker-fon-skandalini-acikladi-ayni-zamanda-tvf-krizi-565671/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "TCDD'nin açtığı ihalede 'Yerlilik' koşuluna uyulmadı",
-                "url": "https://yurtsever.org.tr/2025/tcddnin-actigi-ihalede-yerlilik-kosuluna-uyulmadi-556002/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Agrobay, gazeteci Çiğdem Toker'e açtığı davayı kaybetti",
-                "url": "https://yurtsever.org.tr/2023/agrobay-gazeteci-cigdem-tokere-actigi-davayi-kaybetti-515970/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|yurtsever.org.tr"
-        }
-      ],
-      "zaman": "2026-11-09T05:39:18+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Yurtsever"
-    },
     "AZİZ ÇELİK": {
       "kaynaklar": [
         {
@@ -746,6 +707,9 @@
     ],
     "GÖKÇER TAHİNCİOĞLU": [
       "site|aposto.com"
+    ],
+    "ÇİĞDEM TOKER": [
+      "site|yurtsever.org.tr"
     ]
   },
   "ad_esleme": {
