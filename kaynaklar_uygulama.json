@@ -423,7 +423,47 @@
       "aciklama": "Medyascope, YouTube"
     }
   },
-  "oneriler": {},
+  "oneriler": {
+    "GÜVEN SAK": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ekonomigazetesi.com/yazar/guven-sak-4201",
+          "etiket": "Ekonomi Gazetesi",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "ekonomigazetesi.com sitesindeki yazar sayfası; 24 yazı",
+            "ornekler": [
+              {
+                "baslik": "Hedefler yetti icraat zamanı!",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/hedefler-yetti-icraat-zamani-91679",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Avrupa ile birlikte sanayi politikası düşünmeye başlamamızın tam zamanı",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/avrupa-ile-birlikte-bizim-de-sanayi-politikasi-dusunmeye-baslamamizin-tam-zamani-91616",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Nereden nereye geldik?",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/nereden-nereye-geldik-91037",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 24
+          },
+          "kimlik": "site|ekonomigazetesi.com"
+        }
+      ],
+      "zaman": "2026-11-09T05:38:12+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Ekonomi Gazetesi"
+    }
+  },
   "reddedilen": {
     "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
