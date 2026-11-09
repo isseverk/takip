@@ -287,6 +287,17 @@
           "etiket": "ekonomim.com"
         }
       ]
+    },
+    {
+      "ad": "TAHA AKYOL",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.karar.com/yazarlar/taha-akyol",
+          "dogrula": true,
+          "etiket": "karar.com"
+        }
+      ]
     }
   ],
   "kapali": [
