@@ -80,8 +80,8 @@ _URL_TARIHI = re.compile(r"(?<!\d)(20\d\d)[-/_](0[1-9]|1[0-2])[-/_](0[1-9]|[12]\
 
 TERK_EDILMIS_GUN = 120   # en yeni yazısı bundan eskiyse kaynak "artık yazmıyor" uyarısı verir
 ESKI_YAZI_GUN = 3   # bundan eski tarihli bir yazı ilk kez görülürse "yeni" sayılmaz
-ILK_GOSTERIM_GUN = 14   # kaynak eklenince bu kadar günlük yazılar akışa (bildirimsiz) konur
-PENCERE_EN_FAZLA = 12
+ILK_GOSTERIM_GUN = 30   # her kişinin son bu kadar günlük yazıları akışta görünür (kaynak eklenince de bildirimsiz konur)
+PENCERE_EN_FAZLA = 30
 
 
 def url_tarihi(url: str) -> datetime | None:
@@ -1729,7 +1729,7 @@ def icerik_dogrulamasi(tur: str, k: dict, imza_dogrulandi: bool) -> str:
 
 def basliklari_onar(ist: Istemci, durum: dict, sinir: int = 15) -> None:
     """Başlık yerine yazarın adı gelmiş ("Çiğdem Toker") ya da başında/sonunda ad olan başlıkları düzeltir.
-    Adı-başlık yüzünden "aynı yazı" sanılıp atlanan yazılar için o kaynağın son iki haftası yeniden taranır."""
+    Adı-başlık yüzünden "aynı yazı" sanılıp atlanan yazılar için o kaynağın son ayı yeniden taranır."""
     duzeltilen, kaynaklar = 0, set()
     for o in durum.get("ogeler", []):
         if o.get("konu_haberi") or not o.get("yazar"):
@@ -1757,7 +1757,7 @@ def basliklari_onar(ist: Istemci, durum: dict, sinir: int = 15) -> None:
 
 
 def gec_gelen_eskileri_ayikla(durum: dict) -> None:
-    """Önceki sürümün "yeni" diye aldığı, listede iki haftadan fazla gecikmeyle beliren eski yazıları akıştan çıkarır
+    """Önceki sürümün "yeni" diye aldığı, listede bir aydan fazla gecikmeyle beliren eski yazıları akıştan çıkarır
     (ör. 23 Ekim yazısının 7 Kasım'da "çok okunanlar" kutusundan gelmesi). Bunlar artık hiç alınmıyor."""
     once = len(durum.get("ogeler", []))
     def gec_mi(o):
@@ -1955,7 +1955,12 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         kesif_mesajlari = kesif_mesajlari + gunluk_tarama(ist, ayar, ayar_yolu, durum)
     akis_siniri = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
-    ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 40))
+    ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 80))
+    # Gösterim süresi değiştiyse (ör. 14 → 30 gün) her kaynağın eksik kalan yazıları bir kez daha tamamlanır
+    if durum.get("pencere_gun") != ILK_GOSTERIM_GUN:
+        for kd_ in durum.get("kaynaklar", {}).values():
+            kd_.pop("bosluk_tamam", None)
+        durum["pencere_gun"] = ILK_GOSTERIM_GUN
     baslangic = simdi()
 
     mevcut_url = {o["url"] for o in durum["ogeler"]}
@@ -2017,7 +2022,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             pencere = [o for o in ogeler if o not in taze and o["url"] not in mevcut_url
                        and o.get("gn_url") not in mevcut_url][:PENCERE_EN_FAZLA]
             gerek = sum(1 for o in pencere if tur == "sayfa" and not o.get("_yedek") and k.get("ayrinti", True))
-            if ayrinti_sayaci + gerek <= ayrinti_siniri // 2:   # yeni yazılara da sayfa açma hakkı kalsın
+            if ayrinti_sayaci + gerek <= ayrinti_siniri - 10:   # yeni yazılara da sayfa açma hakkı kalsın
                 kd["bosluk_tamam"] = True
             else:
                 pencere = []          # bu çalışmada sayfa açma hakkı yetmez; sonraki çalışmada
@@ -2063,9 +2068,9 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
             # kendi tarihiyle (yeni sayılmadan) eklenir
             geri_kazanilan = bool(o.pop("_kural_genisledi", False))
             if tamamlama and (not yazi_tarihi or yazi_tarihi < pencere_siniri):
-                continue                   # tamamlama adayıydı ama son iki haftadan değil (ya da tarihi bilinmiyor)
+                continue                   # tamamlama adayıydı ama son bir aydan değil (ya da tarihi bilinmiyor)
             if not ilk_kez and not geri_kazanilan and yazi_tarihi and yazi_tarihi < pencere_siniri:
-                gorulen.add(o["url"])      # listede geç beliren iki haftadan eski yazı ("çok okunanlar" kutusu vb.)
+                gorulen.add(o["url"])      # listede geç beliren bir aydan eski yazı ("çok okunanlar" kutusu vb.)
                 continue
             # listede geç beliren eski bir yazı (ör. "çok okunanlar" kutusu ya da arama yedeği):
             # akışa gerçek tarihiyle girer ama "yeni" sayılmaz, bildirim gitmez

@@ -106,6 +106,10 @@ Okundu işaretlerini telefonunla bilgisayarın arasında eşitleyebilirsin:
 
 Bundan sonra uygulama her açılışta ve bir yazıyı okuduğunda ya da okunmadı yaptığında birkaç saniye içinde eşitlenir. Bu bilgiler depodaki ayrı bir **okundu** dalında, senin parolanla şifrelenmiş olarak durur; depo herkese açık olsa da kimse okuyamaz. Parolayı unutursan aynı bölümden yeni parola belirleyip baştan başlayabilirsin; bu cihazdaki işaretlerin kaybolmaz.
 
+## Sevdiğim yazarlar (★)
+
+Kaynaklar'da kişinin kartındaki **☆**'e ya da yazar sayfasındaki **☆ Sevdiklerime ekle**'ye dokun; yıldız dolar (**★**). Sevdiğin yazarların adının yanında akışta, yazar sayfasında ve Günün özeti'nde ★ görünür. Akışın üstündeki **★ Sevdiklerim** düğmesi yalnızca onların yazılarını gösterir; **☰ Yazar seç** listesinde ve Günün özeti'nde de en başta dururlar. Seçimin `kaynaklar_uygulama.json` içinde `favoriler` altında saklanır, telefonda ve bilgisayarda aynıdır. Tekrar dokununca yıldız kalkar.
+
 ## Yazar adını düzeltmek
 
 Kaynaklar'da kişinin ⋯ menüsünden ya da yazar sayfasından **✏️ Adını düzelt**'e bas ve doğru yazılışı gir (ör. *ismail arı* → *İsmail Arı*). Sıradaki kontrolde ad her yerde değişir; geçmiş içerikler, okundu işaretleri ve kapattığın kaynaklar korunur. `kaynaklar.yaml`'daki kişilerde dosyanın kendisi değişmez; düzeltme `kaynaklar_uygulama.json` içinde `ad_esleme` altında saklanır. Başka birinin adını vermek engellenir.
@@ -120,9 +124,9 @@ Akışta, Günün özeti ekranında ya da Kaynaklar'da bir yazarın adına dokun
 
 ## Akışa hangi yazılar girer?
 
-- Bir kaynak ilk eklendiğinde son **14 günün** yazıları (en az en yeni 3'ü) akışa konur ("yeni" sayılmaz).
+- Her kişinin **son 1 ayda (30 gün)** yazdığı yazılar akışta görünür. Bir kaynak ilk eklendiğinde de son 30 günün yazıları (en az en yeni 3'ü) akışa konur ("yeni" sayılmaz).
 - Sonraki her kontrolde yalnızca yeni yazılar eklenir. Yazının sayfasında tarih yoksa adresteki gün kullanılır (ör. `…/2026-10-23/…`); saati bilinmediği için kartta saat yazmaz.
-- Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse "yeni" sayılmaz, 14 günden eskiyse hiç alınmaz.
+- Sitenin listesinde sonradan beliren eski bir yazı ("çok okunanlar" kutusu gibi) 3 günden eskiyse "yeni" sayılmaz, 30 günden eskiyse hiç alınmaz.
 - Akışta 45 günden eski içerik tutulmaz (yazının kendi tarihine bakılır).
 
 ## Doğrulama işareti (✓ / ?)
