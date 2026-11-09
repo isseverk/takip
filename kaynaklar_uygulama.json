@@ -232,6 +232,17 @@
           "etiket": "ekonomim.com"
         }
       ]
+    },
+    {
+      "ad": "ÇİĞDEM TOKER",
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://t24.com.tr/yazarlar/cigdem-toker",
+          "dogrula": true,
+          "etiket": "t24.com.tr"
+        }
+      ]
     }
   ],
   "kapali": [
