@@ -637,6 +637,65 @@
       "zaman": "2026-11-09T10:54:46+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
+    },
+    "MURAT AĞIREL": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.haberler.com/murat-agirel",
+          "etiket": "Haberler",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "haberler.com sitesindeki yazar sayfası; 1 yazı",
+            "ornekler": [
+              {
+                "baslik": "Murat Ağırel Haberleri",
+                "url": "https://www.haberler.com/murat-agirel/biyografisi/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 1
+          },
+          "kimlik": "site|haberler.com"
+        },
+        {
+          "tur": "sayfa",
+          "url": "https://www.sabah.com.tr/haberleri/murat-agirel",
+          "etiket": "Sabah",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "sabah.com.tr sitesindeki yazar sayfası; 24 yazı",
+            "ornekler": [
+              {
+                "baslik": "Sarıgül soruşturmasında 8 şüpheli daha gözaltında",
+                "url": "https://www.sabah.com.tr/gundem/2026/10/30/sarigul-sorusturmasinda-8-supheli-daha-gozaltinda",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Sarıgül soruşturmasında 10 gözaltı kararı",
+                "url": "https://www.sabah.com.tr/yasam/sarigul-sorusturmasinda-10-gozalti-karari-7690366",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Sarıgül soruşturmasında 3 tutuklama! Sofu Altınbaş da cezaevine gönderildi",
+                "url": "https://www.sabah.com.tr/yasam/sarigul-sorusturmasinda-3-tutuklama-sofu-altinbas-da-cezaevine-gonderildi-7689237",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 24
+          },
+          "kimlik": "site|sabah.com.tr"
+        }
+      ],
+      "zaman": "2026-11-09T13:06:34+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Haberler, Sabah"
     }
   },
   "reddedilen": {
