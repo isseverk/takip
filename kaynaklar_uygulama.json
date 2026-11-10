@@ -477,45 +477,6 @@
     }
   },
   "oneriler": {
-    "İSMAİL SAYMAZ": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/ismail-saymaz",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Zafer Partisi Genel Başkanı Ümit Özdağ, ev hapsinde tutulan gazeteci İsmail Saymaz'ı ziyaret etti.",
-                "url": "https://www.cumhuriyet.com.tr/siyaset/umit-ozdag-ismail-saymaz-i-ziyaret-etti-2553973",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Son dakika haberi... Gazeteciler Murat Ağırel ile gazeteci İsmail Saymaz hakkında yürütülen fon soruşturması…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/son-dakika-gazeteciler-murat-agirel-ve-ismail-saymaz-hakkinda-14-yil-10-ar-aya-kadar-hapis-istemi-2553285",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Başlıktaki bu sözler, Türkiye’ye yabancı yatırımların neden azaldığını konuştuğumuz bir iş insanına ait.",
-                "url": "https://www.cumhuriyet.com.tr/yazarlar/jale-ozgenturk/yabanci-yatirimci-turkiye-den-korkuyor-2547534",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|cumhuriyet.com.tr"
-        }
-      ],
-      "zaman": "2026-11-09T09:59:57+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
-    },
     "FARUK BİLDİRİCİ": {
       "kaynaklar": [
         {
@@ -726,6 +687,9 @@
     "UĞUR GÜRSES": [
       "site|cumhuriyet.com.tr",
       "site|diken.com.tr"
+    ],
+    "İSMAİL SAYMAZ": [
+      "site|cumhuriyet.com.tr"
     ]
   },
   "ad_esleme": {
