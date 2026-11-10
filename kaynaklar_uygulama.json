@@ -845,6 +845,45 @@
       "zaman": "2026-11-09T17:33:13+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
+    },
+    "SERVET YILDIRIM": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://www.ekonomigazetesi.com/yazar/servet-yildirim-33125",
+          "etiket": "Ekonomi Gazetesi",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "ekonomigazetesi.com sitesindeki yazar sayfası; 25 yazı",
+            "ornekler": [
+              {
+                "baslik": "Yavaş ilerleyen dezenflasyonun dayanılmaz ağırlığı",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/yavas-ilerleyen-dezenflasyonun-dayanilmaz-agirligi-91402",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Yeni yüzyılın fabrikalarını bugünden kurmalıyız",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/yeni-yuzyilin-fabrikalarini-bugunden-kurmaliyiz-91137",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "Cumhuriyetin 103 yıllık bilançosu ve bir dönüşüm hikâyesi",
+                "url": "https://www.ekonomigazetesi.com/kose-yazisi/cumhuriyetin-103-yillik-bilancosu-ve-bir-donusum-hikayesi-90815",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 25
+          },
+          "kimlik": "site|ekonomigazetesi.com"
+        }
+      ],
+      "zaman": "2026-11-10T01:00:54+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Ekonomi Gazetesi"
     }
   },
   "reddedilen": {
