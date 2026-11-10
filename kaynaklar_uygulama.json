@@ -555,77 +555,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Doviz.com"
     },
-    "UĞUR GÜRSES": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/ugur-gurses",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 18 yazı",
-            "ornekler": [
-              {
-                "baslik": "Ekonomi yazarı Uğur Gürses, fon piyasasına ilişkin Devlet Denetleme Kurulu’na yaptığı soruşturma çağrısının mahkeme…",
-                "url": "https://www.cumhuriyet.com.tr/siyaset/ekonomi-yazarinin-fon-sorusturmasi-paylasimina-engel-manipulasyonu-yapanlar-bile-bu-hizda-derdest-edilmediler-2539667",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Hazirandan bu yana art arda 6 toplantıda faiz artıran banka bu toplantıda beklentilere paralel politika faizini 250…",
-                "url": "https://www.cumhuriyet.com.tr/ekonomi/artis-ne-zaman-bitecek-ekonomistler-faiz-kararini-degerlendirdi-2154257",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Türkiye Cumhuriyet Merkez Bankası Başkanı Hafize Gaye Erkan’ın İstanbul’da artan kira fiyatlarından yakınıp ev…",
-                "url": "https://www.cumhuriyet.com.tr/ekonomi/ekonomistlerden-merkez-bankasi-baskani-hafize-gaye-erkanin-sozlerine-2152222",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 18
-          },
-          "kimlik": "site|cumhuriyet.com.tr"
-        },
-        {
-          "tur": "sayfa",
-          "url": "https://www.diken.com.tr/yazarlar/ugur-gurses",
-          "etiket": "Diken",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "diken.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "İstemediğimiz kişi neden kıymetlenir?",
-                "url": "https://www.diken.com.tr/istemedigimiz-kisi-neden-kiymetlenir/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Okul ne için var?",
-                "url": "https://www.diken.com.tr/okul-ne-icin-var/",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İki şair, bir roman",
-                "url": "https://www.diken.com.tr/iki-sair-bir-roman/",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|diken.com.tr"
-        }
-      ],
-      "zaman": "2026-11-09T10:54:46+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet, Diken"
-    },
     "FARUK BİLDİRİCİ": {
       "kaynaklar": [
         {
@@ -831,6 +760,10 @@
     "MURAT AĞIREL": [
       "site|haberler.com",
       "site|sabah.com.tr"
+    ],
+    "UĞUR GÜRSES": [
+      "site|cumhuriyet.com.tr",
+      "site|diken.com.tr"
     ]
   },
   "ad_esleme": {
