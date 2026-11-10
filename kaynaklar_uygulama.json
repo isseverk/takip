@@ -455,47 +455,7 @@
       "aciklama": "Medyascope, YouTube"
     }
   },
-  "oneriler": {
-    "DENİZ ZEYREK": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.nowtv.com.tr/Ilker-Karagoz-ile-Calar-Saat/one-cikan-haber/137502/konugumuz-deniz-zeyrek",
-          "etiket": "nowtv.com.tr",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "nowtv.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Destekler esnafa yetecek mi?",
-                "url": "https://www.nowtv.com.tr/Deniz-Uras-ile-NOW-Ana-Haber-Hafta-Sonu/one-cikan-haber/136991/destekler-esnafa-yetecek-mi",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Zeynep iyi olacak mı?",
-                "url": "https://www.nowtv.com.tr/Anne-Yarisi/fragman/5-Bolum-3-Fragman",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Anne Yarısı",
-                "url": "https://www.nowtv.com.tr/Anne-Yarisi/ozel-sahne/137281/ali-velayeti-zeynepe-verecek-mi",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|nowtv.com.tr"
-        }
-      ],
-      "zaman": "2026-11-10T16:50:40+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: nowtv.com.tr"
-    }
-  },
+  "oneriler": {},
   "reddedilen": {
     "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
@@ -564,7 +524,8 @@
       "site|cumhuriyet.com.tr"
     ],
     "DENİZ ZEYREK": [
-      "site|nationalturk.com"
+      "site|nationalturk.com",
+      "site|nowtv.com.tr"
     ],
     "FARUK BİLDİRİCİ": [
       "site|t24.com.tr",
