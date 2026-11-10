@@ -516,45 +516,6 @@
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     },
-    "MAHFİ EĞİLMEZ": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://haber.doviz.com/gundem-haberleri/mahfi-egilmez-tuik-in-enflasyonu-yuzde-31-51-kredi-kartlarininki-yuzde-42-2",
-          "etiket": "Doviz.com",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "haber.doviz.com sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Yerel & Sektörel",
-                "url": "https://haber.doviz.com/yerel-ve-sektorel-haberleri",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Altın",
-                "url": "https://haber.doviz.com/altin-ve-degerli-metal-haberleri",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "Cumhurbaşkanı Erdoğan'dan İran ve Ukrayna için diplomasi mesajı: Türkiye barış masasına hazır",
-                "url": "https://haber.doviz.com/gundem-haberleri/cumhurbaskani-erdogan-dan-iran-ve-ukrayna-icin-diplomasi-mesaji-turkiye-baris-masasina-hazir/948364",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|haber.doviz.com"
-        }
-      ],
-      "zaman": "2026-11-09T10:54:09+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Doviz.com"
-    },
     "FARUK BİLDİRİCİ": {
       "kaynaklar": [
         {
@@ -717,7 +678,8 @@
     ],
     "MAHFİ EĞİLMEZ": [
       "site|cumhuriyet.com.tr",
-      "site|borsaningundemi.com"
+      "site|borsaningundemi.com",
+      "site|haber.doviz.com"
     ],
     "Timur Soykan": [
       "site|gazetepencere.com"
