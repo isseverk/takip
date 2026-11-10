@@ -586,45 +586,6 @@
       "zaman": "2026-11-09T16:35:55+00:00",
       "gunluk": true,
       "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: NationalTurk"
-    },
-    "YALÇIN KARATEPE": {
-      "kaynaklar": [
-        {
-          "tur": "sayfa",
-          "url": "https://www.cumhuriyet.com.tr/haberleri/yalcin-karatepe",
-          "etiket": "Cumhuriyet",
-          "dogrula": true,
-          "otomatik": true,
-          "kanit": {
-            "gerekce": "cumhuriyet.com.tr sitesindeki yazar sayfası; 25 yazı",
-            "ornekler": [
-              {
-                "baslik": "Fon skandalıyla ilgili inceleme ve denetleme görevi verilen Cumhurbaşkanlığı Devlet Denetleme Kurulu (DDK)…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/ddk-kendi-baskaninin-daha-once-calistigi-yeri-inceleyecek-denetim-tartismasi-2542573",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İktisatçı Prof. Dr. Yalçın Karatepe, Borsa İstanbul’daki fon krizinin tüm yönleriyle araştırılması için Devlet…",
-                "url": "https://www.cumhuriyet.com.tr/ekonomi/yalcin-karatepe-den-fon-skandalinda-carpici-degerlendirme-simdi-kim-kimi-denetleyecek-2540875",
-                "tarih": null,
-                "kanal": null
-              },
-              {
-                "baslik": "İktisatçı Prof. Dr. Yalçın Karatepe, bazı fonlardaki manipülasyona neden bu kadar geç müdahale edildiği konusunda…",
-                "url": "https://www.cumhuriyet.com.tr/turkiye/iktisatci-prof-dr-karatepe-fon-krizine-gec-mudahaleyi-degerlendirdi-yetkililer-mudahale-etmedi-mi-yoksa-edemedi-mi-2539715",
-                "tarih": null,
-                "kanal": null
-              }
-            ],
-            "sayi": 25
-          },
-          "kimlik": "site|cumhuriyet.com.tr"
-        }
-      ],
-      "zaman": "2026-11-09T17:33:13+00:00",
-      "gunluk": true,
-      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: Cumhuriyet"
     }
   },
   "reddedilen": {
@@ -689,6 +650,9 @@
       "site|diken.com.tr"
     ],
     "İSMAİL SAYMAZ": [
+      "site|cumhuriyet.com.tr"
+    ],
+    "YALÇIN KARATEPE": [
       "site|cumhuriyet.com.tr"
     ]
   },
