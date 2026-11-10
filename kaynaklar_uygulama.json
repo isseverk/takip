@@ -443,7 +443,41 @@
       "aciklama": "Medyascope, YouTube"
     }
   },
-  "oneriler": {},
+  "oneriler": {
+    "MERDAN YANARDAĞ": {
+      "kaynaklar": [
+        {
+          "tur": "sayfa",
+          "url": "https://ilketv.com.tr/tag/merdan-yanardag",
+          "etiket": "İlke TV",
+          "dogrula": true,
+          "otomatik": true,
+          "kanit": {
+            "gerekce": "ilketv.com.tr sitesindeki yazar sayfası; 2 yazı",
+            "ornekler": [
+              {
+                "baslik": "SONRAKİ",
+                "url": "https://ilketv.com.tr/tag/merdan-yanardag/page/2/",
+                "tarih": null,
+                "kanal": null
+              },
+              {
+                "baslik": "3",
+                "url": "https://ilketv.com.tr/tag/merdan-yanardag/page/3/",
+                "tarih": null,
+                "kanal": null
+              }
+            ],
+            "sayi": 2
+          },
+          "kimlik": "site|ilketv.com.tr"
+        }
+      ],
+      "zaman": "2026-11-10T17:45:47+00:00",
+      "gunluk": true,
+      "aciklama": "Günlük taramada takip ettiklerine ek olarak bulundu: İlke TV"
+    }
+  },
   "reddedilen": {
     "BARIŞ PEHLİVAN": [
       "site|sondakika.com"
