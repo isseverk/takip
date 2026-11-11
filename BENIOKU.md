@@ -73,7 +73,7 @@ Var olan bir yazarın adını seçersen kaynak onun altına eklenir.
 
 **Başka kanallarda program yapan ya da konuk olan kişiler** (ör. futbol yorumcuları): **İsimle bul** ekranında **YouTube'da adının geçtiği programları da takip et** kutusunu işaretle. Program son bir haftanın YouTube videolarında kişinin adını arar; başlığında adı geçen yeni videolar, hangi kanalda olursa olsun akışa gelir ve kartta kanalın adı görünür. Zaten takip ettiğin biri için Kaynaklar'da adının yanındaki **⋯ → YouTube'da adının geçtiği programları ekle** de olur. İsimle bul köşe yazısı bulamazsa bu yolu kendiliğinden de dener. Kısa videolar (Shorts) alınmaz.
 - **Kısayol:** YouTube uygulamasında bir kanalı, ya da Chrome'da bir yazarın sayfasını açıp **Paylaş → Takip** de. Form adres dolu olarak açılır.
-- **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. O kaynaktan gelmiş içerikler de akıştan hemen kalkar. Kapattıkların "Kapatılanlar" bölümünde durur, oradan geri açabilirsin.
+- **Çıkarmak:** Yazarın ya da kaynağın yanındaki **⋯** düğmesine bas, sonra **Takipten çıkar** / **Bu kaynağı kaldır** seç. O kaynaktan gelmiş içerikler de akıştan hemen kalkar. Çıkardığın kişi ve kaynaklar listeden tamamen kalkar (geri istersen yeniden eklersin).
 - **Adresi değişen yazar:** **⋯ → Adresini değiştir** seç.
 
 Değişiklik birkaç dakika içinde akışa yansır. Telefondan yapılanlar `kaynaklar_uygulama.json` dosyasında tutulur.
@@ -137,14 +137,9 @@ Kartlarda kaynağın yanında küçük bir işaret durur; dokununca açıklamas�
 
 Program, başlığında kişinin adının haber öznesi olarak geçtiği sayfaları ("X gözaltına alındı", "X adli kontrolle serbest bırakıldı") artık kişinin yazısı saymaz; "Ad Soyad | Başlık" ya da "… yorumladı" gibi imza kalıpları ise sorun değildir. Eski "İsimle bul" sürümünün yazar sayfası yerine tek bir haberi kaynak diye eklediği durumlar da kendiliğinden temizlenir; kişinin başka kaynağı kalmazsa yeniden aranır ve bulunanlar Onay bekleyenler'e düşer.
 
-## Günlük kaynak taraması
+## T24 yazıları (Android)
 
-Program her kişiyi günde bir kez yeniden arar (her kontrolde 2 kişi; yarım saatte bir çalıştığı için herkes gün içinde sırayla taranır). Takip ettiklerine ek olarak yeni bir köşe, blog ya da kanal bulursa onu doğrudan eklemez; son içerik örnekleriyle **Kaynaklar → Onay bekleyenler**'e koyar ve kartta "🔁 Günlük taramada bulundu" yazar.
-- **Seçilenleri takip et** işaretlediklerini ekler; işaretlemediklerin bir daha önerilmez.
-- **Hiçbirini ekleme** hepsini reddeder; mevcut kaynaklarına dokunmaz ve bunlar da bir daha önerilmez.
-- Köşe yazısı ya da blogu takip edilen kişiler için YouTube kanalı önerilmez. Zaten takip edilen siteler yeniden denenmez.
-- Ekşi başlıkları ve takipten çıkardığın kişiler taranmaz. Yazar sayfasında "yeni kaynak taraması … önce" satırı son taramanın ne zaman yapıldığını gösterir.
-- Mevcut bağlantıların çalışıp çalışmadığı zaten her yarım saatte bir denetlenir; çalışmayanlar Kaynaklar'da uyarıyla görünür.
+T24'ün sitesine Türkiye'den erişim engelli olduğu için T24 yazılarının kartında 📱 işareti durur. Android telefonda başlığa dokununca yazı tarayıcı yerine **T24 uygulamasında** açılır. Uygulama yüklü değilse Google Play'deki T24 sayfası açılır. Bilgisayarda bağlantı eskisi gibi siteye gider.
 
 ## Adres denetimi — yazarlar hâlâ aynı yerde mi?
 

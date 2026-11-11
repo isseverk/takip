@@ -1439,6 +1439,12 @@ def eski_ozellik_kayitlarini_temizle(ayar_yolu: Path) -> None:
     except Exception:
         return
     silinen = [x for x in ("push", "konular", "kategoriler", "bildirim") if x in uyg]
+    oneriler = uyg.get("oneriler") if isinstance(uyg.get("oneriler"), dict) else {}
+    gunluk = [ad for ad, o in oneriler.items() if isinstance(o, dict) and o.get("gunluk")]
+    for ad in gunluk:
+        oneriler.pop(ad)
+    if gunluk:
+        silinen.append(f"{len(gunluk)} günlük tarama önerisi")
     if silinen:
         for x in silinen:
             uyg.pop(x, None)
@@ -1951,8 +1957,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
     dogrulama_isaretini_tamamla(ayar, durum)
     gec_gelen_eskileri_ayikla(durum)
     basliklari_onar(ist, durum)
-    if not sadece_kontrol:
-        kesif_mesajlari = kesif_mesajlari + gunluk_tarama(ist, ayar, ayar_yolu, durum)
+    # (günlük yeni kaynak taraması kullanıcının isteğiyle kapatıldı; gunluk_tarama() artık çağrılmıyor)
     akis_siniri = simdi() - timedelta(days=int(a.get("akista_tutulacak_gun", 45)))
     ilk_gosterim = int(a.get("ilk_calistirmada_goster", 3))
     ayrinti_siniri = int(a.get("calisma_basina_ayrinti_siniri", 80))
@@ -2116,6 +2121,7 @@ def calistir(ayar_yolu: Path, sadece_kontrol: bool = False, zorla_denetim: bool 
         return 0
 
     durum.pop("konular", None)   # konu takibi kaldırıldı
+    durum.pop("gunluk_tarama", None)   # günlük kaynak taraması kapatıldı
 
     # artık ayar dosyasında olmayan kaynakların kayıtlarını temizle
     for anahtar in list(durum["kaynaklar"]):
@@ -2436,11 +2442,18 @@ def rss_uret(ayar: dict, durum: dict, yol: Path):
 
 
 def _yazar_listesi(ayar: dict, durum: dict) -> list[dict]:
-    """Uygulamanın 'Kaynaklar' ekranı için: kapalılar dahil tüm yazarlar ve kaynakları."""
+    """Uygulamanın 'Kaynaklar' ekranı için: takip edilen yazarlar ve kaynakları.
+    Kaldırılan (kapatılan) kişi ve kaynaklar listede hiç görünmez."""
     sonuc = []
     for y in ayar["yazarlar"]:
+        if y.get("aktif") is False:
+            continue
+        if y["kaynaklar"] and all(k.get("aktif") is False for k in y["kaynaklar"]):
+            continue
         kayitlar = []
         for k in y["kaynaklar"]:
+            if k.get("aktif") is False:
+                continue
             anahtar = kaynak_anahtari(y["ad"], k)
             kd = durum["kaynaklar"].get(anahtar) or {}
             tur = k.get("tur", "sayfa")
@@ -2484,7 +2497,6 @@ def sayfa_uret(ayar: dict, durum: dict, yol: Path):
         "aranacaklar": (ayar.get("_uygulama") or {}).get("aranacaklar", []),
         "kesif": (ayar.get("_uygulama") or {}).get("kesif", {}),
         "oneriler": (ayar.get("_uygulama") or {}).get("oneriler", {}),
-        "gunluk_tarama": durum.get("gunluk_tarama", {}),
         "favoriler": (ayar.get("_uygulama") or {}).get("favoriler", []),
         "yazarlar": yazarlar,
         "ogeler": [

@@ -760,6 +760,23 @@ footer a{color:var(--soluk)}
     const y = depo.al(anahtar, null);
     return (y && y.zaman > new Date(V.olusturma).getTime() && Date.now() - y.zaman < 6*3600e3) ? y.deger : sunucu;
   }
+  // ───────── ERİŞİMİ ENGELLİ SİTELER: yazıyı sitenin kendi Android uygulamasında aç
+  // T24'ün sitesine Türkiye'den erişim engelli; yazılar T24 uygulamasında (com.opera.t24) açılır.
+  // Uygulama yüklü değilse ya da bağlantıyı tanımazsa Google Play'deki T24 sayfasına gidilir.
+  const UYGULAMALI_SITELER = {"t24.com.tr": "com.opera.t24"};
+  const ANDROID = /Android/i.test(navigator.userAgent);
+  function uygulamaPaketi(url){
+    try { return UYGULAMALI_SITELER[new URL(url).hostname.replace(/^(www|m)\./, "")] || null; } catch(_) { return null; }
+  }
+  const uygulamaylaMi = url => ANDROID && !!uygulamaPaketi(url);
+  function acilisAdresi(url){
+    const paket = uygulamaylaMi(url) ? uygulamaPaketi(url) : null;
+    if (!paket) return url;
+    const u = new URL(url);
+    const yedek = encodeURIComponent(`https://play.google.com/store/apps/details?id=${paket}`);
+    return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=https;package=${paket};S.browser_fallback_url=${yedek};end`;
+  }
+
   // ───────── SEVDİĞİM YAZARLAR (★): kaynaklar_uygulama.json → favoriler; cihazlar arasında ortak
   const favoriler = () => new Set(yerelVeyaSunucu("favori_yerel", V.favoriler || []));
   const favoriMi = ad => favoriler().has(ad);
@@ -903,13 +920,14 @@ footer a{color:var(--soluk)}
         el("span",{class:"yazar", role:"button", tabindex:"0", title:"Yazar sayfası", onclick: () => yazarAc(o.yazar)}, el("span",{class:"nokta", style:`background:${renk(o.yazar)}`}), o.yazar, yildiz(o.yazar)),
         el("span",{class:"tur " + tur, text: TUR[tur] || tur}),
         el("span",{text: o.kaynak || ""}));
+      if (uygulamaylaMi(o.url)) meta.append(el("span",{title:"Site erişime kapalı; T24 uygulamasında açılır", "aria-label":"uygulamada açılır", text:"📱"}));
       const dg = DOGRULAMA[o.dogrulama];
       if (dg) meta.append(el("button",{class:"dogru " + (dg[0] ? "kesin" : "supheli"), type:"button", title: dg[1],
         "aria-label": dg[0] ? "Kişiye ait: " + dg[1] : "Doğrulanmadı: " + dg[1], text: dg[0] ? "✓" : "?",
         onclick: e => { e.preventDefault(); tost((dg[0] ? "✓ " : "? ") + dg[1], 5000); }}));
       if (!o.tarih_gun) meta.append(el("span",{text: saat(o._t), title: o._t.toLocaleString("tr-TR")}));
       if (yeniMi(o)) meta.append(el("span",{class:"etiket-yeni", text:"YENİ"}));
-      const a = el("a",{class:"baslik", href:o.url, target:"_blank", rel:"noopener noreferrer", text:o.baslik});
+      const a = el("a",{class:"baslik", href:acilisAdresi(o.url), target: uygulamaylaMi(o.url) ? "_self" : "_blank", rel:"noopener noreferrer", text:o.baslik});
       a.addEventListener("click", () => { okunduIsaretle([o.id]); li.classList.add("okundu"); });
       if (okunanlar.has(o.id)) meta.append(el("button",{class:"okunmadi-dugme", type:"button",
         title:"Okunmadı olarak işaretle", "aria-label":"Okunmadı olarak işaretle", text:"↺ Okunmadı yap",
@@ -940,7 +958,7 @@ footer a{color:var(--soluk)}
   function okunduYap(o, kap){ okunduIsaretle([o.id]); if (kap) kap.classList.add("okundu"); }
   function bultenOge(o, onEk){
     const kap = el("div",{class:"bulten-oge" + (okunanlar.has(o.id) ? " okundu" : "")});
-    const a = el("a",{href:o.url, target:"_blank", rel:"noopener noreferrer", text: (onEk || "") + o.baslik});
+    const a = el("a",{href:acilisAdresi(o.url), target: uygulamaylaMi(o.url) ? "_self" : "_blank", rel:"noopener noreferrer", text: (onEk || "") + o.baslik});
     a.addEventListener("click", () => okunduYap(o, kap));
     const gun = gunEtiketi(o._t);
     kap.append(a, el("small",{text:[TUR[o.tur||"yazi"] || o.tur, o.kaynak, o.tarih_gun ? gun : (gun === "Bugün" ? "" : gun + " ") + saat(o._t)].filter(Boolean).join(" · ")}));
@@ -988,8 +1006,7 @@ footer a{color:var(--soluk)}
     ic.append(el("div",{class:"yazar-istatistik", text:[
       `Son 30 günde ${ay.length} içerik` + (ay.length ? " (" + Object.entries(turSay).map(([t,n]) => `${t.toLocaleLowerCase("tr-TR")} ${n}`).join(", ") + ")" : ""),
       ay.length >= 2 ? `haftada ~${haftalik < 3 ? haftalik.toFixed(1).replace(".", ",") : Math.round(haftalik)}` : null,
-      kendi[0] ? "son içerik " + onceki(kendi[0]._t) : null,
-      (V.gunluk_tarama || {})[ad] ? "yeni kaynak taraması " + onceki(new Date(V.gunluk_tarama[ad])) : null].filter(Boolean).join(" · ")}));
+      kendi[0] ? "son içerik " + onceki(kendi[0]._t) : null].filter(Boolean).join(" · ")}));
     if (d && d.durum && d.durum !== "tamam") ic.append(el("div",{class:"uyari-kutu", style:"display:block;margin:0 0 10px"}, el("b",{text:"⚠ "}), d.aciklama || ""));
     const dugmeler = el("div",{class:"satir", style:"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"});
     if (y){
@@ -1241,25 +1258,9 @@ footer a{color:var(--soluk)}
         // sorunlu kaynakta nedeni de yazsın (ör. "en yeni yazı 2018 tarihli")
         if (!k.kapali && k.durum === "uyari" && k.not_) kart.append(el("div",{class:"kaynak-not", text: k.not_}));
       }
-      if (!y.kapali && y.kaynaklar.length && y.kaynaklar.every(k => k.kapali))
-        kart.append(el("div",{style:"padding:4px 14px 10px;font-size:13px;color:var(--soluk)", text:"Bütün kaynakları kapalı — aşağıdaki Kapatılanlar bölümünden yeniden açabilirsin."}));
       return kart;
     };
     aktif.forEach(y => liste.append(ciz(y)));
-    // takip edilen kişilerin kapatılmış kaynakları: kartları kalabalıklaştırmasın, burada dursun
-    const kapaliKaynak = aktif.flatMap(y => y.kaynaklar.filter(k => k.kapali).map(k => [y, k]));
-    if (kapali.length || kapaliKaynak.length) liste.append(el("h2",{class:"bolum-baslik", text:"Kapatılanlar"}));
-    if (kapaliKaynak.length){
-      const kart = el("div",{class:"kart kapali"}, el("div",{class:"kart-ust"}, el("b",{text:"Kapatılan kaynaklar"}),
-        el("span",{style:"font-size:12.5px;color:var(--soluk);margin-left:auto", text:"kontrol edilmiyor"})));
-      for (const [y, k] of kapaliKaynak) kart.append(el("div",{class:"kaynak-satir kapali"},
-        el("span",{text:"–"}),
-        el("span", null, el("b",{text: y.ad + " · "}), el("span",{class:"tur " + k.tur, text: KAYNAK_TUR[k.tur] || k.tur}), " ", k.etiket || ""),
-        el("button",{class:"menu-dugme sag", type:"button", "aria-label":"Kaynak seçenekleri", text:"⋯", onclick: () => kaynakMenu(y, k)}),
-        el("span",{class:"adres", text: kisaAdres(k.adres)})));
-      liste.append(kart);
-    }
-    kapali.forEach(y => liste.append(ciz(y)));
     if (!yazarlar.length) liste.append(el("div",{class:"bos", text: q ? "Bu isimde kaynak yok." : "Henüz kaynak yok."}));
   }
 
@@ -1288,7 +1289,7 @@ footer a{color:var(--soluk)}
       }});
       s.push({yazi:"✏️ Adını düzelt", fn: () => adAc(y.ad)});
       s.push({yazi:"Takipten çıkar", tehlike:true, fn: () => {
-        if (!confirm(`${y.ad} takipten çıkarılsın mı? Kapatılanlar bölümünden geri açabilirsin.`)) return;
+        if (!confirm(`${y.ad} takipten çıkarılsın mı? Listeden tamamen kalkar.`)) return;
         islem(i => {
           i.yazarlar = i.yazarlar.filter(a => a.ad !== y.ad);
           if (y.kok !== "uygulama" || y.kaynaklar.some(k => k.kok === "yaml")) { if (!i.kapali_yazarlar.includes(y.ad)) i.kapali_yazarlar.push(y.ad); }
