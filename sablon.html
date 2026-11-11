@@ -761,9 +761,9 @@ footer a{color:var(--soluk)}
     return (y && y.zaman > new Date(V.olusturma).getTime() && Date.now() - y.zaman < 6*3600e3) ? y.deger : sunucu;
   }
   // ───────── ERİŞİMİ ENGELLİ SİTELER: yazıyı sitenin kendi Android uygulamasında aç
-  // T24'ün sitesine Türkiye'den erişim engelli; yazılar T24 uygulamasında (com.opera.t24) açılır.
+  // T24'ün sitesine Türkiye'den erişim engelli; yazılar T24 uygulamasında (com.app.t24) açılır.
   // Uygulama yüklü değilse ya da bağlantıyı tanımazsa Google Play'deki T24 sayfasına gidilir.
-  const UYGULAMALI_SITELER = {"t24.com.tr": "com.opera.t24"};
+  const UYGULAMALI_SITELER = {"t24.com.tr": "com.app.t24"};   // yeni T24 uygulaması (eskisi com.opera.t24 artık çalışmıyor)
   const ANDROID = /Android/i.test(navigator.userAgent);
   function uygulamaPaketi(url){
     try { return UYGULAMALI_SITELER[new URL(url).hostname.replace(/^(www|m)\./, "")] || null; } catch(_) { return null; }
